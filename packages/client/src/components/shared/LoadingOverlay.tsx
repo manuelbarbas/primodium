@@ -1,10 +1,9 @@
 import { AnimatePresence, motion } from "framer-motion";
-import { useSyncStatus } from "@/hooks/useSyncStatus";
 import { Loader } from "@/components/core/Loader";
 import { useEffect } from "react";
 import { toast } from "react-toastify";
-import { Entity } from "@latticexyz/recs";
-import { singletonEntity } from "@latticexyz/store-sync/recs";
+import { Entity } from "@primodiumxyz/reactive-tables";
+import { useSyncStatus } from "@primodiumxyz/core/react";
 
 export const LoadingOverlay = ({
   syncId,
@@ -21,7 +20,7 @@ export const LoadingOverlay = ({
   children?: React.ReactNode;
   className?: string;
 }) => {
-  const { loading, error } = useSyncStatus(syncId ?? singletonEntity);
+  const { loading, error } = useSyncStatus(syncId);
 
   useEffect(() => {
     if (error) toast.error(errorMessage);

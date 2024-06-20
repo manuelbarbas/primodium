@@ -1,23 +1,36 @@
+// import { setupInvitations } from "@/systems/setupPlayerInvites";
+// import { setupMovementNotifications } from "@/systems/setupMovementNotifications";
+// import { setupSwapNotifications } from "@/systems/setupSwapNotifications";
+import { useAccountClient, useCore } from "@primodiumxyz/core/react";
 import { useEffect } from "react";
-import { ampli } from "src/ampli";
-import { components } from "src/network/components";
-import { useMud } from "./useMud";
+import { ampli } from "@/ampli";
 
 export const useInit = () => {
-  const mud = useMud();
-  const playerEntity = mud.playerAccount.entity;
-  const initialized = !!components.Spawned.use(playerEntity)?.value;
+  const core = useCore();
+  const {
+    tables,
+    network: { world },
+  } = core;
+  const { address, entity } = useAccountClient().playerAccount;
+  const initialized = !!tables.Spawned.use(entity)?.value;
 
   useEffect(() => {
     if (!initialized) return;
-    mud.components.Account.set({ value: playerEntity });
-  }, [initialized, playerEntity, mud]);
+    tables.Account.set({ value: entity });
+    // setupInvitations(core);
+    // setupMovementNotifications(core);
+    // setupSwapNotifications(core);
+
+    return () => {
+      world.dispose("clientSystems");
+    };
+  }, [initialized, entity]);
 
   // The network object and user wallet will have been loaded by the time the loading state is ready
   // So we can use the user wallet to identify the user
   useEffect(() => {
-    ampli.identify(mud.playerAccount.address, {});
-  }, [mud.playerAccount.address]);
+    ampli.identify(address, {});
+  }, [address]);
 
   return initialized;
 };

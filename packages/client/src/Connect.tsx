@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { FaExclamationTriangle } from "react-icons/fa";
 import { toast } from "react-toastify";
 import { useAccount, useConnect } from "wagmi";
-import { usePersistentStore } from "./game/stores/PersistentStore";
+import { usePersistentStore } from "@primodiumxyz/game/src/stores/PersistentStore";
 import { Landing } from "./screens/Landing";
 
 const connectorIcons: Record<string, string> = {

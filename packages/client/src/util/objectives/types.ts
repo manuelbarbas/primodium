@@ -1,4 +1,4 @@
-import { Entity } from "@latticexyz/recs";
+import { Entity } from "@primodiumxyz/reactive-tables";
 import { EObjectives } from "contracts/config/enums";
 
 export type ObjectiveType =

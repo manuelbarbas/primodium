@@ -431,18 +431,6 @@ export const storageUnitStorageUpgrades = {
     Kimberlite: 800,
   },
   9: {
-    Iron: 15000,
-    Copper: 15000,
-    Lithium: 15000,
-    IronPlate: 8000,
-    PVCell: 8000,
-    Alloy: 8000,
-    Titanium: 2200,
-    Platinum: 2200,
-    Iridium: 2200,
-    Kimberlite: 1200,
-  },
-  10: {
     Iron: 25000,
     Copper: 25000,
     Lithium: 25000,
@@ -453,6 +441,18 @@ export const storageUnitStorageUpgrades = {
     Platinum: 3500,
     Iridium: 3500,
     Kimberlite: 2000,
+  },
+  10: {
+    Iron: 50000,
+    Copper: 50000,
+    Lithium: 50000,
+    IronPlate: 20000,
+    PVCell: 20000,
+    Alloy: 20000,
+    Titanium: 10000,
+    Platinum: 10000,
+    Iridium: 10000,
+    Kimberlite: 5000,
   },
 } as const;
 

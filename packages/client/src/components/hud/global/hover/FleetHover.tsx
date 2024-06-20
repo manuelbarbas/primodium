@@ -1,35 +1,44 @@
 import { SecondaryCard } from "@/components/core/Card";
-import { useMud } from "@/hooks";
-import { usePlayerOwner } from "@/hooks/usePlayerOwner";
-import { EntityToResourceImage, EntityToUnitImage } from "@/util/mappings";
-import { Entity } from "@latticexyz/recs";
+import { Entity } from "@primodiumxyz/reactive-tables";
 import { InterfaceIcons } from "@primodiumxyz/assets";
 import { EFleetStance } from "contracts/config/enums";
 import { useMemo } from "react";
-import { IconLabel } from "src/components/core/IconLabel";
-import { Loader } from "src/components/core/Loader";
-import { useInCooldownEnd } from "src/hooks/useCooldownEnd";
-import { useFullResourceCounts } from "src/hooks/useFullResourceCount";
-import { useInGracePeriod } from "src/hooks/useInGracePeriod";
-import { useSyncStatus } from "src/hooks/useSyncStatus";
-import { useUnitCounts } from "src/hooks/useUnitCount";
-import { components } from "src/network/components";
-import { EntityType, ResourceStorages } from "src/util/constants";
-import { entityToFleetName, entityToRockName } from "src/util/name";
-import { formatNumber, formatResourceCount, formatTime, formatTimeShort } from "src/util/number";
-import { getFleetStats } from "src/util/unit";
+import { IconLabel } from "@/components/core/IconLabel";
+import { Loader } from "@/components/core/Loader";
+import {
+  useAccountClient,
+  useCore,
+  useInCooldown,
+  useInGracePeriod,
+  usePlayerOwner,
+  useResourceCounts,
+  useSyncStatus,
+  useUnitCounts,
+} from "@primodiumxyz/core/react";
+import {
+  entityToFleetName,
+  entityToRockName,
+  EntityType,
+  formatNumber,
+  formatResourceCount,
+  formatTime,
+  formatTimeShort,
+  ResourceStorages,
+} from "@primodiumxyz/core";
+import { EntityToResourceImage, EntityToUnitImage } from "@/util/image";
 
 export const FleetHover: React.FC<{ entity: Entity }> = ({ entity }) => {
+  const { tables, utils } = useCore();
   const { loading } = useSyncStatus(entity);
-  const fleetStats = getFleetStats(entity);
-  const movement = components.FleetMovement.use(entity);
-  const time = components.Time.use()?.value ?? 0n;
-  const stance = components.FleetStance.use(entity);
-  const homeAsteroid = components.OwnedBy.get(entity)?.value as Entity | undefined;
+  const fleetStats = utils.getFleetStats(entity);
+  const movement = tables.FleetMovement.use(entity);
+  const time = tables.Time.use()?.value ?? 0n;
+  const stance = tables.FleetStance.use(entity);
+  const homeAsteroid = tables.OwnedBy.get(entity)?.value as Entity | undefined;
   const { inGracePeriod, duration } = useInGracePeriod(entity);
-  const { inCooldown, duration: cooldownDuration } = useInCooldownEnd(entity);
+  const { inCooldown, duration: cooldownDuration } = useInCooldown(entity);
 
-  const playerEntity = useMud().playerAccount.entity;
+  const playerEntity = useAccountClient().playerAccount.entity;
   const friendly = usePlayerOwner(entity) === playerEntity;
 
   const FleetStateText = useMemo(() => {
@@ -155,7 +164,7 @@ const UnitDisplay = ({ type, count }: { type: Entity; count: bigint }) => {
 // exluding units for now
 const FleetResources = ({ entity, loading = false }: { entity: Entity; loading?: boolean }) => {
   const units = useUnitCounts(entity, loading);
-  const resources = useFullResourceCounts(entity, loading);
+  const resources = useResourceCounts(entity, loading);
 
   const hasUnits = !!units && [...units.values()].some((count) => count > 0n);
   const hasResources =

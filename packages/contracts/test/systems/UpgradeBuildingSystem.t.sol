@@ -7,7 +7,7 @@ import { addressToEntity } from "src/utils.sol";
 import { EBuilding, EResource } from "src/Types.sol";
 import { MainBasePrototypeId, IronMinePrototypeId } from "codegen/Prototypes.sol";
 
-import { P_ListMaxResourceUpgrades, MaxResourceCount, P_ByLevelMaxResourceUpgrades, P_RequiredResourcesData, P_RequiredResources, ResourceCount, ProductionRate, P_RequiredDependency, P_RequiredDependencyData, Level, ConsumptionRate, P_Production, P_ProductionData, PositionData, Home, P_MaxLevel } from "codegen/index.sol";
+import { P_ListMaxResourceUpgrades, MaxResourceCount, P_ByLevelMaxResourceUpgrades, P_RequiredResourcesData, P_RequiredResources, ResourceCount, ProductionRate, P_RequiredDependency, P_RequiredDependencyData, Level, ConsumptionRate, P_Production, P_ProductionData, PositionData, Home, P_MaxLevel, P_RequiredBaseLevel, BuildingType } from "codegen/index.sol";
 
 contract UpgradeBuildingSystemTest is PrimodiumTest {
   bytes32 playerEntity;
@@ -47,12 +47,21 @@ contract UpgradeBuildingSystemTest is PrimodiumTest {
     vm.stopPrank();
   }
 
-  // TODO: PRI-644
   function testUpgradeBuildingFailRequiredMainBase() public {
     PositionData memory coord = getTilePosition(asteroidEntity, EBuilding.IronMine);
     bytes32 building = world.Pri_11__build(EBuilding.IronMine, coord);
     upgradeBuilding(creator, building);
-    // upgradeBuilding(creator, building);
+
+    P_RequiredResourcesData memory requiredResources = getUpgradeCost(building);
+    provideResources(asteroidEntity, requiredResources);
+
+    vm.startPrank(creator);
+    uint256 currentMainBaseLevel = Level.get(Home.get(asteroidEntity));
+    P_RequiredBaseLevel.set(BuildingType.get(building), Level.get(building) + 1, currentMainBaseLevel + 1);
+
+    vm.expectRevert("[UpgradeBuildingSystem] MainBase level requirement not met");
+    world.Pri_11__upgradeBuilding(building);
+    vm.stopPrank();
   }
 
   function testUpgradeBuildingWithRequiredResources() public {

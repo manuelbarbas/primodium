@@ -1,0 +1,8 @@
+name: Build Packages
+description: Install dependencies and build packages
+runs:
+  using: composite
+  steps:
+    - name: Run build
+      shell: bash 
+      run: pnpm build

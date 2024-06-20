@@ -8,7 +8,7 @@ import { IWorld } from "codegen/world/IWorld.sol";
 import { setupHooks } from "script/SetupHooks.sol";
 import { createPrototypes } from "codegen/Prototypes.sol";
 import { createTerrain } from "codegen/scripts/CreateTerrain.sol";
-import { SpawnAllowed } from "codegen/index.sol";
+import { SpawnAllowed, Counter } from "codegen/index.sol";
 
 import { ResourceId, WorldResourceIdLib } from "@latticexyz/world/src/WorldResourceId.sol";
 import { StandardDelegationsModule } from "@latticexyz/world-modules/src/modules/std-delegations/StandardDelegationsModule.sol";

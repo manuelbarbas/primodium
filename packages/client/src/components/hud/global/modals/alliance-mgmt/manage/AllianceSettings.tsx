@@ -5,21 +5,16 @@ import { TextInput } from "@/components/core/TextInput";
 import { Tooltip } from "@/components/core/Tooltip";
 import { ALLIANCE_TAG_SIZE } from "@/components/hud/global/modals/alliance-mgmt/CreateScreen";
 import { TransactionQueueMask } from "@/components/shared/TransactionQueueMask";
-import { useMud } from "@/hooks";
-import { useAllianceName } from "@/hooks/useAllianceName";
-import { components } from "@/network/components";
-import { leaveAlliance, updateAllianceAccess, updateAllianceName } from "@/network/setup/contractCalls/alliance";
-import { MUD } from "@/network/types";
+import { useContractCalls } from "@/hooks/useContractCalls";
 import { cn } from "@/util/client";
-import { entityToAddress } from "@/util/common";
-import { TransactionQueueType } from "@/util/constants";
-import { hashEntities } from "@/util/encode";
-import { Entity } from "@latticexyz/recs";
+import { entityToAddress } from "@primodiumxyz/core";
+import { useAllianceName, useCore } from "@primodiumxyz/core/react";
+import { Entity } from "@primodiumxyz/reactive-tables";
 import { EAllianceInviteMode, EAllianceRole } from "contracts/config/enums";
 import { useState } from "react";
-import { FaCopy, FaExclamationTriangle } from "react-icons/fa";
-import { toast } from "react-toastify";
-// import { TextArea } from "@/components/core/TextArea";
+import { FaCopy } from "react-icons/fa";
+import { alert } from "@/util/alert";
+import { useGame } from "@/hooks/useGame";
 
 export const AllianceSettings = ({
   allianceEntity,
@@ -28,13 +23,15 @@ export const AllianceSettings = ({
   allianceEntity: Entity;
   playerEntity: Entity;
 }) => {
-  const mud = useMud();
-  const alliance = components.Alliance.use(allianceEntity);
+  const game = useGame();
+  const { tables } = useCore();
+  const { updateAllianceName, updateAllianceAccess, leaveAlliance } = useContractCalls();
+  const alliance = tables.Alliance.use(allianceEntity);
 
   const wasInviteOnly = (alliance?.inviteMode ?? EAllianceInviteMode.Open) as EAllianceInviteMode;
   const currName = useAllianceName(allianceEntity, true);
 
-  const playerRole = components.PlayerAlliance.use(playerEntity)?.role ?? EAllianceRole.Member;
+  const playerRole = tables.PlayerAlliance.use(playerEntity)?.role ?? EAllianceRole.Member;
 
   const [inviteOnly, setInviteOnly] = useState(wasInviteOnly);
   const [allianceTag, setAllianceTag] = useState(currName);
@@ -56,12 +53,10 @@ export const AllianceSettings = ({
             onChange={(e) => setAllianceTag(e.target.value.toUpperCase())}
             className="w-48 uppercase h-8 text-sm"
           />
-          <TransactionQueueMask
-            queueItemId={hashEntities(TransactionQueueType.UpdateAllianceName, mud.playerAccount.entity)}
-          >
+          <TransactionQueueMask queueItemId={`update-alliance-name`}>
             <Button
               disabled={allianceTag == currName}
-              onClick={() => updateAllianceName(mud, allianceEntity, allianceTag)}
+              onClick={() => updateAllianceName(allianceEntity, allianceTag)}
               className="w-full"
             >
               Update
@@ -79,12 +74,10 @@ export const AllianceSettings = ({
               setInviteOnly(value === "open" ? EAllianceInviteMode.Open : EAllianceInviteMode.Closed)
             }
           />
-          <TransactionQueueMask
-            queueItemId={hashEntities(TransactionQueueType.UpdateAllianceAccess, mud.playerAccount.entity)}
-          >
+          <TransactionQueueMask queueItemId={`update-access`}>
             <Button
               disabled={inviteOnly == wasInviteOnly}
-              onClick={() => updateAllianceAccess(mud, allianceEntity, inviteOnly === EAllianceInviteMode.Closed)}
+              onClick={() => updateAllianceAccess(allianceEntity, inviteOnly === EAllianceInviteMode.Closed)}
               className="w-full"
             >
               Update
@@ -109,12 +102,20 @@ export const AllianceSettings = ({
           </Tooltip>
         </div>
         <div className="relative flex justify-center w-full">
-          <TransactionQueueMask queueItemId={hashEntities(TransactionQueueType.LeaveAlliance, playerEntity)}>
+          <TransactionQueueMask queueItemId="leave-alliance">
             <Button
               tooltip={inviteOnly ? "You will need to request to join again" : undefined}
               tooltipDirection="right"
               variant="error"
-              onClick={() => (playerRole === EAllianceRole.Owner ? confirmLeaveAlliance(mud) : leaveAlliance(mud))}
+              onClick={() =>
+                playerRole === EAllianceRole.Owner
+                  ? alert(
+                      "Are you sure you want to leave the alliance? Leadership will be transferred to the next highest ranking member.",
+                      leaveAlliance,
+                      game
+                    )
+                  : leaveAlliance()
+              }
               className="btn-sm"
             >
               LEAVE
@@ -123,48 +124,5 @@ export const AllianceSettings = ({
         </div>
       </div>
     </SecondaryCard>
-  );
-};
-
-const confirmLeaveAlliance = async (mud: MUD) => {
-  toast(
-    ({ closeToast }) => (
-      <div className="flex flex-col gap-4">
-        <div className="flex flex-col text-center justify-center items-center gap-2 w-full">
-          <FaExclamationTriangle size={24} className="text-warning" />
-          Are you sure you want to leave the alliance? Leadership will be transferred to the next highest ranking
-          member.
-        </div>
-
-        <div className="flex justify-center w-full gap-2">
-          <button
-            className="btn btn-secondary btn-xs"
-            onClick={() => {
-              leaveAlliance(mud);
-              closeToast && closeToast();
-            }}
-          >
-            Confirm
-          </button>
-          <button
-            onClick={() => {
-              closeToast && closeToast();
-            }}
-            className="btn btn-primary btn-xs"
-          >
-            Cancel
-          </button>
-        </div>
-      </div>
-    ),
-    {
-      // className: "border-error",
-      position: "top-center",
-      autoClose: false,
-      closeOnClick: false,
-      draggable: false,
-      closeButton: false,
-      hideProgressBar: true,
-    }
   );
 };

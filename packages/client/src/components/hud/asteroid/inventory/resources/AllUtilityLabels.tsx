@@ -1,9 +1,10 @@
-import { components } from "src/network/components";
-import { EntityType } from "src/util/constants";
+import { useCore } from "@primodiumxyz/core/react";
 import { BarLayoutUtilityLabel } from "./UtilityLabel";
+import { EntityType } from "@primodiumxyz/core";
 
 export const AllUtilityLabels = () => {
-  const activeRock = components.ActiveRock.use()?.value;
+  const { tables } = useCore();
+  const activeRock = tables.ActiveRock.use()?.value;
   if (!activeRock) return null;
   return (
     <div className="flex flex-col w-full gap-1.5 p-2 pt-4">

@@ -1,5 +1,4 @@
 import path from "path";
-import { sentryVitePlugin } from "@sentry/vite-plugin";
 import react from "@vitejs/plugin-react";
 import { defineConfig } from "vite";
 import { comlink } from "vite-plugin-comlink";
@@ -8,13 +7,12 @@ import postcss from "./postcss.config";
 
 export default defineConfig({
   plugins: [
+    tsconfigPaths({
+      projects: ["../game"],
+      parseNative: true,
+    }),
     react(),
     comlink(),
-    tsconfigPaths(),
-    sentryVitePlugin({
-      org: "primodium",
-      project: "primodium",
-    }),
   ],
   server: {
     port: 3000,
@@ -31,17 +29,8 @@ export default defineConfig({
       output: {
         manualChunks: {
           react: ["react", "react-dom"],
-          mud: [
-            "@latticexyz/common",
-            "@latticexyz/protocol-parser",
-            "@latticexyz/dev-tools",
-            "@latticexyz/react",
-            "@latticexyz/recs",
-            "@latticexyz/schema-type",
-            "@latticexyz/store",
-            "@latticexyz/store-sync",
-            "@latticexyz/world",
-          ],
+          mud: ["@latticexyz/common", "@latticexyz/world"],
+          core: ["@primodiumxyz/core"],
           phaser: ["phaser"],
         },
       },
@@ -55,9 +44,7 @@ export default defineConfig({
         bigint: true,
       },
     },
-
     include: [
-      "proxy-deep",
       "bn.js",
       "js-sha3",
       "hash.js",
@@ -69,6 +56,7 @@ export default defineConfig({
       "nice-grpc-web",
       "@improbable-eng/grpc-web",
     ],
+    exclude: ["@primodiumxyz/assets", "contract"],
   },
   envPrefix: "PRI_",
   envDir: "../../",
@@ -78,7 +66,6 @@ export default defineConfig({
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
-      "@game": path.resolve(__dirname, "./src/game"),
     },
   },
 });

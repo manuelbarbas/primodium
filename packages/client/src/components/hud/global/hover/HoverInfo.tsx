@@ -1,15 +1,15 @@
-import { Entity } from "@latticexyz/recs";
-import { components } from "src/network/components";
-import { getBuildingName } from "src/util/building";
+import { Entity } from "@primodiumxyz/reactive-tables";
 import { Card } from "../../../core/Card";
 import { BlueprintInfo } from "@/components/hud/asteroid/blueprints/BlueprintInfo";
 import { AsteroidHover } from "./AsteroidHover";
 import { FleetHover } from "./FleetHover";
 import { ShardAsteroidHover } from "./ShardAsteroidHover";
+import { useCore } from "@primodiumxyz/core/react";
 
 export const HoverInfo = () => {
+  const { tables, utils } = useCore();
   const BuildingInfo: React.FC<{ entity: Entity }> = ({ entity }) => {
-    const buildingName = getBuildingName(entity);
+    const buildingName = utils.getBuildingName(entity);
 
     return (
       <div className="uppercase font-bold text-xs relative p-1">
@@ -19,16 +19,16 @@ export const HoverInfo = () => {
     );
   };
 
-  const hoverEntity = components.HoverEntity.use()?.value;
+  const hoverEntity = tables.HoverEntity.use()?.value;
 
   if (!hoverEntity) return <></>;
 
   let content = <></>;
-  if (components.BuildingType.has(hoverEntity)) content = <BuildingInfo entity={hoverEntity} />;
-  else if (components.Asteroid.has(hoverEntity)) content = <AsteroidHover entity={hoverEntity} />;
-  else if (components.ShardAsteroid.has(hoverEntity)) content = <ShardAsteroidHover entity={hoverEntity} />;
-  else if (components.IsFleet.has(hoverEntity)) content = <FleetHover entity={hoverEntity} />;
-  else if (components.P_Blueprint.has(hoverEntity)) content = <BlueprintInfo building={hoverEntity} />;
+  if (tables.BuildingType.has(hoverEntity)) content = <BuildingInfo entity={hoverEntity} />;
+  else if (tables.Asteroid.has(hoverEntity)) content = <AsteroidHover entity={hoverEntity} />;
+  else if (tables.ShardAsteroid.has(hoverEntity)) content = <ShardAsteroidHover entity={hoverEntity} />;
+  else if (tables.IsFleet.has(hoverEntity)) content = <FleetHover entity={hoverEntity} />;
+  else if (tables.P_Blueprint.has(hoverEntity)) content = <BlueprintInfo building={hoverEntity} />;
 
   return (
     <Card

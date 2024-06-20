@@ -1,38 +1,33 @@
 import { Navigator } from "@/components/core/Navigator";
-import { components } from "@/network/components";
-import { Entity } from "@latticexyz/recs";
+import { Entity } from "@primodiumxyz/reactive-tables";
 import { SecondaryCard } from "@/components/core/Card";
 import { IconLabel } from "@/components/core/IconLabel";
 import { InterfaceIcons } from "@primodiumxyz/assets";
-import { entityToFleetName, entityToRockName } from "@/util/name";
 import React, { useMemo } from "react";
 import { EFleetStance } from "contracts/config/enums";
 import { Button } from "@/components/core/Button";
-import { formatTime } from "@/util/number";
 import { FaInfoCircle } from "react-icons/fa";
 import { TransactionQueueMask } from "@/components/shared/TransactionQueueMask";
-import { hashEntities } from "@/util/encode";
-import { TransactionQueueType } from "@/util/constants";
-import { useMud } from "@/hooks";
-import { useOrbitingFleets } from "@/hooks/useOrbitingFleets";
-import { attack } from "@/network/setup/contractCalls/attack";
-import { clearFleetStance } from "@/network/setup/contractCalls/fleetStance";
 import { alert } from "@/util/alert";
 import { useGame } from "@/hooks/useGame";
+import { useCore, useOrbitingFleets } from "@primodiumxyz/core/react";
+import { entityToFleetName, entityToRockName, formatTime } from "@primodiumxyz/core";
+import { useContractCalls } from "@/hooks/useContractCalls";
 
 export const Fleet: React.FC<{ fleetEntity: Entity; target: Entity; willFriendlyFire: boolean }> = ({
   fleetEntity,
   target,
   willFriendlyFire,
 }) => {
-  const mud = useMud();
   const game = useGame();
-  const movement = components.FleetMovement.use(fleetEntity);
-  const stance = components.FleetStance.use(fleetEntity);
-  const fleetCooldown = components.CooldownEnd.use(fleetEntity)?.value ?? 0n;
-  const now = components.Time.use()?.value ?? 0n;
+  const { tables } = useCore();
+  const { clearFleetStance, attack } = useContractCalls();
+  const movement = tables.FleetMovement.use(fleetEntity);
+  const stance = tables.FleetStance.use(fleetEntity);
+  const fleetCooldown = tables.CooldownEnd.use(fleetEntity)?.value ?? 0n;
+  const now = tables.Time.use()?.value ?? 0n;
   const inCooldown = fleetCooldown > now;
-  const isFleetEmpty = !!components.IsFleetEmpty.use(fleetEntity)?.value;
+  const isFleetEmpty = !!tables.IsFleetEmpty.use(fleetEntity)?.value;
 
   const fleetStateText = useMemo(() => {
     if (stance && stance?.stance === EFleetStance.Follow)
@@ -46,11 +41,11 @@ export const Fleet: React.FC<{ fleetEntity: Entity; target: Entity; willFriendly
     <SecondaryCard
       className="flex-row justify-between gap-10 items-center"
       onPointerEnter={() =>
-        components.HoverEntity.set({
+        tables.HoverEntity.set({
           value: fleetEntity,
         })
       }
-      onPointerLeave={() => components.HoverEntity.remove()}
+      onPointerLeave={() => tables.HoverEntity.remove()}
     >
       <div className="flex gap-2">
         <IconLabel imageUri={InterfaceIcons.Fleet} />
@@ -74,13 +69,13 @@ export const Fleet: React.FC<{ fleetEntity: Entity; target: Entity; willFriendly
         )}
         {stance?.stance && !inCooldown && !isFleetEmpty && (
           <TransactionQueueMask queueItemId={"FleetStance" as Entity}>
-            <Button size="sm" variant="info" onClick={() => clearFleetStance(mud, fleetEntity)}>
+            <Button size="sm" variant="info" onClick={() => clearFleetStance(fleetEntity)}>
               Clear Stance
             </Button>
           </TransactionQueueMask>
         )}
         {!inCooldown && !isFleetEmpty && !stance?.stance && (
-          <TransactionQueueMask queueItemId={hashEntities(TransactionQueueType.Attack, fleetEntity, target)}>
+          <TransactionQueueMask queueItemId={`attack-${fleetEntity}`}>
             <Button
               size="sm"
               variant="error"
@@ -88,10 +83,10 @@ export const Fleet: React.FC<{ fleetEntity: Entity; target: Entity; willFriendly
                 willFriendlyFire
                   ? alert(
                       "You have defending fleets protecting this asteroid. Attacking this asteroid fleet will initiate friendly fire! Are you sure you want to proceed?",
-                      () => attack(mud, fleetEntity, target),
+                      () => attack(fleetEntity, target),
                       game
                     )
-                  : attack(mud, fleetEntity, target)
+                  : attack(fleetEntity, target)
               }
             >
               SELECT
@@ -105,11 +100,12 @@ export const Fleet: React.FC<{ fleetEntity: Entity; target: Entity; willFriendly
 };
 
 export const AttackScreen: React.FC<{ selectedRock: Entity; target: Entity }> = ({ selectedRock, target }) => {
-  const playerEntity = components.Account.use()?.value;
+  const { tables } = useCore();
+  const playerEntity = tables.Account.use()?.value;
   const fleets = useOrbitingFleets(selectedRock, playerEntity);
 
   const willFriendlyFire = useMemo(() => {
-    return !!fleets.find((fleet) => components.FleetStance.get(fleet)?.stance == EFleetStance.Defend);
+    return !!fleets.find((fleet) => tables.FleetStance.get(fleet)?.stance == EFleetStance.Defend);
   }, [fleets]);
 
   if (!playerEntity) return null;

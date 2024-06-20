@@ -1,10 +1,10 @@
 import { useCallback } from "react";
-import { SecondaryCard } from "src/components/core/Card";
-import { Navigator } from "src/components/core/Navigator";
-import { Range } from "src/components/core/Range";
-import { Channel } from "src/game/api/audio";
-import { usePersistentStore } from "src/game/stores/PersistentStore";
-import { useGame } from "src/hooks/useGame";
+import { SecondaryCard } from "@/components/core/Card";
+import { Navigator } from "@/components/core/Navigator";
+import { Range } from "@/components/core/Range";
+import { usePersistentStore } from "@primodiumxyz/game/src/stores/PersistentStore";
+import { useGame } from "@/hooks/useGame";
+import { Channel } from "@primodiumxyz/game";
 
 export const AudioSettings = () => {
   const { master, sfx, ui, music } = usePersistentStore((state) => state.volume);

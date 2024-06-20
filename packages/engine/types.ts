@@ -56,7 +56,7 @@ export type Animation = {
   endFrame: number;
   frameRate: number;
   // Number of times to repeat the animation, -1 for infinity
-  repeat: number;
+  repeat?: number;
   prefix?: string;
   suffix?: string;
 };

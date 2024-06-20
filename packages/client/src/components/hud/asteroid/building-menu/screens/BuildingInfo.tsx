@@ -1,13 +1,11 @@
-import { EntityType } from "@/util/constants";
-import { EntityToResourceImage } from "@/util/mappings";
-import { formatNumber, formatResourceCount } from "@/util/number";
-import { Entity } from "@latticexyz/recs";
-import { Badge } from "src/components/core/Badge";
-import { SecondaryCard } from "src/components/core/Card";
-import { Navigator } from "src/components/core/Navigator";
-import { ResourceIconTooltip } from "src/components/shared/ResourceIconTooltip";
-import { useBuildingInfo } from "src/hooks/useBuildingInfo";
-import { getEntityTypeName } from "src/util/common";
+import { useBuildingInfo } from "@primodiumxyz/core/react";
+import { EntityType, formatNumber, formatResourceCount, getEntityTypeName } from "@primodiumxyz/core";
+import { EntityToResourceImage } from "@/util/image";
+import { Badge } from "@/components/core/Badge";
+import { SecondaryCard } from "@/components/core/Card";
+import { Navigator } from "@/components/core/Navigator";
+import { ResourceIconTooltip } from "@/components/shared/ResourceIconTooltip";
+import { Entity } from "@primodiumxyz/reactive-tables";
 
 const DataLabel: React.FC<{ label: string; children: React.ReactNode }> = ({ label, children }) => {
   return (
@@ -167,7 +165,7 @@ export const BuildingInfo: React.FC<{ building: Entity }> = ({ building }) => {
                     image={EntityToResourceImage[storage.resource]}
                     resource={storage.resource}
                     amount={storage.amount}
-                    resourceType={storage.resourceType}
+                    resourceType={storage.type}
                     direction="top"
                     short
                   />
@@ -188,7 +186,7 @@ export const BuildingInfo: React.FC<{ building: Entity }> = ({ building }) => {
                       image={EntityToResourceImage[storage.resource]}
                       resource={storage.resource}
                       amount={storage.amount}
-                      resourceType={storage.resourceType}
+                      resourceType={storage.type}
                       direction="top"
                       short
                     />

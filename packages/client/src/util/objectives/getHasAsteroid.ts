@@ -1,25 +1,38 @@
-import { MapIdToAsteroidType } from "@/util/mappings";
-import { Entity, Has, HasValue, runQuery } from "@latticexyz/recs";
 import { InterfaceIcons } from "@primodiumxyz/assets";
-import { components } from "src/network/components";
-import { Hex } from "viem";
+import { Core, MapEntityLookup } from "@primodiumxyz/core";
+import { Entity, query } from "@primodiumxyz/reactive-tables";
 
 export const getHasAsteroid = (
+  { tables }: Core,
   playerEntity: Entity | undefined,
   type: "common" | "motherlode" | "wormhole" | "shard"
 ) => {
   let currentValue = 0n;
   if (type == "shard") {
-    const complete =
-      runQuery([Has(components.ShardAsteroid), HasValue(components.OwnedBy, { value: playerEntity as Hex })]).size > 0;
+    const complete = query({
+      with: [tables.ShardAsteroid],
+      withProperties: [{ table: tables.OwnedBy, properties: { value: playerEntity } }],
+    });
     currentValue = complete ? 1n : 0n;
   } else {
-    const playerAsteroids = runQuery([
-      HasValue(components.OwnedBy, { value: playerEntity as Hex }),
-      Has(components.Asteroid),
-    ]);
-    if (type === "common") currentValue = playerAsteroids.size > 1 ? 1n : 0n;
-    else currentValue = [...playerAsteroids].some((asteroid) => isCorrectType(asteroid, type)) ? 1n : 0n;
+    const playerAsteroids = query({
+      with: [tables.Asteroid],
+      withProperties: [{ table: tables.OwnedBy, properties: { value: playerEntity } }],
+    });
+    if (type === "common") currentValue = playerAsteroids.length > 1 ? 1n : 0n;
+    else
+      currentValue = playerAsteroids.some((asteroid) => {
+        const asteroidData = tables.Asteroid.get(asteroid);
+        if (type === "motherlode") {
+          const asteroidResource = MapEntityLookup[asteroidData?.mapId ?? 0];
+          return !!asteroidResource;
+        }
+        if (type === "wormhole") return asteroidData?.wormhole ?? false;
+        if (type === "shard") return tables.ShardAsteroid.has(asteroid);
+        return false;
+      })
+        ? 1n
+        : 0n;
   }
 
   const icon = InterfaceIcons.Asteroid;
@@ -31,15 +44,4 @@ export const getHasAsteroid = (
     isBool: true,
     scale: 1n,
   };
-};
-
-const isCorrectType = (asteroidEntity: Entity, type: "motherlode" | "wormhole" | "shard") => {
-  const asteroidData = components.Asteroid.get(asteroidEntity);
-  if (type === "motherlode") {
-    const asteroidResource = MapIdToAsteroidType[asteroidData?.mapId ?? 0];
-    return !!asteroidResource;
-  }
-  if (type === "wormhole") return asteroidData?.wormhole ?? false;
-  if (type === "shard") return components.ShardAsteroid.has(asteroidEntity);
-  return false;
 };

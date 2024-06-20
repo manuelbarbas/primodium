@@ -1,9 +1,9 @@
 import { Tooltip } from "@/components/core/Tooltip";
 import { useGame } from "@/hooks/useGame";
 import { useEffect, forwardRef, useCallback } from "react";
-import { components } from "@/network/components";
 import { AudioKeys } from "@primodiumxyz/assets";
-import { getRandomRange } from "@/util/common";
+import { getRandomRange } from "@primodiumxyz/core";
+import { useCore } from "@primodiumxyz/core/react";
 import { KeybindActionKeys } from "@game/lib/constants/keybinds";
 import { cn } from "@/util/client";
 import { cva, type VariantProps } from "class-variance-authority";
@@ -97,6 +97,7 @@ export const PushButton = forwardRef<HTMLButtonElement, ButtonProps>(
     ref
   ) => {
     const game = useGame();
+    const { tables } = useCore();
     const api = game.UI;
 
     const handleClick = useCallback(
@@ -120,7 +121,7 @@ export const PushButton = forwardRef<HTMLButtonElement, ButtonProps>(
           });
 
         props.onPointerEnter?.(e);
-        components.HoverEntity.remove();
+        tables.HoverEntity.remove();
       },
       [api.audio, mute, props]
     );

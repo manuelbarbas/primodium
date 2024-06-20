@@ -1,8 +1,8 @@
-import { Entity } from "@latticexyz/recs";
+import { Entity } from "@primodiumxyz/reactive-tables";
 import { InterfaceIcons } from "@primodiumxyz/assets";
 import { EObjectives } from "contracts/config/enums";
-import { EntityType, ObjectiveEnumLookup } from "../constants";
 import { Objective } from "./types";
+import { EntityType, ObjectiveEnumLookup } from "@primodiumxyz/core";
 
 export const getObjective = (objectiveEntity: Entity) => {
   const objectiveEnum = ObjectiveEnumLookup[objectiveEntity];
@@ -427,7 +427,7 @@ export const Objectives = new Map<EObjectives, Objective>([
       unitType: EntityType.ColonyShip,
       unitCount: 1n,
       description:
-        "To train a colony ship, click on Shipyard and select Commission. Unlock a Colony Ship slot by paying required resources and then commmission a ship. Fleets containing colony ships conquer asteroids.",
+        "To train a colony ship, click on Shipyard and select Commission. Unlock a Colony Ship slot by paying required resources and then commission a ship. Fleets containing colony ships conquer asteroids.",
     },
   ],
   [
@@ -627,7 +627,7 @@ export const Objectives = new Map<EObjectives, Objective>([
     {
       category: "Unit Production",
       type: "Train",
-      requiredMainBase: 8n,
+      requiredMainBase: 5n,
       requiredObjectives: [EObjectives.TrainMinutemanMarine],
       unitType: EntityType.TridentMarine,
       unitCount: 32n,
@@ -818,7 +818,7 @@ export const Objectives = new Map<EObjectives, Objective>([
     {
       category: "Defense",
       type: "Build",
-      requiredMainBase: 6n,
+      requiredMainBase: 4n,
       buildingType: EntityType.SAMLauncher,
       description:
         "SAM launchers give your asteroid native defense and additional health, protecting you from enemy attacks. You need electricity to power them. To build, select the SAM Launcher from the Blueprints menu and place it on an empty tile.",
