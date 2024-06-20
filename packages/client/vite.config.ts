@@ -29,13 +29,8 @@ export default defineConfig({
       output: {
         manualChunks: {
           react: ["react", "react-dom"],
-          mud: [
-            "@latticexyz/common",
-            "@latticexyz/react",
-            "@latticexyz/recs",
-            "@latticexyz/store-sync",
-            "@latticexyz/world",
-          ],
+          mud: ["@latticexyz/common", "@latticexyz/world"],
+          core: ["@primodiumxyz/core"],
           phaser: ["phaser"],
         },
       },
@@ -60,7 +55,6 @@ export default defineConfig({
       "is-observable",
       "nice-grpc-web",
       "@improbable-eng/grpc-web",
-      // "@primodiumxyz/game",
     ],
     exclude: ["@primodiumxyz/assets", "contract"],
   },

@@ -128,9 +128,6 @@ importers:
       '@latticexyz/world':
         specifier: 2.0.9
         version: 2.0.9(typescript@5.4.5)
-      '@latticexyz/world-modules':
-        specifier: 2.0.9
-        version: 2.0.9(typescript@5.4.5)
       '@primodiumxyz/assets':
         specifier: workspace:*
         version: link:../assets
@@ -441,7 +438,7 @@ importers:
         version: 2.9.20(typescript@5.5.0-beta)(zod@3.23.8)
       vite:
         specifier: ^3.2.3
-        version: 3.2.10(@types/node@16.18.11)
+        version: 3.2.10(@types/node@18.19.36)
     devDependencies:
       '@testing-library/jest-dom':
         specifier: ^6.4.5
@@ -4752,24 +4749,6 @@ packages:
       - utf-8-validate
     dev: false
 
-  /@latticexyz/world-modules@2.0.9(typescript@5.4.5):
-    resolution: {integrity: sha512-0u3jrjrzIsvu7OKjrFMaL4PGArrg3Wxth2q3gKo6OqAC6BGdDeecAZPUP+HnTe4i4mY0TX0BIx4Si/mew5Eozw==}
-    dependencies:
-      '@latticexyz/common': 2.0.9(typescript@5.4.5)(zod@3.23.8)
-      '@latticexyz/config': 2.0.9(typescript@5.4.5)
-      '@latticexyz/schema-type': 2.0.9(typescript@5.4.5)(zod@3.23.8)
-      '@latticexyz/store': 2.0.9(typescript@5.4.5)
-      '@latticexyz/world': 2.0.9(typescript@5.4.5)
-      zod: 3.23.8
-    transitivePeerDependencies:
-      - '@aws-sdk/client-kms'
-      - asn1.js
-      - bufferutil
-      - supports-color
-      - typescript
-      - utf-8-validate
-    dev: false
-
   /@latticexyz/world-modules@2.0.9(typescript@5.5.0-beta):
     resolution: {integrity: sha512-0u3jrjrzIsvu7OKjrFMaL4PGArrg3Wxth2q3gKo6OqAC6BGdDeecAZPUP+HnTe4i4mY0TX0BIx4Si/mew5Eozw==}
     dependencies:
@@ -7225,6 +7204,7 @@ packages:
 
   /@types/node@16.18.11:
     resolution: {integrity: sha512-3oJbGBUWuS6ahSnEq1eN2XrCyf4YsWI8OyCvo7c64zQJNplk3mO84t53o8lfTk+2ji59g5ycfc6qQ3fdHliHuA==}
+    dev: true
 
   /@types/node@18.19.36:
     resolution: {integrity: sha512-tX1BNmYSWEvViftB26VLNxT6mEr37M7+ldUtq7rlKnv4/2fKYsJIOmqJAjT6h1DNuwQjIKgw3VJ/Dtw3yiTIQw==}
@@ -18500,6 +18480,7 @@ packages:
       rollup: 2.79.1
     optionalDependencies:
       fsevents: 2.3.3
+    dev: true
 
   /vite@3.2.10(@types/node@18.19.36):
     resolution: {integrity: sha512-Dx3olBo/ODNiMVk/cA5Yft9Ws+snLOXrhLtrI3F4XLt4syz2Yg8fayZMWScPKoz12v5BUv7VEmQHnsfpY80fYw==}
@@ -18533,7 +18514,6 @@ packages:
       rollup: 2.79.1
     optionalDependencies:
       fsevents: 2.3.3
-    dev: true
 
   /vitest@0.32.4(happy-dom@14.12.0)(jsdom@24.1.0):
     resolution: {integrity: sha512-3czFm8RnrsWwIzVDu/Ca48Y/M+qh3vOnF16czJm98Q/AN1y3B6PBsyV8Re91Ty5s7txKNjEhpgtGPcfdbh2MZg==}

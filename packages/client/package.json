@@ -5,7 +5,7 @@
   "license": "MIT",
   "type": "module",
   "scripts": {
-    "build": "node --max-old-space-size=8192 node_modules/vite/bin/vite.js build",
+    "build": "pnpm --filter core build && node --max-old-space-size=8192 node_modules/vite/bin/vite.js build",
     "dev": "vite",
     "lint": "eslint ./src --ext .js,.ts,.tsx",
     "lint:fix": "eslint ./src --ext .js,.ts,.tsx --fix",
@@ -20,7 +20,6 @@
     "@latticexyz/common": "2.0.9",
     "@latticexyz/faucet": "2.0.9",
     "@latticexyz/world": "2.0.9",
-    "@latticexyz/world-modules": "2.0.9",
     "@primodiumxyz/assets": "workspace:*",
     "@primodiumxyz/core": "workspace:*",
     "@primodiumxyz/engine": "workspace:*",
