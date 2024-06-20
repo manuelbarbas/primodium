@@ -2,10 +2,11 @@
 import { Core } from "@primodiumxyz/core";
 
 import { starmapSceneConfig } from "@game/lib/config/starmapScene";
-import { createSceneApi, PrimodiumScene } from "@game/api/scene";
+import { createSceneApi } from "@game/api/scene";
 import { setupBasicCameraMovement } from "@game/scenes/common/setup/setupBasicCameraMovement";
 import { GlobalApi } from "@game/api/global";
 import { runSystems as runStarmapSystems } from "@game/scenes/starmap/systems";
+import { PrimodiumScene } from "@game/types";
 
 export const initStarmapScene = async (game: GlobalApi, core: Core): Promise<PrimodiumScene> => {
   const {
@@ -15,6 +16,7 @@ export const initStarmapScene = async (game: GlobalApi, core: Core): Promise<Pri
 
   const scene = await game.createScene(starmapSceneConfig, false);
   const sceneApi = createSceneApi(scene);
+  sceneApi.audio.setPauseOnBlur(false);
 
   setupBasicCameraMovement(sceneApi, world, {
     translateKeybind: true,

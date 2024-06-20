@@ -10,7 +10,7 @@ import { Relationship, DepthLayers } from "@game/lib/constants/common";
 import { isValidClick } from "@game/lib/objects/inputGuards";
 
 export class Fleet extends Phaser.GameObjects.Container implements IPrimodiumGameObject {
-  readonly id: Entity;
+  public readonly id: Entity;
 
   private _scene: PrimodiumScene;
   private coord: Coord;

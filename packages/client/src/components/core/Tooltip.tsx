@@ -3,7 +3,7 @@ import { VariantProps, cva } from "class-variance-authority";
 import { motion, useMotionValue, AnimatePresence } from "framer-motion";
 import { useState } from "react";
 
-export type TooltipDirection = "right" | "left" | "top" | "bottom" | "center" | "topRight";
+export type TooltipDirection = "right" | "left" | "top" | "bottom" | "center" | "topRight" | "topLeft";
 
 const tooltipTranslation = {
   top: {
@@ -30,6 +30,10 @@ const tooltipTranslation = {
     x: "0",
     y: "-120%",
   },
+  topLeft: {
+    x: "-100%",
+    y: "-120%",
+  },
 };
 
 const tooltipVariants = cva(" pointer-events-auto", {
@@ -41,6 +45,7 @@ const tooltipVariants = cva(" pointer-events-auto", {
       bottom: "left-1/2",
       center: "",
       topRight: "",
+      topLeft: "",
     },
   },
   defaultVariants: {

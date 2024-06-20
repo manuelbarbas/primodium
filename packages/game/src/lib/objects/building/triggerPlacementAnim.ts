@@ -12,7 +12,7 @@ export const triggerPlacementAnim = (
   dimensions: Dimensions
 ) => {
   const flare = (absoluteCoord: Coord, size = 1) => {
-    scene.audio.play("Whoosh", "sfx", { rate: 2 });
+    scene.audio.play("Impact", "sfx");
     scene.phaserScene.add
       .particles(absoluteCoord.x, absoluteCoord.y, "flare", {
         speed: 100,

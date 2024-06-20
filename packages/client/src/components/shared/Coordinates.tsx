@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
 import { FaSquare, FaLocationArrow } from "react-icons/fa";
 import { FaCropSimple, FaSquareXmark } from "react-icons/fa6";
-import { Coord } from "@primodiumxyz/engine/types";
+import { Coord } from "@primodiumxyz/game";
 import { useGame } from "@/hooks/useGame";
 import { usePersistentStore } from "@primodiumxyz/game/src/stores/PersistentStore";
 import { cn } from "@/util/client";
+import { SecondaryCard } from "@/components/core/Card";
 import { useCore } from "@primodiumxyz/core/react";
 import { Mode } from "@primodiumxyz/core";
 import { DepthLayers } from "@primodiumxyz/game";
@@ -23,15 +24,15 @@ export const Coordinates = () => {
 
   if (!asteroidMode && !starmapMode) return null;
   return (
-    <div
+    <SecondaryCard
       className={cn(
-        "absolute right-4 flex flex-col gap-1 items-end text-xs",
-        DEV ? "bottom-12 pointer-events-auto" : "bottom-2 pointer-events-none",
+        "flex m-2 flex-col gap-1 min-h-9 justify-center text-xs bg-secondary/15 p-0",
+        DEV ? "pointer-events-auto" : "bottom-2 pointer-events-none",
         uiScale < 0.7 && "text-[10px]"
       )}
     >
       {asteroidMode ? DEV ? <CoordsAsteroidDev /> : <CoordsAsteroid /> : <CoordsStarmap DEV={DEV} />}
-    </div>
+    </SecondaryCard>
   );
 };
 
@@ -44,7 +45,7 @@ export const CoordsAsteroid = () => {
     <div className="grid grid-cols-[12px_40px_48px] items-center gap-2 bg-black bg-opacity-30 p-2 rounded-sm">
       <FaSquareXmark opacity={0.7} />
       <CoordCaption caption="tile" />
-      <CoordDisplay coord={tileCoord} />
+      <CoordDisplay coord={{ x: tileCoord?.x ?? 0, y: tileCoord?.y ?? 0 }} />
     </div>
   );
 };
@@ -70,7 +71,7 @@ export const CoordsStarmap = ({ DEV }: { DEV: boolean }) => {
 
   if (DEV)
     return (
-      <div className="grid grid-cols-[12px_70px_minmax(100px,auto)] items-center gap-2 bg-black bg-opacity-70 p-2 rounded-sm">
+      <div className="grid grid-cols-[12px_70px_minmax(100px,auto)] items-center gap-2  p-2 rounded-sm">
         <FaLocationArrow opacity={0.7} />
         <CoordCaption caption="tile" />
         <CoordDisplay coord={tileCoord} />
@@ -84,7 +85,7 @@ export const CoordsStarmap = ({ DEV }: { DEV: boolean }) => {
     );
 
   return (
-    <div className="grid grid-cols-[12px_70px_minmax(100px,auto)] items-center gap-y-2 gap-x-4 bg-black bg-opacity-70 p-2 rounded-sm">
+    <div className="grid grid-cols-[12px_70px_minmax(100px,auto)] items-center gap-y-2 gap-x-4  p-2 rounded-sm">
       <FaLocationArrow opacity={0.7} className="min-w-[12px]" />
       <CoordCaption caption="coords" />
       <CoordDisplay coord={tileCoord} />
@@ -133,7 +134,7 @@ export const CoordsAsteroidDev = () => {
   }, []);
 
   return (
-    <div className="grid grid-cols-[12px_40px_48px] items-center gap-2 bg-black bg-opacity-30 p-2 rounded-sm">
+    <div className="grid grid-cols-[12px_40px_48px] items-center gap-2  p-2 rounded-sm">
       <FaSquareXmark opacity={0.7} />
       <CoordCaption caption="tile" />
       <CoordDisplay coord={tileCoord} />

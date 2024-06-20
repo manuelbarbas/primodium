@@ -15,6 +15,7 @@ export const initAsteroidScene = async (game: GlobalApi, core: Core, calls: Cont
   const scene = await game.createScene(asteroidSceneConfig, true);
 
   const sceneApi = createSceneApi(scene);
+  sceneApi.audio.setPauseOnBlur(false);
 
   setupMouseInputs(sceneApi, core);
   setupBasicCameraMovement(sceneApi, core.network.world);
