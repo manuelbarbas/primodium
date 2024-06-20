@@ -1,12 +1,5 @@
 import { ExecuteFunctions } from "@primodiumxyz/core";
-import {
-  defaultEntity,
-  AbiToSchema,
-  Entity,
-  ContractTable,
-  ContractTableDef,
-  Properties,
-} from "@primodiumxyz/reactive-tables";
+import { AbiToSchema, Entity, ContractTable, ContractTableDef, Properties } from "@primodiumxyz/reactive-tables";
 import {
   encodeEntity,
   encodeField,
@@ -14,7 +7,7 @@ import {
   StaticAbiType,
   uuid,
 } from "@primodiumxyz/reactive-tables/utils";
-import { Hex, padHex } from "viem";
+import { Hex } from "viem";
 
 export function createDevCalls({ execute }: ExecuteFunctions) {
   async function removeTable<tableDef extends ContractTableDef = ContractTableDef>(
@@ -39,12 +32,9 @@ export function createDevCalls({ execute }: ExecuteFunctions) {
     keys: Properties<AbiToSchema<ContractTable<tableDef>["metadata"]["abiKeySchema"]>>,
     newValues: Partial<Properties<ContractTable<tableDef>["propertiesSchema"]>>
   ) {
-    if (Object.entries(keys).length === 0) keys = { entity: padHex(defaultEntity, { size: 32 }) };
     const tableId = table.id as Hex;
-    console.log({ table });
 
     const schema = Object.keys(table.metadata.abiPropertiesSchema);
-    console.log({ schema, keys, keySchema: table.metadata.abiKeySchema });
     const key = encodeEntity(table.metadata.abiKeySchema, keys);
     Object.entries(newValues).forEach(async ([name, value]) => {
       const type = table.metadata.abiPropertiesSchema[name] as StaticAbiType;

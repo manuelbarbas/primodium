@@ -1,5 +1,5 @@
 import { useAccountClient, useCore } from "@primodiumxyz/core/react";
-import { useCallback, useMemo } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { createClient as createFaucetClient } from "@latticexyz/faucet";
 import { Hex, createWalletClient, fallback, formatEther, http } from "viem";
 import { createBurnerAccount as createMudBurnerAccount, transportObserver } from "@latticexyz/common";
@@ -38,28 +38,52 @@ export const useDripAccount = (): DripAccountHook => {
       const publicClient = network?.publicClient;
       if (!publicClient) return;
       if (faucet) {
-        console.info(`[Faucet] Balance is less than ${formatEther(minEth)}, dripping funds`);
+        console.info(`[Faucet] ${address.slice(0, 7)} Balance is less than ${formatEther(minEth)}, dripping funds`);
         await faucet.drip.mutate({ address: address });
         const balance = await publicClient.getBalance({ address });
-        console.info(`[Faucet] New balance: ${formatEther(balance)} ETH`);
+        console.info(`[Faucet] ${address.slice(0, 7)} New balance: ${formatEther(balance)} ETH`);
       } else if (externalWalletClient) {
         const amountToDrip = 10n * 10n ** 18n;
         await externalWalletClient.sendTransaction({ chain: config.chain, to: address, value: amountToDrip });
-        console.info(`[Dev Drip] Dripped ${formatEther(amountToDrip)} to ${address}`);
+        console.info(`[Dev Drip] Dripped ${formatEther(amountToDrip)} to ${address.slice(0, 7)}`);
       }
     },
     [externalWalletClient, faucet, network?.publicClient]
   );
 
+  const [playerBalance, setPlayerBalance] = useState<bigint | undefined>();
+
+  // Fast interval for when balance is less than minEth, slow interval otherwise
+  const fastInterval = 2 * 1000;
+  const slowInterval = 60 * 1000;
+
   const playerBalanceData = useBalance({
     address: playerAccount.address,
     chainId: config.chain.id,
-    query: { staleTime: 2000 },
+    query: { staleTime: 2000, refetchInterval: !playerBalance || playerBalance < minEth ? fastInterval : slowInterval },
   });
+
+  useEffect(() => {
+    setPlayerBalance(playerBalanceData.data?.value);
+  }, [playerBalanceData.data?.value]);
+
+  const [sessionBalance, setSessionBalance] = useState<bigint | undefined>();
   const sessionBalanceData = useBalance({
     address: sessionAccount?.address,
     chainId: config.chain.id,
-    query: { staleTime: 2000 },
+    query: {
+      staleTime: 2000,
+      refetchInterval: !sessionAccount
+        ? undefined
+        : !sessionBalance || sessionBalance < minEth
+        ? fastInterval
+        : slowInterval,
+    },
   });
+
+  useEffect(() => {
+    setSessionBalance(sessionBalanceData.data?.value);
+  }, [sessionBalanceData.data?.value]);
+
   return { playerBalanceData, sessionBalanceData, requestDrip };
 };
