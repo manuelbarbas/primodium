@@ -1,26 +1,22 @@
-import { Entity } from "@latticexyz/recs";
+import { Entity } from "@primodiumxyz/reactive-tables";
 import { InterfaceIcons, ResourceImages } from "@primodiumxyz/assets";
-import { Navigator } from "src/components/core/Navigator";
-import { components } from "@/network/components";
+import { Navigator } from "@/components/core/Navigator";
 import { IconLabel } from "@/components/core/IconLabel";
 import { Button } from "@/components/core/Button";
-import { EntityType, Mode } from "@/util/constants";
 import { TransactionQueueMask } from "@/components/shared/TransactionQueueMask";
-import { claimPrimodium, claimShardAsteroid } from "@/network/setup/contractCalls/claimPrimodium";
-import { formatResourceCount, formatTime } from "@/util/number";
-import { useShardAsteroid } from "@/hooks/primodium/useShardAsteroid";
-import { useMud } from "@/hooks/useMud";
-import { entityToShardData } from "@/util/name";
 import { SecondaryCard } from "@/components/core/Card";
 import { FaMinus, FaPlus } from "react-icons/fa";
 import { useState } from "react";
-import { useClaimPrimodium } from "@/hooks/primodium/useClaimPrimodium";
+import { useClaimPrimodium, useCore, useShardAsteroid } from "@primodiumxyz/core/react";
+import { EntityType, formatResourceCount, formatTime, Mode } from "@primodiumxyz/core";
+import { useContractCalls } from "@/hooks/useContractCalls";
 
 export const ShardButton: React.FC<{ shardEntity: Entity }> = ({ shardEntity }) => {
-  const mud = useMud();
+  const { tables } = useCore();
   const shardData = useShardAsteroid(shardEntity);
-  const ownedBy = components.OwnedBy.use(shardEntity)?.value;
-  const playerEntity = components.Account.use()?.value;
+  const { claimShardAsteroid } = useContractCalls();
+  const ownedBy = tables.OwnedBy.use(shardEntity)?.value;
+  const playerEntity = tables.Account.use()?.value;
   const ownedByPlayer = ownedBy === playerEntity;
 
   return (
@@ -60,7 +56,7 @@ export const ShardButton: React.FC<{ shardEntity: Entity }> = ({ shardEntity }) 
       {shardData && ownedByPlayer && shardData.canExplode && (
         <TransactionQueueMask queueItemId={"ClaimPrimodium" as Entity} className="w-full">
           <Button
-            onClick={() => claimShardAsteroid(mud, shardEntity)}
+            onClick={() => claimShardAsteroid(shardEntity)}
             className="w-full py-3 heropattern-topography-slate-100/10"
             variant="warning"
             size="content"
@@ -86,7 +82,7 @@ export const ShardButton: React.FC<{ shardEntity: Entity }> = ({ shardEntity }) 
       {shardData && !!ownedBy && !ownedByPlayer && shardData.canExplode && (
         <TransactionQueueMask queueItemId={"ClaimPrimodium" as Entity} className="w-full">
           <Button
-            onClick={() => claimShardAsteroid(mud, shardEntity)}
+            onClick={() => claimShardAsteroid(shardEntity)}
             className="w-full py-3 heropattern-topography-slate-100/10"
             variant="error"
             size="content"
@@ -106,11 +102,12 @@ export const ShardButton: React.FC<{ shardEntity: Entity }> = ({ shardEntity }) 
 };
 
 export const InitialScreen = ({ selectedRock }: { selectedRock: Entity }) => {
-  const playerEntity = components.Account.use()?.value;
-  const ownedBy = components.OwnedBy.use(selectedRock)?.value;
-  const isShard = components.ShardAsteroid.use(selectedRock)?.isShardAsteroid;
-  const shardDescription = entityToShardData(selectedRock)?.description;
-  const mud = useMud();
+  const { tables, utils } = useCore();
+  const { claimPrimodium } = useContractCalls();
+  const playerEntity = tables.Account.use()?.value;
+  const ownedBy = tables.OwnedBy.use(selectedRock)?.value;
+  const isShard = tables.ShardAsteroid.use(selectedRock)?.isShardAsteroid;
+  const shardDescription = utils.getShardData(selectedRock)?.description;
 
   const primodiumData = useClaimPrimodium(selectedRock);
   return (
@@ -126,7 +123,7 @@ export const InitialScreen = ({ selectedRock }: { selectedRock: Entity }) => {
             size="content"
             onClick={() => {
               if (!primodiumData.canConquer) return;
-              claimPrimodium(mud, selectedRock);
+              claimPrimodium(selectedRock);
             }}
           >
             {primodiumData.canConquer && (
@@ -162,7 +159,7 @@ export const InitialScreen = ({ selectedRock }: { selectedRock: Entity }) => {
         size="content"
         variant="neutral"
         onClick={() => {
-          components.SelectedMode.set({ value: Mode.CommandCenter });
+          tables.SelectedMode.set({ value: Mode.CommandCenter });
         }}
       >
         <div className="flex flex-start px-1 gap-3 w-full">
@@ -178,10 +175,10 @@ export const InitialScreen = ({ selectedRock }: { selectedRock: Entity }) => {
           size="content"
           variant="neutral"
           onClick={() => {
-            components.ActiveRock.set({ value: selectedRock });
+            tables.ActiveRock.set({ value: selectedRock });
             ownedBy === playerEntity
-              ? components.SelectedMode.set({ value: Mode.Asteroid })
-              : components.SelectedMode.set({ value: Mode.Spectate });
+              ? tables.SelectedMode.set({ value: Mode.Asteroid })
+              : tables.SelectedMode.set({ value: Mode.Spectate });
           }}
         >
           <div className="flex flex-start px-1 gap-3 w-full">

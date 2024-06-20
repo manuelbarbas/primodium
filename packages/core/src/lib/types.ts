@@ -8,7 +8,7 @@ import {
   PublicClient,
   WalletClient,
 } from "viem";
-import { createUtils } from "@/utils/core";
+import { createUtils } from "@/utils";
 import { createSync } from "@/sync";
 import { ContractWrite } from "@latticexyz/common";
 import { ReplaySubject, Subject } from "rxjs";
@@ -88,9 +88,20 @@ export type CreateNetworkResult = Omit<Recs<MudConfig, typeof otherTableDefs>, "
 } & WrapperResult<MudConfig, typeof otherTableDefs> & {
     tables: ContractTables<AllTableDefs<MudConfig, typeof otherTableDefs>> & SyncTables;
   };
+
 export type Tables = CreateNetworkResult["tables"] & ReturnType<typeof setupCoreTables>;
 export type Utils = ReturnType<typeof createUtils>;
 export type Sync = ReturnType<typeof createSync>;
+
+/**
+ * Core object
+ * @typedef {Object} Core
+ * @property {CoreConfig} config - Chain configuration. Default configurations can be found in the {@link chainConfigs object chainConfigs} object
+ * @property {CreateNetworkResult} network - Network configuration
+ * @property {Tables} tables - Tables contain data and methods to interact with game state. See [reactive tables](
+ * @property {Utils} utils - Utility functions
+ * @property {Sync} sync - Sync functions
+ */
 
 export type Core = {
   /**
@@ -98,9 +109,7 @@ export type Core = {
    */
   config: CoreConfig;
   network: CreateNetworkResult;
-  /**
-   * Tables contain data and methods to interact with game state. See [reactive tables](https://github.com/primodiumxyz/reactive-tables)
-   */
+  /** Tables contain data and methods to interact with game state. See [reactive tables](https://github.com/primodiumxyz/reactive-tables) */
   tables: Tables;
   utils: Utils;
   sync: Sync;
@@ -117,7 +126,8 @@ export type Clock = {
 /**
  * World Abi. Combination of IWorld abi and CallWithSignature abi.
  */
-export type WorldAbiType = ((typeof IWorldAbi)[number] | (typeof CallWithSignatureAbi)[number])[];
+
+export type WorldAbiType = typeof IWorldAbi & typeof CallWithSignatureAbi;
 
 type _Account<
   IsLocalAccount extends boolean = false,

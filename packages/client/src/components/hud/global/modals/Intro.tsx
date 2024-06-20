@@ -1,6 +1,6 @@
 import { SecondaryCard } from "@/components/core/Card";
 import { Modal } from "@/components/core/Modal";
-import { usePersistentStore } from "@/game/stores/PersistentStore";
+import { usePersistentStore } from "@primodiumxyz/game/src/stores/PersistentStore";
 import { InterfaceIcons } from "@primodiumxyz/assets";
 import { useEffect, useState } from "react";
 import { useShallow } from "zustand/react/shallow";

@@ -40,7 +40,7 @@ export function createAsteroidUtils(tables: Tables) {
    * @param asteroid entity of asteroid
    * @returns asteroid description
    * */
-  function getAsteroidDescription(asteroid: Entity): { type: string; size: string; primodium: bigint } {
+  function getAsteroidDescription(asteroid: Entity): { type: string; size: string } {
     const asteroidData = tables.Asteroid.get(asteroid);
 
     const asteroidResource = MapEntityLookup[asteroidData?.mapId ?? 0];
@@ -54,7 +54,6 @@ export function createAsteroidUtils(tables: Tables) {
     return {
       type: asteroidResource ? getEntityTypeName(asteroidResource) : "Common",
       size: asteroidSize ?? "Small",
-      primodium: asteroidData?.primodium ?? 0n,
     };
   }
 
@@ -141,11 +140,19 @@ export function createAsteroidUtils(tables: Tables) {
     return RockRelationship.Neutral;
   };
 
+  const getPlayerOwner = (entity: Entity) => {
+    const isFleet = tables.IsFleet.get(entity)?.value;
+    const owner = tables.OwnedBy.get(entity)?.value;
+    const rockEntity = isFleet ? owner : entity;
+    return tables.OwnedBy.get(rockEntity as Entity)?.value as Entity | undefined;
+  };
+
   return {
     getAsteroidName,
     getAsteroidDescription,
     getAsteroidInfo,
     isAsteroidBlocked,
     getRockRelationship,
+    getPlayerOwner,
   };
 }

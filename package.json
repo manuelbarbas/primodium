@@ -3,19 +3,20 @@
   "private": true,
   "scripts": {
     "build": "pnpm recursive run build",
+    "build:contracts": "pnpm --filter 'contracts' build",
     "clean": "bash clean.sh",
     "clean:indexer": "pnpm clean-local-docker-indexer",
     "clean:modules": "find . -name 'node_modules' -type d -prune -exec rm -rf '{}' + && find . -name 'pnpm-lock.yaml' -type f -prune -exec rm -rf '{}' +",
     "deploy:caldera": "pnpm --filter 'contracts' deploy:caldera",
     "deploy:caldera-sepolia": "pnpm --filter 'contracts' deploy:caldera-sepolia",
+    "deploy:local": "pnpm --filter 'contracts' deploy:local",
     "deploy:redstone-holesky": "pnpm --filter 'contracts' deploy:redstone-holesky",
-    "dev": "concurrently -n node,contracts,client,indexer -c yellow,cyan,magenta,red \"cd packages/contracts && pnpm run devnode\" \"cd packages/contracts && pnpm run deploy:local\" \"cd packages/client && pnpm run dev\" \"pnpm dev:indexer\"",
-    "dev:client": "pnpm --filter 'client' run dev",
-    "dev:contracts": "pnpm --filter 'contracts' deploy:local",
+    "dev": "run-pty % pnpm dev:client % pnpm dev:node % pnpm deploy:local % pnpm dev:indexer % pnpm dev:core",
+    "dev:client": "run-pty % pnpm --filter 'client' run dev % pnpm dev:core",
+    "dev:contracts": "run-pty % pnpm dev:node % pnpm deploy:local",
+    "dev:core": "pnpm --filter 'core' run dev",
     "dev:indexer": "pnpm clean-local-docker-indexer && pnpm local-docker-indexer",
     "dev:node": "pnpm --filter 'contracts' devnode",
-    "dev:playtest": "run-pty % pnpm dev:node % pnpm dev:contracts ",
-    "dev:pty": "run-pty % pnpm dev:client % pnpm dev:node % pnpm dev:contracts % pnpm dev:indexer ",
     "dev:vercel": "vercel dev --local-config packages/client/vercel-dev.json",
     "export:assets": "pnpm --filter 'assets' export",
     "export:audio": "pnpm --filter 'assets' export-audio",
@@ -42,7 +43,7 @@
     "husky": ">=6",
     "lint-staged": ">=10",
     "rimraf": "^3.0.2",
-    "run-pty": "4.0.4",
+    "run-pty": "^5.0.0",
     "semantic-release": "^24.0.0",
     "semantic-release-monorepo": "^8.0.2",
     "typescript": "5.5.0-beta"
@@ -50,10 +51,5 @@
   "engines": {
     "node": "18.x",
     "pnpm": "8.x"
-  },
-  "paths": {
-    "@primodiumxyz/core": [
-      "packages/core/src"
-    ]
   }
 }

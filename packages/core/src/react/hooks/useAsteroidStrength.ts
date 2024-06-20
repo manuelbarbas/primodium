@@ -20,8 +20,8 @@ export const useAsteroidStrength = (asteroid: Entity, force = false) => {
   const hangar = tables.Hangar.use(asteroid);
   return useMemo(() => {
     const unitDefense =
-      hangar?.units.reduce((acc, unit, i) => {
-        const count = hangar?.counts[i] ?? 0n;
+      hangar?.units?.reduce((acc, unit, i) => {
+        const count = hangar?.counts?.[i] ?? 0n;
         if (count == 0n) return acc;
         const unitLevel = tables.UnitLevel.getWithKeys({ entity: asteroid as Hex, unit: unit as Hex })?.value ?? 0n;
         const defense = tables.P_Unit.getWithKeys({ entity: unit as Hex, level: unitLevel })?.defense ?? 0n;

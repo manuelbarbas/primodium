@@ -25,9 +25,9 @@ import { Block, Hex, PublicClient, TransactionReceiptNotFoundError } from "viem"
 import { SyncTables } from "@/tables/syncTables";
 import { SyncStep } from "@/lib";
 
-export type Recs<config extends StoreConfig, extraTables extends ContractTableDefs> = WrapperResult<
-  config,
-  extraTables
+export type Recs<config extends StoreConfig, extraTables extends ContractTableDefs> = Omit<
+  WrapperResult<config, extraTables>,
+  "world"
 > & {
   latestBlock$: Observable<Block<bigint, false, "latest">>;
   latestBlockNumber$: Observable<bigint>;

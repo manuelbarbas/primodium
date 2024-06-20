@@ -10,7 +10,7 @@ import { Hex, encodeAbiParameters, isHex, keccak256, size, sliceHex, toHex } fro
  * @param namespace - The namespace of the system.
  * @returns The system ID.
  */
-export const getSystemId = (name: string, namespace = "Pri_11"): string => {
+export const getSystemId = (name: string, namespace = "Pri_11"): Hex => {
   return resourceToHex({ type: "system", name, namespace: namespace.toLowerCase() == "core" ? "" : namespace });
 };
 

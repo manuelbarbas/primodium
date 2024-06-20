@@ -1,16 +1,8 @@
 import { bigIntMax, bigIntMin } from "@latticexyz/common/utils";
-import { Entity } from "@latticexyz/recs";
-import { singletonEntity } from "@latticexyz/store-sync/recs";
+import { defaultEntity, Entity } from "@primodiumxyz/reactive-tables";
 import { EResource } from "contracts/config/enums";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import ReactDOM from "react-dom";
-import { useFullResourceCounts } from "src/hooks/useFullResourceCount";
-import { useUnitCounts } from "src/hooks/useUnitCount";
-import { components } from "src/network/components";
-import { ResourceEntityLookup, UnitStorages } from "src/util/constants";
-import { parseResourceCount } from "src/util/number";
-import { getFullResourceCount } from "src/util/resource";
-import { getFleetStatsFromUnits } from "src/util/unit";
 import { ResourceIcon } from "./ResourceIcon";
 import { TransferConfirm } from "./TransferConfirm";
 import { TransferPane } from "./TransferPane";
@@ -18,19 +10,22 @@ import { useTransfer } from "@/hooks/providers/TransferProvider";
 import { Button } from "@/components/core/Button";
 import { useGame } from "@/hooks/useGame";
 import { FaInfoCircle } from "react-icons/fa";
+import { useCore, useResourceCounts, useUnitCounts } from "@primodiumxyz/core/react";
+import { parseResourceCount, ResourceEntityLookup, UnitStorages } from "@primodiumxyz/core";
 
 const Transfer: React.FC = () => {
   const { left, right, hovering, setHovering, flash, deltas, setDeltas, moving, setMoving } = useTransfer();
+  const { tables, utils } = useCore();
 
-  const selectedRock = components.ActiveRock.use()?.value;
+  const selectedRock = tables.ActiveRock.use()?.value;
   if (!selectedRock) throw new Error("No selected rock");
 
-  const rightEntity = right === "newFleet" || right === undefined ? singletonEntity : right;
+  const rightEntity = right === "newFleet" || right === undefined ? defaultEntity : right;
 
   // Resources
-  const transportables = components.P_Transportables.use()?.value ?? [];
+  const transportables = tables.P_Transportables.use()?.value ?? [];
 
-  const rightInitialResourceCounts = useFullResourceCounts(rightEntity);
+  const rightInitialResourceCounts = useResourceCounts(rightEntity);
   const rightResourceCounts = useMemo(
     () =>
       transportables.reduce((acc, transportable) => {
@@ -38,12 +33,12 @@ const Transfer: React.FC = () => {
         const resourceCount = rightInitialResourceCounts.get(entity)?.resourceCount;
         const delta = deltas.get(entity) ?? 0n;
         const movingCount = moving?.side == "right" && moving?.entity === entity ? moving.count : 0n;
-        const maxAtStorageCapacity = components.Asteroid.has(rightEntity);
+        const maxAtStorageCapacity = tables.Asteroid.has(rightEntity);
         let total = (resourceCount ?? 0n) + delta - movingCount;
         if (total <= 0n) return acc;
 
         if (maxAtStorageCapacity) {
-          const storage = getFullResourceCount(entity, rightEntity).resourceStorage;
+          const storage = utils.getResourceCount(entity, rightEntity).resourceStorage;
           total = bigIntMin(storage, total);
         }
         acc.set(entity, total);
@@ -52,7 +47,7 @@ const Transfer: React.FC = () => {
     [rightInitialResourceCounts, deltas, moving]
   );
 
-  const leftInitialResourceCounts = useFullResourceCounts(left ?? singletonEntity);
+  const leftInitialResourceCounts = useResourceCounts(left ?? defaultEntity);
   const leftResourceCounts = useMemo(
     () =>
       transportables.reduce((acc, transportable) => {
@@ -64,8 +59,8 @@ const Transfer: React.FC = () => {
         let total = (resourceCount ?? 0n) - delta - movingCount;
         if (total <= 0n) return acc;
 
-        if (components.Asteroid.has(left)) {
-          const storage = getFullResourceCount(entity, left ?? singletonEntity).resourceStorage;
+        if (tables.Asteroid.has(left)) {
+          const storage = utils.getResourceCount(entity, left ?? defaultEntity).resourceStorage;
           total = bigIntMin(storage, total);
         }
 
@@ -136,10 +131,10 @@ const Transfer: React.FC = () => {
         newMap.set(moving.entity, (deltas.get(moving.entity) ?? 0n) + (moving.side === "right" ? -count : count));
         setDeltas(newMap);
       } else {
-        const recipientIsFleet = recipient === "newFleet" || !!components.IsFleet.get(recipient)?.value;
+        const recipientIsFleet = recipient === "newFleet" || !!tables.IsFleet.get(recipient)?.value;
 
         const fleetOwner = (
-          recipientIsFleet && recipient !== "newFleet" ? components.OwnedBy.get(recipient)?.value : undefined
+          recipientIsFleet && recipient !== "newFleet" ? tables.OwnedBy.get(recipient)?.value : undefined
         ) as Entity | undefined;
 
         let resourceStorage: bigint = 0n;
@@ -147,11 +142,11 @@ const Transfer: React.FC = () => {
 
         if (recipientIsFleet) {
           const unitCounts = moving.side === "left" ? rightUnitCounts : leftUnitCounts;
-          resourceStorage = getFleetStatsFromUnits(unitCounts, fleetOwner).cargo;
+          resourceStorage = utils.getFleetStatsFromUnits(unitCounts, fleetOwner).cargo;
           const resourceCounts = moving.side === "left" ? rightResourceCounts : leftResourceCounts;
           resourceCount = [...resourceCounts.entries()].reduce((acc, [, count]) => acc + count, 0n);
         } else {
-          resourceStorage = getFullResourceCount(moving.entity, recipient as Entity).resourceStorage;
+          resourceStorage = utils.getResourceCount(moving.entity, recipient as Entity).resourceStorage;
           const resourceCounts = moving.side === "left" ? rightResourceCounts : leftResourceCounts;
           resourceCount = resourceCounts.get(moving.entity) ?? 0n;
         }

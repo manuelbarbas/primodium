@@ -1,11 +1,11 @@
-import { Entity } from "@latticexyz/recs";
+import { Entity } from "@primodiumxyz/reactive-tables";
 import { InterfaceIcons } from "@primodiumxyz/assets";
-import { components } from "src/network/components";
 import { Hex } from "viem";
 import { ExpandObjective, ObjectiveReq } from "./types";
+import { Core } from "@primodiumxyz/core";
 
-export function getHasExpansion(asteroid: Entity, objective: ExpandObjective): ObjectiveReq {
-  const level = components.Level.getWithKeys({ entity: asteroid as Hex })?.value ?? 0n;
+export function getHasExpansion({ tables }: Core, asteroid: Entity, objective: ExpandObjective): ObjectiveReq {
+  const level = tables.Level.getWithKeys({ entity: asteroid as Hex })?.value ?? 0n;
 
   return {
     tooltipText: `Expand to Lvl ${objective.level}`,

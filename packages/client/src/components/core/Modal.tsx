@@ -1,8 +1,8 @@
 import { Button } from "@/components/core/Button";
 import { Card } from "@/components/core/Card";
-import { KeybindActionKeys } from "@/game/lib/constants/keybinds";
 import { useGame } from "@/hooks/useGame";
-import { components } from "@/network/components";
+import { useCore } from "@primodiumxyz/core/react";
+import { KeybindActionKeys } from "@primodiumxyz/game";
 import React, { ReactNode, createContext, useCallback, useContext, useEffect, useRef, useState } from "react";
 import ReactDOM from "react-dom";
 import { FaTimes } from "react-icons/fa";
@@ -39,6 +39,7 @@ export const Modal: React.FC<ModalProps> & {
   Content: React.FC<{ children: ReactNode; className?: string }>;
 } = ({ children, title, keybind, keybindClose, startOpen = false, onClose, blockClose = false }) => {
   const [isOpen, setIsOpen] = useState(startOpen);
+  const { tables } = useCore();
   const game = useGame();
   const {
     audio,
@@ -60,7 +61,7 @@ export const Modal: React.FC<ModalProps> & {
 
     if (isOpen) {
       game.GLOBAL.disableGlobalInput();
-      components.HoverEntity.remove(); // remove any hovered entity (probably displaying a tooltip)
+      tables.HoverEntity.remove(); // remove any hovered entity (probably displaying a tooltip)
     } else {
       game.GLOBAL.enableGlobalInput();
     }
@@ -84,7 +85,15 @@ export const Modal: React.FC<ModalProps> & {
   }, [isOpen, audio, keybind, keybindClose, addListener, game, handleClose]);
 
   return (
-    <ModalContext.Provider value={{ isOpen, handleClose, title, handleOpen: () => setIsOpen(true), blockClose }}>
+    <ModalContext.Provider
+      value={{
+        isOpen,
+        handleClose,
+        title,
+        handleOpen: () => setIsOpen(true),
+        blockClose,
+      }}
+    >
       {children}
     </ModalContext.Provider>
   );

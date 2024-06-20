@@ -1,0 +1,9 @@
+{
+  "extends": "../../.tsconfigs/bundler/dom/library-monorepo.json",
+  "compilerOptions": {
+    "paths": {
+      "@/*": ["./src/*"]
+    },
+  },
+  "exclude": ["node_modules", "dist"]
+}

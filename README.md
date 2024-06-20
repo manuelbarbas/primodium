@@ -203,7 +203,7 @@ feature locally with the Anvil development chain, do the following:
 2. Add the Anvil private key to the `PRI_DEV_PKEY` environment variable in the root directory.
    - Note that this is necessary for testing faucet drip for the external wallet in development because there is no
      faucet deployed locally for the local anvil chain.
-3. Set `noExternalWallet` to false in `client/src/network/config/getNetworkConfig.ts`
+3. Set `noExternalWallet` to false in `client/src/network/getCoreConfig.ts`
 
 See [here](https://github.com/primodiumxyz/primodium/pull/873) for more information on account authorization.
 

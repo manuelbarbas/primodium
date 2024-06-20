@@ -35,8 +35,8 @@ export function createLeaderboardUtils(tables: Tables) {
     const playerDatas: Record<Entity, FinalLeaderboardData> = {};
 
     // inject wormhole data
-    wormholeData?.players.forEach((player, index) => {
-      const wormholeRank = wormholeData.ranks[index];
+    wormholeData?.players?.forEach((player, index) => {
+      const wormholeRank = wormholeData.ranks?.[index] ?? 1;
       const retData = {
         player,
         wormholeRank,
@@ -47,8 +47,8 @@ export function createLeaderboardUtils(tables: Tables) {
     });
 
     // inject shard data
-    shardData?.players.forEach((player, index) => {
-      const shardRank = shardData.ranks[index];
+    shardData?.players?.forEach((player, index) => {
+      const shardRank = shardData.ranks?.[index] ?? 1;
       const retData = {
         player,
         shardRank,

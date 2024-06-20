@@ -1,61 +1,47 @@
-import { transportObserver } from "@latticexyz/common";
-import { useEffect, useMemo, useState } from "react";
 import { BrowserRouter, Navigate, Route, Routes, useLocation } from "react-router-dom";
-import { setupSessionAccount } from "src/network/systems/setupSessionAccount";
-import { createPublicClient, fallback, http } from "viem";
 import { Progress } from "./components/core/Progress";
-import { useMud } from "./hooks";
 import { useInit } from "./hooks/useInit";
-import { useSyncStatus } from "./hooks/useSyncStatus";
-import { getNetworkConfig } from "./network/config/getNetworkConfig";
 import { Enter } from "./screens/Enter";
 import { Game } from "./screens/Game";
 import { Increment } from "./screens/Increment";
 import { Sandbox } from "./screens/Sandbox";
 import { Statistics } from "./screens/Statistics";
-import { minEth } from "./util/constants";
-
-export const DEV = import.meta.env.PRI_DEV === "true";
-export const DEV_CHAIN = import.meta.env.PRI_CHAIN_ID === "dev";
+import { useUpdateSessionAccount } from "@/hooks/useUpdateSessionAccount";
+import { useEffect, useMemo } from "react";
+import { useAccountClient, useSyncStatus } from "@primodiumxyz/core/react";
+import { minEth } from "@primodiumxyz/core";
+import { useDripAccount } from "@/hooks/useDripAccount";
 
 export default function AppLoadingState() {
-  const mud = useMud();
-
-  const [balance, setBalance] = useState<bigint>();
-
-  useEffect(() => {
-    mud.removeSessionAccount();
-    setupSessionAccount(mud.playerAccount.entity, mud.removeSessionAccount, mud.updateSessionAccount);
-  }, [mud.playerAccount.entity]);
+  useUpdateSessionAccount();
+  const { playerBalanceData, sessionBalanceData, requestDrip } = useDripAccount();
+  const { sessionAccount, playerAccount } = useAccountClient();
 
   useEffect(() => {
-    const networkConfig = getNetworkConfig();
-    const clientOptions = {
-      chain: networkConfig.chain,
-      transport: transportObserver(fallback([http()])),
-    };
-    /* Since this system modifies mud.sessionAccount, it can't have mud as a dependency */
+    const sessionBalance = sessionBalanceData.data?.value;
+    if (!sessionAccount?.address || sessionBalanceData.isLoading || !sessionBalance || sessionBalance >= minEth) return;
+    console.log("dripping session account");
+    requestDrip(sessionAccount.address);
+  }, [sessionAccount?.address, sessionBalanceData.data?.value, sessionBalanceData.isLoading]);
 
-    const publicClient = createPublicClient(clientOptions);
+  useEffect(() => {
+    const playerBalance = playerBalanceData.data?.value;
+    if (sessionBalanceData.isLoading || !playerBalance || playerBalance >= minEth) return;
+    console.log("dripping player account");
+    requestDrip(playerAccount.address);
+  }, [playerAccount.address, sessionBalanceData.isLoading, playerBalanceData.data?.value]);
 
-    const updateBalance = setInterval(async () => {
-      if (DEV_CHAIN || (balance ?? 0n) > minEth) return;
-      const bal = await publicClient.getBalance({ address: mud.playerAccount.address });
-      setBalance(bal);
-    }, 1000);
-    return () => clearInterval(updateBalance);
-  }, [balance, mud.playerAccount.address, mud.playerAccount.publicClient]);
-
-  const { loading, message, progress, error } = useSyncStatus();
-
-  const enoughEth = useMemo(() => DEV_CHAIN || (balance ?? 0n) >= minEth, [balance]);
-  const ready = useMemo(() => !loading && enoughEth, [loading, enoughEth]);
-
+  const { loading, error, progress, message } = useSyncStatus();
+  const balanceReady = useMemo(() => {
+    const playerBalanceReady = (playerBalanceData.data?.value ?? 0n) >= minEth;
+    const sessionBalanceReady = !sessionAccount || (sessionBalanceData.data?.value ?? 0n) >= minEth;
+    return playerBalanceReady && sessionBalanceReady;
+  }, [loading, playerBalanceData, sessionAccount, sessionBalanceData]);
   return (
     <div className="h-screen relative">
       {!error && (
         <div className="relative">
-          {!loading && !enoughEth && (
+          {!loading && !balanceReady && (
             <div className="flex flex-col items-center justify-center h-screen text-white gap-4">
               <p className="text-lg text-white">
                 <span className="">Dripping Eth to Primodium account</span>
@@ -83,7 +69,7 @@ export default function AppLoadingState() {
               </div>
             </div>
           )}
-          {ready && (
+          {!loading && balanceReady && (
             <BrowserRouter>
               <PrimodiumRoutes />
             </BrowserRouter>
@@ -101,7 +87,7 @@ export default function AppLoadingState() {
   );
 }
 
-export const PrimodiumRoutes = () => {
+const PrimodiumRoutes = () => {
   const location = useLocation();
   const initialized = useInit();
 

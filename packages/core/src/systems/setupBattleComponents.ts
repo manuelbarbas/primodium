@@ -15,7 +15,7 @@ export const setupBattleComponents = (core: Core) => {
 
   tables.BattleResult.watch({
     world: systemWorld,
-    onUpdate: ({ entity, properties }) => {
+    onChange: ({ entity, properties }) => {
       const battleData = properties.current;
       if (!battleData) return RawBattle.remove(entity);
 

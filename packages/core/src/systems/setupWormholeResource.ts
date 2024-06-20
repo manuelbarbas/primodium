@@ -35,7 +35,7 @@ export const setupWormholeResource = async (core: Core) => {
   const systemWorld = namespaceWorld(world, "coreSystems");
   tables.Time.watch({
     world: systemWorld,
-    onUpdate: ({ properties }) => {
+    onChange: ({ properties }) => {
       const time = properties.current?.value;
       const wormholeData = tables.Wormhole.get();
       const wormholeConfig = tables.P_WormholeConfig.get();

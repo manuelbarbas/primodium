@@ -1,22 +1,25 @@
 import { useEffect, useState } from "react";
-import { useMud } from "src/hooks/useMud";
 
-import { usePlayerAsteroids } from "@/hooks/usePlayerAsteroids";
 import { YouDied } from "@/screens/YouDied";
-import { PrimodiumGame, initGame } from "@game/api";
-import { Progress } from "src/components/core/Progress";
-import { GameProvider } from "src/hooks/providers/GameProvider";
+import { initGame, PrimodiumGame } from "@primodiumxyz/game";
+import { Progress } from "@/components/core/Progress";
+import { GameProvider } from "@/hooks/providers/GameProvider";
 import { GameHUD } from "@/components/hud";
-import { WidgetProvider } from "src/hooks/providers/WidgetProvider";
+import { WidgetProvider } from "@/hooks/providers/WidgetProvider";
 import { CommandBackgroundEffect } from "@/screens/CommandBackgroundEffect";
 import { BackgroundParallaxEffect } from "@/screens/BackgroundParallaxEffect";
-import { useSyncStatus } from "@/hooks/useSyncStatus";
-import { Keys } from "@/util/constants";
+import { useSyncStatus, usePlayerAsteroids, useCore, useAccountClient } from "@primodiumxyz/core/react";
+import { Keys } from "@primodiumxyz/core";
+import { useContractCalls } from "@/hooks/useContractCalls";
 
 const params = new URLSearchParams(window.location.search);
 
 export const Game = () => {
-  const mud = useMud();
+  const core = useCore();
+  const calls = useContractCalls();
+  const {
+    playerAccount: { entity },
+  } = useAccountClient();
   const [game, setGame] = useState<PrimodiumGame | null>(null);
   const { loading: loadingSecondaryData } = useSyncStatus(Keys.SECONDARY);
 
@@ -34,7 +37,7 @@ export const Game = () => {
   const init = async () => {
     try {
       await destroy();
-      const pri = await initGame(params.get("version") ? params.get("version")! : "🔥");
+      const pri = await initGame(core, calls, params.get("version") ? params.get("version")! : "🔥");
       setGame(pri);
     } catch (e) {
       console.log(e);
@@ -43,15 +46,15 @@ export const Game = () => {
 
   useEffect(() => {
     if (!game) return;
-    game.runSystems(mud).primary();
-  }, [mud, game]);
+    game.runSystems().primary();
+  }, [core, game]);
 
   useEffect(() => {
     if (!game || loadingSecondaryData) return;
-    const { secondary, done } = game.runSystems(mud);
+    const { secondary, done } = game.runSystems();
     secondary();
     done();
-  }, [mud, game, loadingSecondaryData]);
+  }, [core, game, loadingSecondaryData]);
 
   useEffect(() => {
     init();
@@ -61,7 +64,8 @@ export const Game = () => {
     };
   }, []);
 
-  const isDead = usePlayerAsteroids(mud.playerAccount.entity).length === 0;
+  const isDead = usePlayerAsteroids(entity).length === 0;
+
   return (
     <div>
       {!game && (
@@ -78,12 +82,13 @@ export const Game = () => {
       <div id="game-container" className="screen-container">
         <div id="phaser-container" className="cursor-pointer screen-container absolute pointer-events-auto z-10"></div>
         {!!game && (
-          <GameProvider {...game}>
+          <GameProvider game={game}>
             <BackgroundParallaxEffect />
             <CommandBackgroundEffect />
             <WidgetProvider>
               <div className="relative z-20 pointer-events-none">
-                {isDead && <YouDied />} <GameHUD />
+                {isDead && <YouDied />}
+                <GameHUD />
               </div>
             </WidgetProvider>
           </GameProvider>

@@ -3,11 +3,11 @@ import { OwnedAsteroids } from "@/components/hud/starbelt/starmap-navigator/Owne
 import { OwnedColonyShips } from "@/components/hud/starbelt/starmap-navigator/OwnedColonyShips";
 import { OwnedFleets } from "@/components/hud/starbelt/starmap-navigator/OwnedFleets";
 import { Shards } from "@/components/hud/starbelt/starmap-navigator/Shards";
-import { usePersistentStore } from "@/game/stores/PersistentStore";
+import { usePersistentStore } from "@primodiumxyz/game/src/stores/PersistentStore";
 import { useGame } from "@/hooks/useGame";
-import { EntityType } from "@/util/constants";
-import { EntityToUnitImage } from "@/util/mappings";
+import { EntityToUnitImage } from "@/util/image";
 import { InterfaceIcons } from "@primodiumxyz/assets";
+import { EntityType } from "@primodiumxyz/core";
 import { useEffect, useRef, useState } from "react";
 import { useShallow } from "zustand/react/shallow";
 

@@ -17,11 +17,13 @@ export const useClaimPrimodium = (asteroidEntity: Entity) => {
   const time = tables.Time.use()?.value ?? 0n;
   const conquestConfig = tables.P_ConquestConfig.use();
   const gameConfig = tables.P_GameConfig.use();
+  const gameOver = tables.VictoryStatus.use()?.gameOver ?? false;
 
   return useMemo(() => {
+    if (gameOver) return null;
     if (points === 0n || !owner || !conquestConfig || !gameConfig) return null;
     const holdTime = (conquestConfig.holdTime * SPEED_SCALE) / gameConfig.worldSpeed;
     const timeUntilClaim = lastConquered + holdTime - time;
     return { canConquer: timeUntilClaim <= 0n, timeUntilClaim, points };
-  }, [conquestConfig, gameConfig, lastConquered, owner, points, time]);
+  }, [gameOver, conquestConfig, gameConfig, lastConquered, owner, points, time]);
 };

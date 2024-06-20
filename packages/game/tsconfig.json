@@ -1,0 +1,11 @@
+{
+  "extends": "../../.tsconfigs/bundler/dom/library-monorepo.json",
+  "compilerOptions": {
+    "paths": {
+      "@game/*": ["./src/*"],
+      "@client/*": ["../client/src/*"],
+    },
+  },
+  "references": [{ "path": "../client" }],
+  "exclude": ["node_modules", "dist"],
+}

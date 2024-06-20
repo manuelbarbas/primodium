@@ -21,7 +21,8 @@ export function usePlayerName(playerEntity: Entity, address?: boolean) {
 
   const [linkedAddress, setLinkedAddress] = useState<LinkedAddressResult>();
   const [loading, setLoading] = useState(true);
-  const allianceInfo = tables.PlayerAllianceInfo.use(playerEntity);
+  const alliance = tables.PlayerAlliance.get(playerEntity)?.alliance as Entity;
+  const allianceInfo = tables.Alliance.get(alliance);
   const allianceName = decodeAllianceName(allianceInfo?.name ?? "");
   const isPlayer = _isPlayer(playerEntity);
 
