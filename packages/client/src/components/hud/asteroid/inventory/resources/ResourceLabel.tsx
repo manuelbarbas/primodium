@@ -1,4 +1,4 @@
-import { defaultEntity, Entity } from "@primodiumxyz/reactive-tables";
+import { Entity } from "@primodiumxyz/reactive-tables";
 import { useMemo } from "react";
 import { Badge } from "@/components/core/Badge";
 import { ResourceIconTooltip } from "@/components/shared/ResourceIconTooltip";

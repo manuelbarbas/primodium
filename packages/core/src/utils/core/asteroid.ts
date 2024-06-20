@@ -40,7 +40,7 @@ export function createAsteroidUtils(tables: Tables) {
    * @param asteroid entity of asteroid
    * @returns asteroid description
    * */
-  function getAsteroidDescription(asteroid: Entity): { type: string; size: string; primodium: bigint } {
+  function getAsteroidDescription(asteroid: Entity): { type: string; size: string } {
     const asteroidData = tables.Asteroid.get(asteroid);
 
     const asteroidResource = MapEntityLookup[asteroidData?.mapId ?? 0];
@@ -54,7 +54,6 @@ export function createAsteroidUtils(tables: Tables) {
     return {
       type: asteroidResource ? getEntityTypeName(asteroidResource) : "Common",
       size: asteroidSize ?? "Small",
-      primodium: asteroidData?.primodium ?? 0n,
     };
   }
 
