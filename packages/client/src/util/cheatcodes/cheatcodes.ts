@@ -25,6 +25,7 @@ import {
 } from "@primodiumxyz/core";
 import { encodeEntity } from "@primodiumxyz/reactive-tables/utils";
 import { ContractCalls } from "@/contractCalls/createContractCalls";
+import { Cheatcode, Cheatcodes } from "@/components/hud/global/modals/dev/types";
 
 export const setupCheatcodes = (
   { tables, utils, config, network }: Core,
@@ -342,6 +343,7 @@ export const setupCheatcodes = (
               const start = Date.now();
               notify("info", `running cheatcode: ${name}`);
               // world speed
+              console.log("world speed");
               pack.worldSpeed &&
                 (await setTableValue(
                   tables.P_GameConfig,
@@ -352,10 +354,12 @@ export const setupCheatcodes = (
                 ));
 
               // spawn players
+              console.log("spawn");
               pack.players && (await spawnPlayers(pack.players));
 
               const activeAsteroid = tables.ActiveRock.get()?.value;
               if (!activeAsteroid) throw new Error("No active asteroid found");
+              console.log("resources");
               if (pack.resources) {
                 // provide resources
                 for (const [resource, count] of pack.resources.entries()) {
@@ -365,6 +369,7 @@ export const setupCheatcodes = (
 
                 notify("success", `${name}:Resources provided`);
               }
+              console.log("storages");
               if (pack.storages) {
                 // provide resources
                 for (const [resource, count] of pack.storages.entries()) {
@@ -383,12 +388,14 @@ export const setupCheatcodes = (
                 notify("success", `${name}:Resources provided`);
               }
               // provide units
+              console.log("units");
               if (pack.units) {
                 for (const [unit, count] of pack.units.entries()) {
                   await provideUnit(activeAsteroid, unit, BigInt(count));
                   await waitUntilTxQueueEmpty();
                 }
               }
+              console.log("mainbaselevel");
               if (pack.mainBaseLevel) {
                 const mainBase = tables.Home.get(activeAsteroid)?.value;
                 //upgrade main base
@@ -399,6 +406,7 @@ export const setupCheatcodes = (
                 notify("success", `${name}: Main Base Level set to ${pack.mainBaseLevel}`);
               }
               // upgrade expansion
+              console.log("expansion");
               if (pack.expansion) {
                 await setTableValue(
                   tables.Level,
@@ -411,6 +419,7 @@ export const setupCheatcodes = (
                 notify("success", `${name}:Expansion set to ${pack.expansion}`);
               }
               // build buildings
+              console.log("buildings");
               if (pack.buildings) {
                 const usedCoords: Coord[] = [];
                 for (const building of pack.buildings) {

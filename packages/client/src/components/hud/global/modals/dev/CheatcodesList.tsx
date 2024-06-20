@@ -123,7 +123,7 @@ export const CheatcodesList = ({ cheatcodes, className = "" }: { cheatcodes: Che
                     >
                       <h1 className="text-white opacity-90 font-bold text-sm">{camelCaseToCapitalized(funcName)}</h1>{" "}
                       {flatCheatcodes[funcName].params.length > 0 && (
-                        <div className="grid grid-cols-[max-content,1fr] gap-2">
+                        <div className="flex flex-col gap-2">
                           {flatCheatcodes[funcName].params.map((param, index) => {
                             return (
                               <div key={`param-input-${param.name}-${index}`} className="flex gap-3 items-center">

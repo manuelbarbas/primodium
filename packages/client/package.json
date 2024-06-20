@@ -19,6 +19,7 @@
     "@improbable-eng/grpc-web": "^0.15.0",
     "@latticexyz/common": "2.0.9",
     "@latticexyz/faucet": "2.0.9",
+    "@latticexyz/protocol-parser": "2.0.9",
     "@latticexyz/world": "2.0.9",
     "@primodiumxyz/assets": "workspace:*",
     "@primodiumxyz/core": "workspace:*",

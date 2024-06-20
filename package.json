@@ -11,7 +11,7 @@
     "deploy:local": "pnpm --filter 'contracts' deploy:local",
     "deploy:redstone-holesky": "pnpm --filter 'contracts' deploy:redstone-holesky",
     "dev": "run-pty % pnpm dev:client % pnpm dev:node % pnpm dev:contracts % pnpm dev:indexer % pnpm dev:core",
-    "dev:client": "pnpm --filter 'client' run dev",
+    "dev:client": "run-pty % pnpm --filter 'client' run dev % pnpm dev:core",
     "dev:contracts": "run-pty % pnpm dev:node % pnpm dev:contracts ",
     "dev:core": "pnpm --filter 'core' run dev",
     "dev:indexer": "pnpm clean-local-docker-indexer && pnpm local-docker-indexer",
