@@ -1,6 +1,6 @@
 import { HUD } from "@/components/core/HUD";
 import { StarmapNavigator } from "@/components/hud/starbelt/starmap-navigator/StarmapNavigator";
-import { usePersistentStore } from "@primodiumxyz/game/src/stores/persistentStore";
+import { usePersistentStore } from "@primodiumxyz/game/src/stores/PersistentStore";
 import { memo } from "react";
 import { useShallow } from "zustand/react/shallow";
 import { AsteroidMenuPopup } from "@/components/hud/starbelt/markers/AsteroidMenuPopup";

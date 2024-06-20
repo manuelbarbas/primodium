@@ -50,10 +50,5 @@
   "engines": {
     "node": "18.x",
     "pnpm": "8.x"
-  },
-  "paths": {
-    "@primodiumxyz/core": [
-      "packages/core/src"
-    ]
   }
 }
