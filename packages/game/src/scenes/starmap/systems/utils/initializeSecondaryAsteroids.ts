@@ -174,7 +174,7 @@ function getAsteroidData(
   } else if (distributionVal < asteroidThresholdProb.common2) {
     // common + advanced resources
     maxLevel = 3; // small
-    primodium = 2n * RESOURCE_SCALE;
+    primodium = 5n * RESOURCE_SCALE;
     mapId = EMap.Common;
   } else if (distributionVal < asteroidThresholdProb.eliteMicro) {
     // elite resources, micro
@@ -183,15 +183,15 @@ function getAsteroidData(
   } else if (distributionVal < asteroidThresholdProb.eliteSmall) {
     // elite resources, small
     maxLevel = 3;
-    primodium = 4n * RESOURCE_SCALE;
+    primodium = 6n * RESOURCE_SCALE;
   } else if (distributionVal < asteroidThresholdProb.eliteMedium) {
     // elite resources, medium
     maxLevel = 6;
-    primodium = 5n * RESOURCE_SCALE;
+    primodium = 10n * RESOURCE_SCALE;
   } else {
     // elite resources, large
     maxLevel = 8;
-    primodium = 5n * RESOURCE_SCALE;
+    primodium = 20n * RESOURCE_SCALE;
   }
 
   if (mapId != EMap.Common) {
