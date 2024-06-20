@@ -189,7 +189,13 @@ export const renderOverview = (scene: PrimodiumScene, core: Core) => {
         const progress = Number(timeTraveled) / Number(totaltime);
 
         if (progress >= 1) {
-          const fleet = scene.objects.fleet.get(transit) ?? renderFleet({ scene, entity: transit, tables });
+          const fleet =
+            scene.objects.fleet.get(transit) ??
+            renderFleet({ scene, entity: transit, tables }).onClick(() => {
+              tables.BattleTarget.set({
+                value: transit,
+              });
+            });
           const orbitRing = scene.objects.asteroid.get(movement.destination as Entity)?.getFleetsContainer();
 
           if (orbitRing && fleet) {
