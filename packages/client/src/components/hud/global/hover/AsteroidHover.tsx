@@ -90,7 +90,7 @@ export const AsteroidHover: React.FC<{ entity: Entity; hideResources?: boolean }
             </p>
             <SecondaryCard className="flex flex-row gap-1 p-1 text-xs items-center h-4 p-1">
               <img src={ResourceImages.Primodium} className={`pixel-images w-4 h-4`} />
-              {formatResourceCount(EntityType.Iron, desc.primodium, { short: true, showZero: true })}
+              {formatResourceCount(EntityType.Iron, claimConquerTime?.points ?? 0n, { short: true, showZero: true })}
             </SecondaryCard>
           </div>
         </div>
@@ -106,7 +106,7 @@ export const AsteroidHover: React.FC<{ entity: Entity; hideResources?: boolean }
         </div>
       </div>
 
-      {desc.primodium > 0n && !!claimConquerTime && (
+      {claimConquerTime && claimConquerTime.points > 0n && !!claimConquerTime && (
         <div className="flex bg-warning uppercase btn-warning font-bold text-sm justify-center items-center">
           CLAIM
           {!claimConquerTime.canConquer
