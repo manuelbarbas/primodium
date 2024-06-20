@@ -3,35 +3,34 @@ import { BattleAllies } from "@/components/hud/global/modals/battle-reports/Batt
 import { ResourceStatus } from "@/components/hud/global/modals/battle-reports/ResourceStatus";
 import { UnitStatus } from "@/components/hud/global/modals/battle-reports/UnitStatus";
 import { AccountDisplay } from "@/components/shared/AccountDisplay";
-import { EntityType } from "@/util/constants";
-import { Entity } from "@latticexyz/recs";
+import { Entity } from "@primodiumxyz/reactive-tables";
 import { InterfaceIcons } from "@primodiumxyz/assets";
 import { EObjectives } from "contracts/config/enums";
 import React, { useEffect } from "react";
-import { Navigator } from "src/components/core/Navigator";
-import { useMud } from "src/hooks";
-import { components } from "src/network/components";
-import { entityToFleetName, entityToRockName } from "src/util/name";
-import { formatResourceCount } from "src/util/number";
-import { makeObjectiveClaimable } from "src/util/objectives/makeObjectiveClaimable";
+import { Navigator } from "@/components/core/Navigator";
+import { makeObjectiveClaimable } from "@/util/objectives/makeObjectiveClaimable";
+import { useAccountClient, useCore } from "@primodiumxyz/core/react";
+import { entityToFleetName, entityToRockName, formatResourceCount, EntityType } from "@primodiumxyz/core";
 
 export const BattleDetails: React.FC<{
   battleEntity: Entity;
 }> = ({ battleEntity }) => {
+  const core = useCore();
+  const { tables } = core;
   const {
     playerAccount: { entity: playerEntity },
-  } = useMud();
-  const battle = components.Battle.use(battleEntity);
+  } = useAccountClient();
+  const battle = tables.Battle.use(battleEntity);
 
   const attackingPlayer = battle?.attackingPlayer as Entity;
   const defendingPlayer = battle?.defendingPlayer as Entity;
   const winningPlayer = battle?.winner === battle?.attacker ? attackingPlayer : defendingPlayer;
   const winnerIsAttacker = winningPlayer === attackingPlayer;
-  const attackerIsFleet = components.IsFleet.use(battle?.attacker);
-  const defenderIsFleet = components.IsFleet.use(battle?.defender);
+  const attackerIsFleet = tables.IsFleet.use(battle?.attacker);
+  const defenderIsFleet = tables.IsFleet.use(battle?.defender);
 
   useEffect(() => {
-    makeObjectiveClaimable(playerEntity, EObjectives.OpenBattleReport);
+    makeObjectiveClaimable(core, playerEntity, EObjectives.OpenBattleReport);
   }, []);
 
   if (!battle) return <></>;

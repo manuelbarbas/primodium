@@ -1,12 +1,12 @@
-import { singletonEntity } from "@latticexyz/store-sync/recs";
-import { components } from "@/network/components";
 import { LoadingOverlay } from "@/components/shared/LoadingOverlay";
-import { Keys } from "@/util/constants";
-import { hashEntities } from "@/util/encode";
+import { hashEntities, Keys } from "@primodiumxyz/core";
+import { useCore } from "@primodiumxyz/core/react";
+import { defaultEntity } from "@primodiumxyz/reactive-tables";
 
 export const AsteroidLoading = () => {
-  const systemsReady = components.SystemsReady.use()?.value ?? false;
-  const activeRock = components.ActiveRock.use()?.value ?? singletonEntity;
+  const { tables } = useCore();
+  const systemsReady = tables.SystemsReady.use()?.value ?? false;
+  const activeRock = tables.ActiveRock.use()?.value ?? defaultEntity;
   const syncId = hashEntities(Keys.ACTIVE, activeRock);
 
   return (

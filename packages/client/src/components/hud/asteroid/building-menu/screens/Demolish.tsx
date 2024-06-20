@@ -1,21 +1,18 @@
+import { useContractCalls } from "@/hooks/useContractCalls";
 import { useGame } from "@/hooks/useGame";
-import { EntityToResourceImage } from "@/util/mappings";
-import { Entity } from "@latticexyz/recs";
+import { EntityToResourceImage } from "@/util/image";
+import { ResourceType } from "@primodiumxyz/core";
+import { useBuildingInfo, useBuildingName, useCore } from "@primodiumxyz/core/react";
+import { Entity } from "@primodiumxyz/reactive-tables";
 import { useMemo } from "react";
-import { Button } from "src/components/core/Button";
-import { SecondaryCard } from "src/components/core/Card";
-import { IconLabel } from "src/components/core/IconLabel";
-import { Navigator } from "src/components/core/Navigator";
-import { useMud } from "src/hooks";
-import { useBuildingInfo } from "src/hooks/useBuildingInfo";
-import { useBuildingName } from "src/hooks/useBuildingName";
-import { components } from "src/network/components";
-import { demolishBuilding } from "src/network/setup/contractCalls/demolishBuilding";
-import { ResourceType } from "src/util/constants";
-import { getFullResourceCount } from "src/util/resource";
+import { Button } from "@/components/core/Button";
+import { SecondaryCard } from "@/components/core/Card";
+import { IconLabel } from "@/components/core/IconLabel";
+import { Navigator } from "@/components/core/Navigator";
 
 export const Demolish: React.FC<{ building: Entity }> = ({ building }) => {
-  const mud = useMud();
+  const { tables, utils } = useCore();
+  const { demolishBuilding } = useContractCalls();
 
   const name = useBuildingName(building);
   const {
@@ -26,7 +23,7 @@ export const Demolish: React.FC<{ building: Entity }> = ({ building }) => {
   if (!parentEntity) throw new Error("[Demolish] Building has no parentEntity");
   const blockingResource = production.find((production) => {
     if (production.type !== ResourceType.Utility) return false;
-    const { resourceCount } = getFullResourceCount(production.resource, parentEntity as Entity);
+    const { resourceCount } = utils.getResourceCount(production.resource, parentEntity as Entity);
     return resourceCount < production.amount;
   });
 
@@ -41,12 +38,12 @@ export const Demolish: React.FC<{ building: Entity }> = ({ building }) => {
       repeat: -1,
     });
     selectedBuildingObj?.setTint(0xff0000);
-    demolishBuilding(mud, building, () => {
+    demolishBuilding(building, () => {
       pendingAnim.destroy();
       selectedBuildingObj?.setAlpha(1);
       selectedBuildingObj?.clearTint();
     });
-    components.SelectedBuilding.remove();
+    tables.SelectedBuilding.remove();
   };
 
   const Content = useMemo(

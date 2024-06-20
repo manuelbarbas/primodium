@@ -1,34 +1,33 @@
-import { Entity } from "@latticexyz/recs";
-
+import { Entity, defaultEntity } from "@primodiumxyz/reactive-tables";
+import { ObjectiveEntityLookup } from "@primodiumxyz/core";
+import { useCore } from "@primodiumxyz/core/react";
 import { useMemo, useState } from "react";
 
-import { singletonEntity } from "@latticexyz/store-sync/recs";
-import { SecondaryCard } from "src/components/core/Card";
-import { components } from "src/network/components";
+import { SecondaryCard } from "@/components/core/Card";
 
 import { canShowObjective } from "@/util/objectives/objectiveRequirements";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
-import { Button } from "src/components/core/Button";
-import { ObjectiveEntityLookup } from "src/util/constants";
+import { Button } from "@/components/core/Button";
 import { Hex } from "viem";
 import { Objective } from "./Objective";
 
 export const UnclaimedObjectives: React.FC<{ highlight?: Entity }> = ({ highlight }) => {
+  const core = useCore();
+  const { tables } = core;
   const [currentPage, setCurrentPage] = useState(0);
   const itemsPerPage = 6;
-  const player = components.Account.use()?.value ?? singletonEntity;
-  const asteroidEntity = components.ActiveRock.use()?.value;
-  const time = components.Time.use()?.value;
+  const player = tables.Account.use()?.value ?? tables.Account.get()?.value ?? defaultEntity;
+  const asteroidEntity = tables.ActiveRock.use()?.value ?? tables.ActiveRock.get()?.value;
+  const time = tables.Time.use()?.value;
   const objectives = Object.values(ObjectiveEntityLookup);
 
   const filteredObjectiveEntities = useMemo(() => {
     if (!asteroidEntity) return [];
     return objectives.filter((objective) => {
-      const canShow = canShowObjective(player, objective);
+      const canShow = canShowObjective(core, player, objective);
 
       const claimed =
-        components.CompletedObjective.getWithKeys({ entity: player as Hex, objective: objective as Hex })?.value ??
-        false;
+        tables.CompletedObjective.getWithKeys({ entity: player as Hex, objective: objective as Hex })?.value ?? false;
 
       return canShow && !claimed;
     });
@@ -42,7 +41,7 @@ export const UnclaimedObjectives: React.FC<{ highlight?: Entity }> = ({ highligh
 
   const startIdx = currentPage * itemsPerPage + 1;
   const endIdx = Math.min(startIdx + itemsPerPage - 1, filteredObjectiveEntities.length);
-  if (!asteroidEntity || player === singletonEntity) return <></>;
+  if (!asteroidEntity || player === defaultEntity) return <></>;
 
   if (filteredObjectiveEntities.length === 0)
     return (

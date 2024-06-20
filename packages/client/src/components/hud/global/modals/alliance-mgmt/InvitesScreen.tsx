@@ -3,26 +3,21 @@ import { SecondaryCard } from "@/components/core/Card";
 import { Navigator } from "@/components/core/Navigator";
 import { Tooltip } from "@/components/core/Tooltip";
 import { TransactionQueueMask } from "@/components/shared/TransactionQueueMask";
-import { useMud } from "@/hooks";
-import { components } from "@/network/components";
-import { declineInvite, joinAlliance } from "@/network/setup/contractCalls/alliance";
-import { getAllianceName } from "@/util/alliance";
+import { useContractCalls } from "@/hooks/useContractCalls";
 import { copyToClipboard } from "@/util/clipboard";
-import { entityToColor } from "@/util/color";
-import { entityToAddress } from "@/util/common";
-import { TransactionQueueType } from "@/util/constants";
-import { hashEntities } from "@/util/encode";
-import { Entity } from "@latticexyz/recs";
+import { entityToAddress } from "@primodiumxyz/core";
+import { useAccountClient, useCore } from "@primodiumxyz/core/react";
+import { Entity } from "@primodiumxyz/reactive-tables";
 import { FaCheck, FaCopy, FaTimes } from "react-icons/fa";
 import AutoSizer from "react-virtualized-auto-sizer";
 import { FixedSizeList as List } from "react-window";
 
 // This screen is only accessible to players who are not in an alliance
 export const InvitesScreen: React.FC = () => {
-  const mud = useMud();
-  const playerEntity = mud.playerAccount.entity;
-  const invites = components.PlayerInvite.useAllWith({ target: playerEntity }) ?? [];
-  const maxAllianceMembers = components.P_AllianceConfig.get()?.maxAllianceMembers ?? 1n;
+  const { tables } = useCore();
+  const playerEntity = useAccountClient().playerAccount.entity;
+  const invites = tables.PlayerInvite.useAllWith({ target: playerEntity }) ?? [];
+  const maxAllianceMembers = tables.P_AllianceConfig.get()?.maxAllianceMembers ?? 1n;
 
   return (
     <Navigator.Screen
@@ -71,28 +66,32 @@ export const InvitesScreen: React.FC = () => {
 };
 
 const InviteItem = ({ index, entity, max }: { index: number; entity: Entity; max: bigint }) => {
-  const mud = useMud();
-  const playerInvite = components.PlayerInvite.get(entity);
-  const playerEntities = components.PlayerAlliance.getAllWith({
+  const { tables, utils } = useCore();
+  const { declineInvite, joinAlliance } = useContractCalls();
+  const playerInvite = tables.PlayerInvite.get(entity);
+  const playerEntities = tables.PlayerAlliance.getAllWith({
     alliance: playerInvite?.alliance,
   });
   const full = playerEntities.length >= Number(max);
 
   if (!playerInvite?.alliance) return null;
+
   return (
     <>
       <span>{index + 1}.</span>
       <div className="flex gap-2">
-        <span style={{ color: entityToColor(entity) }}>[{getAllianceName(playerInvite.alliance, true)}]</span>
+        <span style={{ color: utils.getEntityColor(entity) }}>
+          [{utils.getAllianceName(playerInvite.alliance, true)}]
+        </span>
         <span className="opacity-75">
           ({playerEntities.length} MEMBER{playerEntities.length > 1 ? "S" : ""})
         </span>
       </div>
-      <TransactionQueueMask queueItemId={hashEntities(TransactionQueueType.JoinAlliance, playerInvite.alliance)}>
+      <TransactionQueueMask queueItemId={`join-${playerInvite.alliance}`}>
         <Button
           tooltip={full ? "alliance full" : "accept"}
           className="btn-xs border-none !rounded-box text-success"
-          onClick={() => joinAlliance(mud, playerInvite.alliance)}
+          onClick={() => joinAlliance(playerInvite.alliance)}
           disabled={full}
         >
           <div className="flex gap-2">
@@ -100,11 +99,11 @@ const InviteItem = ({ index, entity, max }: { index: number; entity: Entity; max
           </div>
         </Button>
       </TransactionQueueMask>
-      <TransactionQueueMask queueItemId={hashEntities(TransactionQueueType.DeclineInvite, playerInvite.player)}>
+      <TransactionQueueMask queueItemId={`decline-${playerInvite.player}`}>
         <Button
           variant="ghost"
           className="btn-xs border-none !rounded-box text-error"
-          onClick={() => declineInvite(mud, playerInvite.player)}
+          onClick={() => declineInvite(playerInvite.player)}
         >
           <div className="flex gap-2">
             <FaTimes className="rounded-none" /> DECLINE

@@ -1,9 +1,8 @@
 import { Entity } from "@primodiumxyz/reactive-tables";
-import { reverseRecord } from "@/utils/global/common";
 import { toHex32 } from "@/utils/global/encode";
 import { resourceToHex } from "@latticexyz/common";
 import { DECIMALS } from "contracts/config/constants";
-import { EBuilding, EObjectives, EPointType, EResource, EUnit } from "contracts/config/enums";
+import { EObjectives, EUnit } from "contracts/config/enums";
 import { parseEther } from "viem";
 
 /** minimum eth required to get drip */

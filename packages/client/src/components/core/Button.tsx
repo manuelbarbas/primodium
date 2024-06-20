@@ -1,10 +1,9 @@
-import { components } from "@/network/components";
 import { Tooltip, TooltipDirection } from "@/components/core/Tooltip";
-import { KeybindActionKeys } from "@/game/lib/constants/keybinds";
 import { useGame } from "@/hooks/useGame";
 import { cn } from "@/util/client";
-import { getRandomRange } from "@/util/common";
 import { AudioKeys } from "@primodiumxyz/assets";
+import { getRandomRange } from "@primodiumxyz/core";
+import { KeybindActionKeys } from "@primodiumxyz/game";
 import { cva, type VariantProps } from "class-variance-authority";
 import { forwardRef, useCallback, useEffect } from "react";
 
@@ -110,7 +109,8 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
 
         props.onPointerEnter?.(e);
         // if the button is supposed to show a tooltip, remove the hover entity to not render its info as well
-        if (tooltip) components.HoverEntity.remove();
+        //TODOL i dont want to drill tables here
+        // if (tooltip) components.HoverEntity.remove()
       },
       [api.audio, mute, tooltip, props]
     );

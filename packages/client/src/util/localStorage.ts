@@ -1,5 +1,5 @@
 import { Hex } from "viem";
-import { STORAGE_PREFIX } from "./constants";
+import { STORAGE_PREFIX } from "@primodiumxyz/core";
 
 export function findEntriesWithPrefix(prefix: string = STORAGE_PREFIX) {
   // Array to hold the matched entries

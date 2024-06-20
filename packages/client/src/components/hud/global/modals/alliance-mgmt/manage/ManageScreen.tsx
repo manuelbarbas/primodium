@@ -4,33 +4,31 @@ import { Tabs } from "@/components/core/Tabs";
 import { AllianceJoinRequests } from "@/components/hud/global/modals/alliance-mgmt/manage/AllianceJoinRequests";
 import { AllianceSettings } from "@/components/hud/global/modals/alliance-mgmt/manage/AllianceSettings";
 import { Invite } from "@/components/hud/global/modals/alliance-mgmt/manage/Invite";
-import { useMud } from "@/hooks";
-import { useAllianceName } from "@/hooks/useAllianceName";
-import { components } from "@/network/components";
-import { entityToPlayerName } from "@/util/name";
-import { Entity } from "@latticexyz/recs";
+import { Entity } from "@primodiumxyz/reactive-tables";
 import { EAllianceRole } from "contracts/config/enums";
 import { FaAngleDoubleDown, FaAngleDoubleUp, FaDoorOpen, FaInfoCircle } from "react-icons/fa";
 import { GiRank1, GiRank2, GiRank3 } from "react-icons/gi";
 import { MemberItems } from "./MemberItems";
+import { useAccountClient, useAllianceName, useCore } from "@primodiumxyz/core/react";
+import { entityToPlayerName } from "@primodiumxyz/core";
 
 export const ManageScreen: React.FC = () => {
   /* ---------------------------------- STATE --------------------------------- */
-  const mud = useMud();
-  const playerEntity = mud.playerAccount.entity;
+  const { tables } = useCore();
+  const playerEntity = useAccountClient().playerAccount.entity;
 
   /* ----------------------------- ALLIANCE/PLAYER ---------------------------- */
-  const alliance = components.PlayerAlliance.use(playerEntity);
+  const alliance = tables.PlayerAlliance.use(playerEntity);
   const allianceEntity = alliance?.alliance as Entity;
   const allianceName = useAllianceName(allianceEntity, true);
-  const maxAllianceMembers = components.P_AllianceConfig.get()?.maxAllianceMembers ?? 1n;
+  const maxAllianceMembers = tables.P_AllianceConfig.get()?.maxAllianceMembers ?? 1n;
   const playerRole = alliance?.role ?? EAllianceRole.Member;
-  const players = components.PlayerAlliance.useAllWith({
+  const players = tables.PlayerAlliance.useAllWith({
     alliance: allianceEntity,
   })
     // sort by role
     .map((entity) => {
-      return { entity, name: entityToPlayerName(entity), ...components.PlayerAlliance.get(entity) };
+      return { entity, name: entityToPlayerName(entity), ...tables.PlayerAlliance.get(entity) };
     })
     .sort((a, b) => {
       return (a.role ?? EAllianceRole.Member) - (b.role ?? EAllianceRole.Member);

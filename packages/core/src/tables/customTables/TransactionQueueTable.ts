@@ -1,21 +1,9 @@
 import { useEffect, useState } from "react";
-import {
-  BaseTableMetadata,
-  createLocalTable,
-  Entity,
-  Metadata,
-  TableOptions,
-  Type,
-} from "@primodiumxyz/reactive-tables";
+import { BaseTableMetadata, createLocalTable, Entity, TableOptions, Type } from "@primodiumxyz/reactive-tables";
 import { CreateNetworkResult } from "@/lib/types";
+import { TxQueueOptions } from "@/tables/types";
 
-export type TxQueueOptions<M extends Metadata> = {
-  id: string;
-  force?: true;
-  metadata?: M;
-};
-
-export function createTransactionQueueTable<M extends BaseTableMetadata>(
+export function createTransactionQueueTable<M extends BaseTableMetadata = BaseTableMetadata>(
   { world }: CreateNetworkResult,
   options?: TableOptions<M>
 ) {
@@ -26,13 +14,14 @@ export function createTransactionQueueTable<M extends BaseTableMetadata>(
     world,
     {
       metadata: Type.OptionalString,
+      type: Type.OptionalString,
     },
     options
   );
 
   // Add a function to the queue
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  async function enqueue(fn: () => Promise<any>, options: TxQueueOptions<M>) {
+  async function enqueue(fn: () => Promise<any>, options: TxQueueOptions) {
     if (!options.force && table.has(options.id as Entity)) return;
 
     queue.push({
@@ -43,6 +32,7 @@ export function createTransactionQueueTable<M extends BaseTableMetadata>(
     table.set(
       {
         metadata: JSON.stringify(options?.metadata),
+        type: options.type,
       },
       options.id as Entity
     );
@@ -84,7 +74,7 @@ export function createTransactionQueueTable<M extends BaseTableMetadata>(
     return queue.length;
   }
 
-  function getMetadata(id: string): M | undefined {
+  function getMetadata(id: string): object | undefined {
     const index = getIndex(id);
     if (index === -1) return undefined;
     return JSON.parse(table.get(id as Entity)?.metadata || "");

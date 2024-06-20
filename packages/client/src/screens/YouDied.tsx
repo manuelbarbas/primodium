@@ -3,28 +3,27 @@ import { Card, SecondaryCard } from "@/components/core/Card";
 import { BattleDetails } from "@/components/hud/global/modals/battle-reports/BattleDetails";
 import { BattleButton, ErrorScreen, LoadingScreen } from "@/components/hud/global/modals/battle-reports/BattleReports";
 import { TransactionQueueMask } from "@/components/shared/TransactionQueueMask";
-import { spawn } from "@/network/setup/contractCalls/spawn";
-import { hydrateBattleReports } from "@/network/sync/indexer";
-import { Entity } from "@latticexyz/recs";
-import { singletonEntity } from "@latticexyz/store-sync/recs";
+import { useContractCalls } from "@/hooks/useContractCalls";
 import { InterfaceIcons } from "@primodiumxyz/assets";
 import { useEffect, useState } from "react";
-import { Navigator } from "src/components/core/Navigator";
-import { useMud } from "src/hooks";
-import { components } from "src/network/components";
+import { Navigator } from "@/components/core/Navigator";
+import { useCore, useAccountClient } from "@primodiumxyz/core/react";
+import { defaultEntity, Entity } from "@primodiumxyz/reactive-tables";
 
 export const YouDied = () => {
-  const mud = useMud();
+  const { tables, sync } = useCore();
+  const { spawn } = useContractCalls();
   const {
     playerAccount: { entity: playerEntity },
-  } = mud;
-  const battles = components.Battle.useAllPlayerBattles(playerEntity).sort((a, b) =>
-    Number(components.Battle.get(b)?.timestamp! - components.Battle.get(a)?.timestamp!)
+  } = useAccountClient();
+  const battles = tables.Battle.useAllPlayerBattles(playerEntity).sort((a, b) =>
+    Number(tables.Battle.get(b)?.timestamp! - tables.Battle.get(a)?.timestamp!)
   );
 
   useEffect(() => {
-    hydrateBattleReports(playerEntity, mud);
-  }, [playerEntity, mud]);
+    sync.syncBattleReports(playerEntity);
+  }, [playerEntity]);
+
   const BaseContent = () => (
     <Navigator.Screen title="YouDied" className="flex flex-col gap-6 px-8 z-[1000]">
       <h1 className="font-bold text-error">Ashes to ashes, dust to dust</h1>
@@ -36,8 +35,8 @@ export const YouDied = () => {
         </Navigator.NavButton>
       </div>
       <div className="w-full grid place-items-center">
-        <TransactionQueueMask queueItemId={singletonEntity}>
-          <Button variant="secondary" size="md" onClick={() => spawn(mud)} className="!w-56">
+        <TransactionQueueMask queueItemId={defaultEntity}>
+          <Button variant="secondary" size="md" onClick={() => spawn()} className="!w-56">
             Respawn
           </Button>
         </TransactionQueueMask>

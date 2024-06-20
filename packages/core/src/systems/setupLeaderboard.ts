@@ -40,7 +40,7 @@ export const setupLeaderboard = (core: Core) => {
 
   tables.Points.watch({
     world: systemWorld,
-    onUpdate: ({ entity: rawEntity, properties }) => {
+    onChange: ({ entity: rawEntity, properties }) => {
       const pointsValue = properties.current?.value ?? 0n;
       const { entity, pointType } = tables.Points.getEntityKeys(rawEntity);
 

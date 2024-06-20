@@ -15,7 +15,7 @@ export function setupTrainingQueues(core: Core) {
   // todo: create a component that tracks active asteroids (to be updated each second)
   tables.Time.watch({
     world: systemWorld,
-    onUpdate: () => {
+    onChange: () => {
       const activeRock = tables.ActiveRock.get()?.value;
       const selectedRock = SelectedRock.get()?.value;
       const parents: Entity[] = [];
@@ -28,7 +28,7 @@ export function setupTrainingQueues(core: Core) {
 
   tables.HoverEntity.watch({
     world: systemWorld,
-    onUpdate: ({ properties }) => {
+    onChange: ({ properties }) => {
       const hoverEntity = properties.current?.value;
       if (!hoverEntity || !tables.Asteroid.has(hoverEntity)) return;
 

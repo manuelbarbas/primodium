@@ -1,4 +1,4 @@
-import { formatNumber } from "src/util/number";
+import { formatNumber } from "@primodiumxyz/core";
 import { Tooltip } from "../core/Tooltip";
 
 type Props = {

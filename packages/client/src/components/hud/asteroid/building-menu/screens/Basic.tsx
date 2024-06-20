@@ -1,5 +1,5 @@
-import { Entity } from "@latticexyz/recs";
-import { Navigator } from "src/components/core/Navigator";
+import { Entity } from "@primodiumxyz/reactive-tables";
+import { Navigator } from "@/components/core/Navigator";
 import { Upgrade } from "../widgets/Upgrade";
 
 export const Basic: React.FC<{ building: Entity }> = ({ building }) => {

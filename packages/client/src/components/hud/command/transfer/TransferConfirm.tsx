@@ -1,23 +1,21 @@
 import { PushButton } from "@/components/core/PushButton";
-import { useMud } from "@/hooks";
 import { useTransfer } from "@/hooks/providers/TransferProvider";
-import { createFleet } from "@/network/setup/contractCalls/createFleet";
-import { transfer } from "@/network/setup/contractCalls/transfer";
-import { Entity } from "@latticexyz/recs";
-import { TransactionQueueMask } from "src/components/shared/TransactionQueueMask";
+import { useContractCalls } from "@/hooks/useContractCalls";
+import { Entity } from "@primodiumxyz/reactive-tables";
+import { TransactionQueueMask } from "@/components/shared/TransactionQueueMask";
 
 export const TransferConfirm = () => {
   const { left, right, setRight, deltas, setDeltas, errors } = useTransfer();
-  const mud = useMud();
+  const { createFleet, transfer } = useContractCalls();
   const disabled = !!errors["left"] || !!errors["right"] || deltas.size === 0;
   const newFleet = right === "newFleet";
 
   const handleSubmit = () => {
     if (!left || !right) return;
     if (newFleet) {
-      createFleet(mud, left, deltas);
+      createFleet(left, deltas);
       setRight(undefined);
-    } else transfer(mud, left, right, deltas);
+    } else transfer(left, right, deltas);
     setDeltas(new Map());
   };
 

@@ -2,14 +2,15 @@ import { Button } from "@/components/core/Button";
 import { SecondaryCard } from "@/components/core/Card";
 import { TextInput } from "@/components/core/TextInput";
 import { TransactionQueueMask } from "@/components/shared/TransactionQueueMask";
-import { useMud } from "@/hooks";
-import { invite } from "@/network/setup/contractCalls/alliance";
-import { Entity } from "@latticexyz/recs";
+import { useContractCalls } from "@/hooks/useContractCalls";
+import { toHex32 } from "@primodiumxyz/core";
+import { Entity } from "@primodiumxyz/reactive-tables";
 import { useState } from "react";
-import { Hex, isAddress, padHex } from "viem";
+import { isAddress } from "viem";
 
 export const Invite = () => {
-  const mud = useMud();
+  const { invite } = useContractCalls();
+
   const [friendCode, setFriendCode] = useState("");
 
   return (
@@ -20,10 +21,10 @@ export const Invite = () => {
         onChange={(e) => setFriendCode(e.target.value)}
         className="w-48 uppercase h-6 text-xs"
       />
-      <TransactionQueueMask queueItemId={"invite" as Entity}>
+      <TransactionQueueMask queueItemId={"invite"}>
         <Button
           variant="primary"
-          onClick={() => invite(mud, padHex(friendCode as Hex, { size: 32 }) as Entity)}
+          onClick={() => invite(toHex32(friendCode) as Entity)}
           className="btn-sm border-2 border-secondary"
           disabled={!friendCode || !isAddress(friendCode)}
         >

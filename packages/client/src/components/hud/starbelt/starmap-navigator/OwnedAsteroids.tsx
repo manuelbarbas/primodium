@@ -1,28 +1,22 @@
-import { EntityToResourceImage } from "@/util/mappings";
-import { useEntityQuery } from "@latticexyz/react";
-import { Entity, Has, HasValue } from "@latticexyz/recs";
-import { Button } from "src/components/core/Button";
-import { Card } from "src/components/core/Card";
+import { Button } from "@/components/core/Button";
+import { Card } from "@/components/core/Card";
 import { Badge } from "@/components/core/Badge";
-import { useMud } from "src/hooks";
-import { useAsteroidStrength } from "src/hooks/useAsteroidStrength";
-import { useFullResourceCount } from "src/hooks/useFullResourceCount";
-import { useGame } from "src/hooks/useGame";
-import { components } from "src/network/components";
-import { getAsteroidImage, getAsteroidInfo } from "src/util/asteroid";
-import { EntityType } from "src/util/constants";
-import { entityToRockName } from "src/util/name";
-import { formatResourceCount } from "src/util/number";
+import { Entity, useQuery } from "@primodiumxyz/reactive-tables";
+import { useAccountClient, useAsteroidStrength, useCore, useResourceCount } from "@primodiumxyz/core/react";
+import { useAsteroidImage } from "@/hooks/image/useAsteroidImage";
+import { entityToRockName, EntityType, formatResourceCount } from "@primodiumxyz/core";
+import { EntityToResourceImage } from "@/util/image";
+import { useGame } from "@/hooks/useGame";
 
 export const OwnedAsteroid: React.FC<{ className?: string; asteroid: Entity; onClick?: () => void }> = ({
   className,
   asteroid,
   onClick,
 }) => {
-  const game = useGame();
-  const imageUri = getAsteroidImage(game, asteroid);
-  const selected = components.SelectedRock.use()?.value === asteroid;
-  const { resourceCount: encryption, resourceStorage: maxEncryption } = useFullResourceCount(
+  const { tables } = useCore();
+  const imageUri = useAsteroidImage(asteroid);
+  const selected = tables.SelectedRock.use()?.value === asteroid;
+  const { resourceCount: encryption, resourceStorage: maxEncryption } = useResourceCount(
     EntityType.Encryption,
     asteroid
   );
@@ -64,17 +58,20 @@ export const OwnedAsteroid: React.FC<{ className?: string; asteroid: Entity; onC
 export const OwnedAsteroids: React.FC<{ className?: string }> = ({ className }) => {
   const {
     playerAccount: { entity: playerEntity },
-  } = useMud();
-
+  } = useAccountClient();
+  const { tables, utils } = useCore();
   const game = useGame();
-  const query = [HasValue(components.OwnedBy, { value: playerEntity }), Has(components.Asteroid)];
-  const asteroids = useEntityQuery(query);
+
+  const asteroids = useQuery({
+    with: [tables.Asteroid],
+    withProperties: [{ table: tables.OwnedBy, properties: { value: playerEntity } }],
+  });
 
   const handleSelectRock = (entity: Entity) => {
-    const { position } = getAsteroidInfo(game, entity);
+    const { position } = utils.getAsteroidInfo(entity);
     const { pan, zoomTo } = game.STARMAP.camera;
 
-    components.SelectedRock.set({ value: entity });
+    tables.SelectedRock.set({ value: entity });
 
     pan({
       x: position.x,

@@ -1,26 +1,29 @@
 import { Button } from "@/components/core/Button";
-import { EntityToResourceImage } from "@/util/mappings";
-import { Entity } from "@latticexyz/recs";
+import { Entity } from "@primodiumxyz/reactive-tables";
 import { EPointType } from "contracts/config/enums";
 import { useState } from "react";
-import { SecondaryCard } from "src/components/core/Card";
-import { Navigator } from "src/components/core/Navigator";
-import { NumberInput } from "src/components/core/NumberInput";
-import { TransactionQueueMask } from "src/components/shared/TransactionQueueMask";
-import { useMud } from "src/hooks";
-import { useFullResourceCount } from "src/hooks/useFullResourceCount";
-import { useWormholeBaseCooldown } from "src/hooks/wormhole/useWormholeBaseCooldown";
-import { components } from "src/network/components";
-import { wormholeDeposit } from "src/network/setup/contractCalls/wormholeDeposit";
-import { getEntityTypeName } from "src/util/common";
-import { EntityType, ResourceEnumLookup } from "src/util/constants";
-import { formatResourceCount, formatTime, parseResourceCount } from "src/util/number";
+import { SecondaryCard } from "@/components/core/Card";
+import { Navigator } from "@/components/core/Navigator";
+import { NumberInput } from "@/components/core/NumberInput";
+import { TransactionQueueMask } from "@/components/shared/TransactionQueueMask";
 import { Hex } from "viem";
 import { ExpandRange } from "../widgets/ExpandRange";
 import { Upgrade } from "../widgets/Upgrade";
+import { useAccountClient, useCore, useResourceCount, useWormholeBaseCooldown } from "@primodiumxyz/core/react";
+import {
+  EntityType,
+  formatResourceCount,
+  formatTime,
+  getEntityTypeName,
+  parseResourceCount,
+  ResourceEnumLookup,
+} from "@primodiumxyz/core";
+import { EntityToResourceImage } from "@/util/image";
+import { useContractCalls } from "@/hooks/useContractCalls";
 
 export const WormholeBase: React.FC<{ building: Entity }> = ({ building }) => {
-  const asteroid = components.OwnedBy.use(building)?.value as Entity;
+  const { tables } = useCore();
+  const asteroid = tables.OwnedBy.use(building)?.value as Entity;
   if (!asteroid) return null;
   return (
     <Navigator.Screen title={building} className="w-fit grid grid-rows-2 grid-cols-2 gap-1">
@@ -32,19 +35,21 @@ export const WormholeBase: React.FC<{ building: Entity }> = ({ building }) => {
 };
 
 const WormholeDeposit: React.FC<{ building: Entity; asteroid: Entity }> = ({ building, asteroid }) => {
+  const { tables } = useCore();
+  const { playerAccount } = useAccountClient();
+  const { wormholeDeposit } = useContractCalls();
   const [count, setCount] = useState<string>("0");
-  const mud = useMud();
-  const wormholeData = components.WormholeResource.use();
+  const wormholeData = tables.WormholeResource.use();
   if (!wormholeData) throw new Error("WormholeData not found");
   const { resource: wormholeResource, nextResource, timeUntilNextResource } = wormholeData;
-  const resourceData = useFullResourceCount(wormholeResource, asteroid);
+  const resourceData = useResourceCount(wormholeResource, asteroid);
   const { inCooldown, timeLeft } = useWormholeBaseCooldown(building);
-  const multiplier = components.P_PointMultiplier.useWithKeys({
+  const multiplier = tables.P_PointMultiplier.useWithKeys({
     resource: ResourceEnumLookup[wormholeResource],
   })?.value;
   const points =
-    components.Points.useWithKeys({
-      entity: mud.playerAccount.entity as Hex,
+    tables.Points.useWithKeys({
+      entity: playerAccount.entity as Hex,
       pointType: EPointType.Wormhole,
     })?.value ?? 0n;
   if (wormholeResource === EntityType.NULL) return null;
@@ -86,7 +91,7 @@ const WormholeDeposit: React.FC<{ building: Entity; asteroid: Entity }> = ({ bui
             size="sm"
             onClick={() => {
               // deposit wormhole resource
-              wormholeDeposit(mud, building, parseResourceCount(wormholeResource, count));
+              wormholeDeposit(building, parseResourceCount(wormholeResource, count));
               setCount("0");
             }}
           >

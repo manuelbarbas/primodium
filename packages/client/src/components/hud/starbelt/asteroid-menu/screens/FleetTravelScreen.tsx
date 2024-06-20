@@ -1,37 +1,29 @@
 import { Navigator } from "@/components/core/Navigator";
-import { components } from "@/network/components";
-import { useEntityQuery } from "@latticexyz/react";
-import { Entity, Has } from "@latticexyz/recs";
 import { SecondaryCard } from "@/components/core/Card";
 import { IconLabel } from "@/components/core/IconLabel";
 import { InterfaceIcons } from "@primodiumxyz/assets";
-import { entityToFleetName, entityToRockName } from "@/util/name";
 import React, { useMemo } from "react";
 import { EFleetStance } from "contracts/config/enums";
 import { Button } from "@/components/core/Button";
-import { getMoveLength } from "@/util/send";
-import { getFleetUnitCounts } from "@/util/unit";
-import { formatTime } from "@/util/number";
 import { FaInfoCircle } from "react-icons/fa";
 import { TransactionQueueMask } from "@/components/shared/TransactionQueueMask";
-import { hashEntities } from "@/util/encode";
-import { TransactionQueueType } from "@/util/constants";
-import { sendFleetPosition } from "@/network/setup/contractCalls/fleetSend";
-import { useMud } from "@/hooks";
-import { clearFleetStance } from "@/network/setup/contractCalls/fleetStance";
-import { isAsteroidBlocked } from "@/util/asteroid";
+import { Entity, useQuery } from "@primodiumxyz/reactive-tables";
+import { useCore } from "@primodiumxyz/core/react";
+import { entityToFleetName, entityToRockName, formatTime } from "@primodiumxyz/core";
+import { useContractCalls } from "@/hooks/useContractCalls";
 
 export const Fleet: React.FC<{ fleetEntity: Entity; playerEntity: Entity; selectedRock: Entity }> = ({
   fleetEntity,
   playerEntity,
   selectedRock,
 }) => {
-  const mud = useMud();
-  const movement = components.FleetMovement.use(fleetEntity);
-  const stance = components.FleetStance.use(fleetEntity);
-  const destPos = components.Position.use(selectedRock);
-  const fleetCooldown = components.CooldownEnd.use(fleetEntity)?.value ?? 0n;
-  const now = components.Time.use()?.value ?? 0n;
+  const { tables, utils } = useCore();
+  const { clearFleetStance, sendFleetPosition } = useContractCalls();
+  const movement = tables.FleetMovement.use(fleetEntity);
+  const stance = tables.FleetStance.use(fleetEntity);
+  const destPos = tables.Position.use(selectedRock);
+  const fleetCooldown = tables.CooldownEnd.use(fleetEntity)?.value ?? 0n;
+  const now = tables.Time.use()?.value ?? 0n;
   const inCooldown = fleetCooldown > now;
 
   const fleetStateText = useMemo(() => {
@@ -43,18 +35,18 @@ export const Fleet: React.FC<{ fleetEntity: Entity; playerEntity: Entity; select
   }, [stance]);
 
   const asteroidBlocked = useMemo(() => {
-    return isAsteroidBlocked(movement?.destination as Entity);
+    return utils.isAsteroidBlocked(movement?.destination as Entity);
   }, [now, movement]);
 
   const fleetETA = useMemo(() => {
-    const startPos = components.Position.get(movement?.destination as Entity);
-    const destPos = components.Position.get(selectedRock);
+    const startPos = tables.Position.get(movement?.destination as Entity);
+    const destPos = tables.Position.get(selectedRock);
 
-    return getMoveLength(
+    return utils.getMoveLength(
       startPos ?? { x: 0, y: 0 },
       destPos ?? { x: 0, y: 0 },
       playerEntity,
-      Object.fromEntries(getFleetUnitCounts(fleetEntity))
+      Object.fromEntries(utils.getFleetUnitCounts(fleetEntity))
     );
   }, [movement, playerEntity, selectedRock, fleetEntity]);
 
@@ -64,11 +56,11 @@ export const Fleet: React.FC<{ fleetEntity: Entity; playerEntity: Entity; select
     <SecondaryCard
       className="flex-row justify-between gap-10 items-center"
       onPointerEnter={() =>
-        components.HoverEntity.set({
+        tables.HoverEntity.set({
           value: fleetEntity,
         })
       }
-      onPointerLeave={() => components.HoverEntity.remove()}
+      onPointerLeave={() => tables.HoverEntity.remove()}
     >
       <div className="flex gap-2">
         <IconLabel imageUri={InterfaceIcons.Fleet} />
@@ -87,7 +79,7 @@ export const Fleet: React.FC<{ fleetEntity: Entity; playerEntity: Entity; select
         )}
         {stance?.stance && !inCooldown && (
           <TransactionQueueMask queueItemId={"FleetStance" as Entity}>
-            <Button size="sm" variant="info" onClick={() => clearFleetStance(mud, fleetEntity)}>
+            <Button size="sm" variant="info" onClick={() => clearFleetStance(fleetEntity)}>
               Clear Stance
             </Button>
           </TransactionQueueMask>
@@ -98,8 +90,8 @@ export const Fleet: React.FC<{ fleetEntity: Entity; playerEntity: Entity; select
           </Button>
         )}
         {!stance?.stance && !inCooldown && !asteroidBlocked && (
-          <TransactionQueueMask queueItemId={hashEntities(TransactionQueueType.SendFleet, fleetEntity)}>
-            <Button size="sm" variant="secondary" onClick={() => sendFleetPosition(mud, fleetEntity, destPos)}>
+          <TransactionQueueMask queueItemId={`send-${fleetEntity}`}>
+            <Button size="sm" variant="secondary" onClick={() => sendFleetPosition(fleetEntity, destPos)}>
               Travel
             </Button>
           </TransactionQueueMask>
@@ -112,39 +104,49 @@ export const Fleet: React.FC<{ fleetEntity: Entity; playerEntity: Entity; select
 };
 
 export const FleetTravelScreen: React.FC<{ selectedRock: Entity }> = ({ selectedRock }) => {
-  const query = [Has(components.IsFleet)];
-  const playerEntity = components.Account.use()?.value;
-  const fleets = useEntityQuery(query);
-  const time = components.Time.use()?.value ?? 0n;
+  const { tables, utils } = useCore();
+  const fleets = useQuery({ with: [tables.IsFleet] });
+  const playerEntity = tables.Account.use()?.value;
+  const time = tables.Time.use()?.value ?? 0n;
 
   const ownedFleetsSorted = useMemo(
     () =>
       fleets
         .filter((entity) => {
-          const ownedBy = components.OwnedBy.get(entity)?.value as Entity | undefined;
-          const rock = components.FleetMovement.get(entity)?.destination as Entity | undefined;
-          const selectedRock = components.SelectedRock.get()?.value;
+          const ownedBy = tables.OwnedBy.get(entity)?.value as Entity | undefined;
+          const rock = tables.FleetMovement.get(entity)?.destination as Entity | undefined;
+          const selectedRock = tables.SelectedRock.get()?.value;
           if (!rock || !ownedBy) return false;
           if (selectedRock === rock) return false;
-          const player = components.OwnedBy.get(ownedBy)?.value;
+          const player = tables.OwnedBy.get(ownedBy)?.value;
           return player === playerEntity;
         })
         .sort((a, b) => {
-          const aMovement = components.FleetMovement.get(a);
-          const bMovement = components.FleetMovement.get(b);
+          const aMovement = tables.FleetMovement.get(a);
+          const bMovement = tables.FleetMovement.get(b);
           const aDest = aMovement?.destination;
           const bDest = bMovement?.destination;
 
           if (!aDest || !bDest) return 0;
 
-          const aPos = components.Position.get(aDest as Entity);
-          const bPos = components.Position.get(bDest as Entity);
-          const destPos = components.Position.get(selectedRock);
+          const aPos = tables.Position.get(aDest as Entity);
+          const bPos = tables.Position.get(bDest as Entity);
+          const destPos = tables.Position.get(selectedRock);
 
           if (!playerEntity || !destPos || !aPos || !bPos) return 0;
 
-          const aLen = getMoveLength(aPos, destPos, playerEntity, Object.fromEntries(getFleetUnitCounts(a)));
-          const bLen = getMoveLength(bPos, destPos, playerEntity, Object.fromEntries(getFleetUnitCounts(b)));
+          const aLen = utils.getMoveLength(
+            aPos,
+            destPos,
+            playerEntity,
+            Object.fromEntries(utils.getFleetUnitCounts(a))
+          );
+          const bLen = utils.getMoveLength(
+            bPos,
+            destPos,
+            playerEntity,
+            Object.fromEntries(utils.getFleetUnitCounts(b))
+          );
 
           return aLen - bLen;
         }),
@@ -153,10 +155,10 @@ export const FleetTravelScreen: React.FC<{ selectedRock: Entity }> = ({ selected
 
   const orbitingFleets = useMemo(() => {
     return ownedFleetsSorted.filter((fleet) => {
-      const movement = components.FleetMovement.get(fleet);
-      const isEmpty = !!components.IsFleetEmpty.get(fleet)?.value;
-      const rock = components.FleetMovement.get(fleet)?.destination as Entity | undefined;
-      const selectedRock = components.SelectedRock.get()?.value;
+      const movement = tables.FleetMovement.get(fleet);
+      const isEmpty = !!tables.IsFleetEmpty.get(fleet)?.value;
+      const rock = tables.FleetMovement.get(fleet)?.destination as Entity | undefined;
+      const selectedRock = tables.SelectedRock.get()?.value;
       if (!rock) return false;
       if (selectedRock === rock) return false;
 

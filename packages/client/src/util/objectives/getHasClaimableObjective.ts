@@ -1,9 +1,13 @@
-import { Entity } from "@latticexyz/recs";
-import { components } from "src/network/components";
+import { Entity } from "@primodiumxyz/reactive-tables";
 import { ClaimableObjective, ObjectiveReq } from "./types";
+import { Core } from "@primodiumxyz/core";
 
-export const getHasClaimableObjective = (objectiveEntity: Entity, objective: ClaimableObjective): ObjectiveReq => {
-  const isClaimable = components.IsObjectiveClaimable.get(objectiveEntity);
+export const getHasClaimableObjective = (
+  { tables }: Core,
+  objectiveEntity: Entity,
+  objective: ClaimableObjective
+): ObjectiveReq => {
+  const isClaimable = tables.IsObjectiveClaimable.get(objectiveEntity);
   return {
     tooltipText: objective.tooltip,
     backgroundImage: objective.icon,

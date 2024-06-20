@@ -1,11 +1,12 @@
-import { Entity } from "@latticexyz/recs";
-import { Navigator } from "src/components/core/Navigator";
-import { components } from "src/network/components";
+import { Entity } from "@primodiumxyz/reactive-tables";
+import { Navigator } from "@/components/core/Navigator";
 import { ExpandRange } from "../widgets/ExpandRange";
 import { Upgrade } from "../widgets/Upgrade";
+import { useCore } from "@primodiumxyz/core/react";
 
 export const MainBase: React.FC<{ building: Entity }> = ({ building }) => {
-  const asteroid = components.OwnedBy.use(building)?.value;
+  const { tables } = useCore();
+  const asteroid = tables.OwnedBy.use(building)?.value;
   return (
     <Navigator.Screen title={building} className="w-fit gap-1">
       <Upgrade building={building} />

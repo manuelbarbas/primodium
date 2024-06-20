@@ -4,14 +4,10 @@ import { Navigator } from "@/components/core/Navigator";
 import { TextInput } from "@/components/core/TextInput";
 import { ALLIANCE_TAG_SIZE } from "@/components/hud/global/modals/alliance-mgmt/CreateScreen";
 import { TransactionQueueMask } from "@/components/shared/TransactionQueueMask";
-import { useMud } from "@/hooks";
-import { components } from "@/network/components";
-import { joinAlliance, requestToJoin } from "@/network/setup/contractCalls/alliance";
-import { getAllianceName } from "@/util/alliance";
+import { useContractCalls } from "@/hooks/useContractCalls";
 import { cn } from "@/util/client";
-import { TransactionQueueType } from "@/util/constants";
-import { hashEntities } from "@/util/encode";
-import { Entity } from "@latticexyz/recs";
+import { useAccountClient, useCore } from "@primodiumxyz/core/react";
+import { Entity } from "@primodiumxyz/reactive-tables";
 import { EAllianceInviteMode } from "contracts/config/enums";
 import { useMemo, useState } from "react";
 import { FaCheck, FaEnvelope, FaLock, FaPlus, FaSearch } from "react-icons/fa";
@@ -23,22 +19,23 @@ import { FixedSizeList as List } from "react-window";
 export const IndexScreen = () => {
   const {
     playerAccount: { entity: playerEntity },
-  } = useMud();
+  } = useAccountClient();
+  const { tables, utils } = useCore();
 
-  const allianceEntities = components.Alliance.useAll() as Entity[] | undefined;
-  const allianceNames = allianceEntities?.map((entity) => getAllianceName(entity, true));
+  const allianceEntities = tables.Alliance.useAll() as Entity[] | undefined;
+  const allianceNames = allianceEntities?.map((entity) => utils.getAllianceName(entity, true));
   const [searchTag, setSearchTag] = useState("");
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  const invites = components.PlayerInvite.useAllWith({ target: playerEntity }) ?? [];
+  const invites = tables.PlayerInvite.useAllWith({ target: playerEntity }) ?? [];
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  const joinRequests = components.AllianceRequest.useAllWith({ player: playerEntity }) ?? [];
+  const joinRequests = tables.AllianceRequest.useAllWith({ player: playerEntity }) ?? [];
 
   const alliances = useMemo(() => {
     const allAlliances = allianceEntities?.map((entity, i) => ({
       entity,
       name: allianceNames![i],
       // All players in the alliance
-      members: components.PlayerAlliance.getAllWith({ alliance: entity }),
+      members: tables.PlayerAlliance.getAllWith({ alliance: entity }),
       // Whether the player has been invited or requested to join this alliance
       invited: invites.some((invite: Entity) => invite.includes(entity.slice(0, 2))),
       requested: joinRequests.some((request: Entity) => request.includes(entity.slice(0, 2))),
@@ -152,8 +149,9 @@ const AllianceItem = ({
   className?: string;
   alreadyMember?: boolean;
 }) => {
-  const mud = useMud();
-  const allianceMode = components.Alliance.get(entity)?.inviteMode as EAllianceInviteMode | undefined;
+  const { tables } = useCore();
+  const { requestToJoin, joinAlliance } = useContractCalls();
+  const allianceMode = tables.Alliance.get(entity)?.inviteMode as EAllianceInviteMode | undefined;
   const inviteOnly = allianceMode === EAllianceInviteMode.Closed;
 
   return (
@@ -168,11 +166,11 @@ const AllianceItem = ({
           {alreadyMember ? (
             <span className="text-xs text-success">YOUR ALLIANCE</span>
           ) : (
-            <TransactionQueueMask queueItemId={hashEntities(TransactionQueueType.JoinAlliance, entity)}>
+            <TransactionQueueMask queueItemId={`join-${entity}`}>
               <Button
                 className="btn-xs"
                 onClick={() => {
-                  inviteOnly && !invited ? requestToJoin(mud, entity) : joinAlliance(mud, entity);
+                  inviteOnly && !invited ? requestToJoin(entity) : joinAlliance(entity);
                 }}
                 disabled={requested}
               >

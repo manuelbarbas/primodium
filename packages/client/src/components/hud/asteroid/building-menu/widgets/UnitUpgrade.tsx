@@ -1,22 +1,17 @@
-import { EntityToResourceImage, EntityToUnitImage } from "@/util/mappings";
-import { Entity } from "@latticexyz/recs";
+import { Entity } from "@primodiumxyz/reactive-tables";
 import { memo } from "react";
-import { Badge } from "src/components/core/Badge";
-import { Button } from "src/components/core/Button";
-import { SecondaryCard } from "src/components/core/Card";
-import { IconLabel } from "src/components/core/IconLabel";
-import { ResourceIconTooltip } from "src/components/shared/ResourceIconTooltip";
-import { TransactionQueueMask } from "src/components/shared/TransactionQueueMask";
-import { useMud } from "src/hooks";
-import { useHasEnoughResources } from "src/hooks/useHasEnoughResources";
-import { components } from "src/network/components";
-import { upgradeUnit } from "src/network/setup/contractCalls/upgradeUnit";
-import { getEntityTypeName } from "src/util/common";
-import { EntityType, ResourceType, TransactionQueueType, UnitEnumLookup } from "src/util/constants";
-import { hashEntities } from "src/util/encode";
-import { formatNumber, formatResourceCount } from "src/util/number";
-import { getUnitStatsLevel } from "src/util/unit";
-import { getUpgradeInfo } from "src/util/upgrade";
+import { Badge } from "@/components/core/Badge";
+import { Button } from "@/components/core/Button";
+import { SecondaryCard } from "@/components/core/Card";
+import { IconLabel } from "@/components/core/IconLabel";
+import { ResourceIconTooltip } from "@/components/shared/ResourceIconTooltip";
+import { TransactionQueueMask } from "@/components/shared/TransactionQueueMask";
+import { ResourceType, getEntityTypeName } from "@primodiumxyz/core";
+import { EntityToResourceImage } from "@/util/image";
+import { useCore, useHasEnoughResources } from "@primodiumxyz/core/react";
+import { formatNumber, formatResourceCount, EntityType, UnitEnumLookup } from "@primodiumxyz/core";
+import { EntityToUnitImage } from "@/util/image";
+import { useContractCalls } from "@/hooks/useContractCalls";
 
 export const RecipeDisplay: React.FC<{
   asteroid: Entity;
@@ -60,16 +55,17 @@ export const RecipeDisplay: React.FC<{
   );
 });
 export const UnitUpgrade: React.FC<{ unit: Entity }> = memo(({ unit }) => {
-  const mud = useMud();
+  const { tables, utils } = useCore();
+  const { upgradeUnit } = useContractCalls();
 
-  const asteroid = components.ActiveRock.use()?.value as Entity | undefined;
+  const asteroid = tables.ActiveRock.use()?.value ?? (tables.ActiveRock.get()?.value as Entity | undefined);
   if (!asteroid) throw new Error("No active rock entity found");
-  const mainBaseEntity = components.Home.use(asteroid)?.value as Entity;
-  const mainBaseLevel = components.Level.use(mainBaseEntity, {
+  const mainBaseEntity = tables.Home.use(asteroid)?.value as Entity;
+  const mainBaseLevel = tables.Level.use(mainBaseEntity, {
     value: 1n,
   }).value;
 
-  const { level, maxLevel, mainBaseLvlReq, recipe, isResearched } = getUpgradeInfo(unit, asteroid);
+  const { level, maxLevel, mainBaseLvlReq, recipe, isResearched } = utils.getUpgradeInfo(unit, asteroid);
 
   const hasEnough = useHasEnoughResources(recipe, asteroid);
   const canUpgrade = hasEnough && mainBaseLevel >= mainBaseLvlReq && !isResearched;
@@ -83,7 +79,7 @@ export const UnitUpgrade: React.FC<{ unit: Entity }> = memo(({ unit }) => {
     error = "reached max upgrade";
   }
 
-  const nextStats = getUnitStatsLevel(unit, level + 1n);
+  const nextStats = utils.getUnitLevelStats(unit, level + 1n);
   return (
     <SecondaryCard className="flex flex-col gap-4 p-6 justify-between items-center">
       <div className="flex gap-1 absolute top-2 left-1/2 -translate-x-1/2">
@@ -102,7 +98,7 @@ export const UnitUpgrade: React.FC<{ unit: Entity }> = memo(({ unit }) => {
         text={getEntityTypeName(unit)}
       />
       <div className="grid grid-cols-6 gap-2 border-y border-cyan-400/30 mx-auto">
-        {Object.entries(getUnitStatsLevel(unit, level)).map(([name, value]) => {
+        {Object.entries(utils.getUnitLevelStats(unit, level)).map(([name, value]) => {
           const increase = level === maxLevel ? 0n : nextStats[name as keyof typeof nextStats] - value;
           return (
             <div key={name} className="flex flex-col items-center">
@@ -121,11 +117,11 @@ export const UnitUpgrade: React.FC<{ unit: Entity }> = memo(({ unit }) => {
       </div>
 
       <RecipeDisplay asteroid={asteroid} recipe={recipe} />
-      <TransactionQueueMask queueItemId={hashEntities(TransactionQueueType.Upgrade, unit)}>
+      <TransactionQueueMask queueItemId={`upgrade-${unit}`}>
         <Button
           className="btn-sm btn-secondary"
           disabled={!canUpgrade}
-          onClick={() => upgradeUnit(mud, asteroid, UnitEnumLookup[unit])}
+          onClick={() => upgradeUnit(asteroid, UnitEnumLookup[unit])}
         >
           Upgrade
         </Button>
