@@ -7,7 +7,7 @@ import { Intro } from "@/components/hud/global/modals/Intro";
 import { FavoriteAsteroids } from "@/components/hud/global/FavoriteAsteroids";
 import { WarshipPopulation } from "@/components/hud/global/WarshipPopulation";
 import { BrandingLabel } from "@/components/shared/BrandingLabel";
-import { usePersistentStore } from "@game/stores/PersistentStore";
+import { usePersistentStore } from "@primodiumxyz/game/src/stores/PersistentStore";
 import { memo } from "react";
 import { useShallow } from "zustand/react/shallow";
 import { HoverInfo } from "@/components/hud/global/hover/HoverInfo";

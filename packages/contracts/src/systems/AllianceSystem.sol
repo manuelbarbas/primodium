@@ -7,6 +7,8 @@ import { LibAlliance } from "libraries/LibAlliance.sol";
 import { EAllianceInviteMode, EAllianceRole } from "src/Types.sol";
 import { addressToEntity } from "src/utils.sol";
 
+import { LibAllianceRegistry } from "libraries/LibAllianceRegistry.sol";
+
 contract AllianceSystem is PrimodiumSystem {
   /**
    * @dev try to join an alliance
@@ -22,7 +24,9 @@ contract AllianceSystem is PrimodiumSystem {
    * @param allianceInviteMode the invite mode of the alliance
    */
   function create(bytes32 name, EAllianceInviteMode allianceInviteMode) public returns (bytes32 allianceEntity) {
-    return LibAlliance.create(_player(), name, allianceInviteMode);
+    allianceEntity = LibAlliance.create(_player(), name, allianceInviteMode);
+    LibAllianceRegistry.add(allianceEntity);
+    return allianceEntity;
   }
 
   function setAllianceName(bytes32 entity, bytes32 newName) public {

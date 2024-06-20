@@ -6,8 +6,9 @@ import { addressToEntity } from "src/utils.sol";
 
 import { EResource, EUnit } from "src/Types.sol";
 import { UnitKey } from "src/Keys.sol";
+import { RESOURCE_SCALE } from "src/constants.sol";
 
-import { MaxColonySlots, LastConquered, OwnedBy, UnitCount, ProductionRate, CooldownEnd, P_ColonyShipConfig, GracePeriod, P_Unit, FleetMovement, P_EnumToPrototype, ResourceCount, P_Transportables, ResourceCount, P_UnitPrototypes, FleetMovement, IsFleet, UnitLevel, Home } from "codegen/index.sol";
+import { MaxColonySlots, LastConquered, OwnedBy, UnitCount, ProductionRate, CooldownEnd, P_ColonyShipConfig, GracePeriod, P_Unit, FleetMovement, P_EnumToPrototype, ResourceCount, P_Transportables, ResourceCount, P_UnitPrototypes, FleetMovement, IsFleet, UnitLevel, Home, ReversePosition } from "codegen/index.sol";
 
 import { LibCombatAttributes } from "libraries/LibCombatAttributes.sol";
 import { LibCombat } from "libraries/LibCombat.sol";
@@ -24,6 +25,8 @@ contract CombatEncryptionTest is PrimodiumTest {
   bytes32 eveHomeAsteroid;
   bytes32 eveEntity;
 
+  bytes32 wormholeAsteroid;
+
   function setUp() public override {
     super.setUp();
     aliceEntity = addressToEntity(alice);
@@ -32,6 +35,11 @@ contract CombatEncryptionTest is PrimodiumTest {
     bobHomeAsteroid = spawn(bob);
     eveEntity = addressToEntity(eve);
     eveHomeAsteroid = spawn(eve);
+    // generate wormhole asteroid
+    wormholeAsteroid = ReversePosition.get(
+      findWormholeAsteroid(aliceHomeAsteroid).x,
+      findWormholeAsteroid(aliceHomeAsteroid).y
+    );
   }
 
   function testFleetAttackAsteroidEncryption() public {
@@ -297,7 +305,7 @@ contract CombatEncryptionTest is PrimodiumTest {
     bytes32[] memory unitPrototypes = P_UnitPrototypes.get();
 
     uint256[] memory unitCounts = new uint256[](unitPrototypes.length);
-    uint256 numberOfUnits = 10;
+    uint256 numberOfUnits = 100;
 
     //create fleet with 10 minuteman marine
     bytes32 minuteman = P_EnumToPrototype.get(UnitKey, uint8(EUnit.MinutemanMarine));
@@ -397,6 +405,181 @@ contract CombatEncryptionTest is PrimodiumTest {
       encryption - decryption + ProductionRate.get(bobHomeAsteroid, uint8(EResource.R_Encryption)) * 5,
       "encryption should recovered by production"
     );
+
+    console.log("end");
+  }
+
+  function testFleetConquerOnlyColonyShips() public {
+    bytes32[] memory unitPrototypes = P_UnitPrototypes.get();
+
+    uint256[] memory unitCounts = new uint256[](unitPrototypes.length);
+    uint256 numberOfUnits = 1;
+
+    bytes32 colonyShipPrototype = P_EnumToPrototype.get(UnitKey, uint8(EUnit.ColonyShip));
+
+    vm.startPrank(creator);
+    // buff colony ship so that it won't get destroyed in battle
+    P_Unit.setAttack(colonyShipPrototype, 0, 100000 * RESOURCE_SCALE);
+    P_Unit.setHp(colonyShipPrototype, 0, 100000 * RESOURCE_SCALE);
+    uint256 decryption = P_ColonyShipConfig.getDecryption();
+
+    // Add colony slot to account for the colony ship about to be created
+    LibColony.increaseMaxColonySlots(aliceEntity);
+    vm.stopPrank();
+
+    for (uint256 i = 0; i < unitPrototypes.length; i++) {
+      if (unitPrototypes[i] == colonyShipPrototype) unitCounts[i] = 1;
+    }
+
+    //create fleet with 1 iron
+    uint256[] memory resourceCounts = new uint256[](P_Transportables.length());
+
+    //provide resource and unit requirements to create one fleet
+    setupCreateFleet(alice, aliceHomeAsteroid, unitCounts, resourceCounts);
+
+    vm.startPrank(alice);
+    bytes32 fleetEntity = world.Pri_11__createFleet(aliceHomeAsteroid, unitCounts, resourceCounts);
+    console.log("number of colony ships:", UnitCount.get(fleetEntity, colonyShipPrototype));
+    vm.stopPrank();
+
+    vm.startPrank(alice);
+    world.Pri_11__sendFleet(fleetEntity, bobHomeAsteroid);
+    vm.warp(FleetMovement.getArrivalTime(fleetEntity));
+    vm.stopPrank();
+
+    vm.startPrank(creator);
+    GracePeriod.set(bobHomeAsteroid, block.timestamp);
+    vm.stopPrank();
+
+    upgradeMainBase(bob);
+    upgradeMainBase(bob);
+    upgradeMainBase(bob);
+
+    vm.startPrank(creator);
+    ResourceCount.set(bobHomeAsteroid, uint8(EResource.R_Encryption), decryption);
+
+    console.log("asteroid hp before attack: %s", ResourceCount.get(bobHomeAsteroid, uint8(EResource.R_HP)));
+    uint256 initAsteroidHp = ResourceCount.get(bobHomeAsteroid, uint8(EResource.R_HP));
+    console.log(
+      "asteroid encryption before attack: %s",
+      ResourceCount.get(bobHomeAsteroid, uint8(EResource.R_Encryption))
+    );
+
+    vm.startPrank(alice);
+    world.Pri_11__attack(fleetEntity, bobHomeAsteroid);
+    vm.stopPrank();
+
+    console.log(
+      "encryption: %s decryption: %s",
+      ResourceCount.get(bobHomeAsteroid, uint8(EResource.R_Encryption)),
+      decryption
+    );
+
+    assertEq(OwnedBy.get(bobHomeAsteroid), aliceEntity, "asteroid should have been taken over");
+
+    console.log("end");
+  }
+
+  function testColonyShipConquerWormhole() public {
+    console.log("start");
+
+    vm.startPrank(creator);
+    if (wormholeAsteroid == bytes32(0)) {
+      wormholeAsteroid = world.Pri_11__createSecondaryAsteroid(findWormholeAsteroid(aliceHomeAsteroid));
+    }
+    vm.stopPrank();
+
+    bytes32[] memory unitPrototypes = P_UnitPrototypes.get();
+
+    uint256[] memory unitCounts = new uint256[](unitPrototypes.length);
+    uint256 numberOfUnits = 10000;
+
+    bytes32 minuteman = P_EnumToPrototype.get(UnitKey, uint8(EUnit.MinutemanMarine));
+    bytes32 colonyShipPrototype = P_EnumToPrototype.get(UnitKey, uint8(EUnit.ColonyShip));
+    uint256 decryption = P_ColonyShipConfig.getDecryption();
+
+    console.log("decryption: %s", decryption);
+    for (uint256 i = 0; i < unitPrototypes.length; i++) {
+      if (unitPrototypes[i] == colonyShipPrototype) unitCounts[i] = 1;
+    }
+    uint256[] memory resourceCounts = new uint256[](P_Transportables.length());
+
+    uint256 encryption = ResourceCount.get(wormholeAsteroid, uint8(EResource.R_Encryption));
+    console.log("encryption: %s", encryption);
+    uint256 fleetCountToWin = LibMath.divideCeil(encryption, decryption);
+
+    bytes32[] memory fleetEntities = new bytes32[](fleetCountToWin);
+    require(fleetCountToWin > 0, "should have at least 1 fleet to win");
+
+    for (uint256 i = 0; i < fleetCountToWin; i++) {
+      console.log("create fleet %s", i);
+
+      // Add 1 colony slot to account for the colony ship about to be created
+      vm.startPrank(creator);
+      LibColony.increaseMaxColonySlots(aliceEntity);
+      vm.stopPrank();
+
+      setupCreateFleet(alice, aliceHomeAsteroid, unitCounts, resourceCounts);
+
+      vm.startPrank(alice);
+      fleetEntities[i] = world.Pri_11__createFleet(aliceHomeAsteroid, unitCounts, resourceCounts);
+      vm.stopPrank();
+      console.log("create fleet done %s", i);
+    }
+
+    for (uint256 i = 0; i < unitPrototypes.length; i++) {
+      if (unitPrototypes[i] == minuteman) unitCounts[i] = numberOfUnits;
+      if (unitPrototypes[i] == colonyShipPrototype) unitCounts[i] = 0;
+    }
+    setupCreateFleet(alice, aliceHomeAsteroid, unitCounts, resourceCounts);
+    vm.startPrank(alice);
+    bytes32 minutemanFleet = world.Pri_11__createFleet(aliceHomeAsteroid, unitCounts, resourceCounts);
+
+    for (uint256 i = 0; i < fleetCountToWin; i++) {
+      console.log("send fleet %s", i);
+      world.Pri_11__sendFleet(fleetEntities[i], wormholeAsteroid);
+      console.log("send fleet done %s", i);
+    }
+
+    console.log("send minuteman fleet");
+    world.Pri_11__sendFleet(minutemanFleet, wormholeAsteroid);
+
+    vm.stopPrank();
+
+    vm.warp(
+      LibMath.max(
+        block.timestamp,
+        LibMath.max(FleetMovement.getArrivalTime(fleetEntities[0]), FleetMovement.getArrivalTime(minutemanFleet))
+      )
+    );
+
+    vm.startPrank(alice);
+    // clear out asteroid defenses before decrypting
+    world.Pri_11__attack(minutemanFleet, wormholeAsteroid);
+
+    for (uint256 i = 0; i < fleetCountToWin; i++) {
+      console.log("asteroid encryption: %s", ResourceCount.get(wormholeAsteroid, uint8(EResource.R_Encryption)));
+      console.log("fleet attack %s", i);
+      uint256 encryptionBeforeAttack = ResourceCount.get(wormholeAsteroid, uint8(EResource.R_Encryption));
+
+      world.Pri_11__attack(fleetEntities[i], wormholeAsteroid);
+      if (encryptionBeforeAttack > decryption) {
+        assertEq(
+          ResourceCount.get(wormholeAsteroid, uint8(EResource.R_Encryption)),
+          encryptionBeforeAttack - decryption,
+          "encryption should have decreased after attack"
+        );
+      } else {
+        assertEq(OwnedBy.get(wormholeAsteroid), aliceEntity, "alice should have conquered the wormhole");
+      }
+      console.log("fleet attack done %s", i);
+    }
+
+    vm.stopPrank();
+    assertEq(LastConquered.get(wormholeAsteroid), block.timestamp, "last conquered should have been updated");
+    console.log("encryption after battles: %s", ResourceCount.get(wormholeAsteroid, uint8(EResource.R_Encryption)));
+
+    assertEq(OwnedBy.get(wormholeAsteroid), aliceEntity, "asteroid should have been taken over");
 
     console.log("end");
   }

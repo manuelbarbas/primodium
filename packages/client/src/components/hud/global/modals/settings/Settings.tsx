@@ -1,20 +1,20 @@
-import { useMud } from "@/hooks";
-import { forfeit } from "@/network/setup/contractCalls/forfeit";
 import { ReactNode, useState } from "react";
 import { FaDiscord, FaExclamationTriangle } from "react-icons/fa";
 import { toast } from "react-toastify";
-import { Button } from "src/components/core/Button";
-import { Navigator } from "src/components/core/Navigator";
+import { Button } from "@/components/core/Button";
+import { Navigator } from "@/components/core/Navigator";
 import { AccountSettings } from "./AccountSettings";
 import { AudioSettings } from "./AudioSettings";
 import { GeneralSettings } from "./GeneralSettings";
 import { FaXTwitter } from "react-icons/fa6";
+import { useContractCalls } from "@/hooks/useContractCalls";
 
 const params = new URLSearchParams(window.location.search);
 
 export const Settings = () => {
   const [showingToast, setShowingToast] = useState(false);
-  const mud = useMud();
+  const { forfeit } = useContractCalls();
+
   const forfeitGame = async () => {
     toast.dismiss();
     if (showingToast) await new Promise((resolve) => setTimeout(resolve, 500));
@@ -31,7 +31,7 @@ export const Settings = () => {
             <button
               className="btn btn-secondary btn-xs"
               onClick={() => {
-                forfeit(mud);
+                forfeit();
                 closeToast && closeToast();
               }}
             >

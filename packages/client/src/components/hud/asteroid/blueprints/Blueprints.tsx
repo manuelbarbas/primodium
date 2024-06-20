@@ -3,12 +3,12 @@ import { IconLabel } from "@/components/core/IconLabel";
 import { Tabs } from "@/components/core/Tabs";
 import { InterfaceIcons } from "@primodiumxyz/assets";
 import { memo } from "react";
-import { useMud } from "src/hooks";
 import { BlueprintPane } from "./BlueprintPane";
+import { useCore } from "@primodiumxyz/core/react";
 
 export const Blueprints = memo(() => {
-  const { components } = useMud();
-  const isBuilding = components.ActiveRock.use()?.value === components.BuildRock.use()?.value;
+  const { tables } = useCore();
+  const isBuilding = tables.ActiveRock.use()?.value === tables.BuildRock.use()?.value;
 
   if (!isBuilding) return;
 

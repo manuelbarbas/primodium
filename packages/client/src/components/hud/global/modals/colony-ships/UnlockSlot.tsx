@@ -4,17 +4,12 @@ import { SecondaryCard } from "@/components/core/Card";
 import { IconLabel } from "@/components/core/IconLabel";
 import { NumberInput } from "@/components/core/NumberInput";
 import { TransactionQueueMask } from "@/components/shared/TransactionQueueMask";
-import { useMud } from "@/hooks";
-import { useColonySlots, getColonySlotsCostMultiplier } from "@/hooks/useColonySlots";
-import { useFullResourceCount } from "@/hooks/useFullResourceCount";
-import { components } from "@/network/components";
-import { payForColonySlot } from "@/network/setup/contractCalls/payForColonySlot";
-import { ResourceEnumLookup } from "@/util/constants";
-import { EntityToResourceImage } from "@/util/mappings";
-import { formatResourceCount, parseResourceCount } from "@/util/number";
-import { getFullResourceCount } from "@/util/resource";
+import { useContractCalls } from "@/hooks/useContractCalls";
+import { EntityToResourceImage } from "@/util/image";
 import { bigIntMin } from "@latticexyz/common/utils";
-import { Entity } from "@latticexyz/recs";
+import { formatResourceCount, parseResourceCount, ResourceEnumLookup } from "@primodiumxyz/core";
+import { useCore, useColonySlots, useResourceCount, useColonySlotsCostMultiplier } from "@primodiumxyz/core/react";
+import { Entity } from "@primodiumxyz/reactive-tables";
 import React, { useEffect, useMemo, useState } from "react";
 import { Hex } from "viem";
 
@@ -25,14 +20,15 @@ export const UnlockSlot: React.FC<{
   className?: string;
   index: number;
 }> = ({ asteroidEntity, buildingEntity, playerEntity, className = "" }) => {
-  const mud = useMud();
+  const { utils } = useCore();
   const colonySlotsData = useColonySlots(playerEntity);
+  const { payForColonySlot } = useContractCalls();
   const [activeResource, setActiveResource] = useState<Entity | null>(null);
   const [activeResourceCount, setActiveResourceCount] = useState("0");
 
   const max = useMemo(() => {
     if (!activeResource) return 0;
-    const resourceData = getFullResourceCount(activeResource, asteroidEntity);
+    const resourceData = utils.getResourceCount(activeResource, asteroidEntity);
     if (!resourceData) return 0;
     const resourceCosts = colonySlotsData.resourceCosts[activeResource];
     const resourcesLeft = resourceCosts.cost - resourceCosts.paid;
@@ -47,14 +43,13 @@ export const UnlockSlot: React.FC<{
 
   const handleSubmit = () => {
     if (!activeResource) return;
-    payForColonySlot(mud, buildingEntity, {
+    payForColonySlot(buildingEntity, {
       [activeResource]: BigInt(parseResourceCount(activeResource, activeResourceCount)),
     });
     setActiveResourceCount("0");
   };
   return (
-    <SecondaryCard className={`flex flex-col gap-3 p-2 justify-center items-center ${className}`}>
-      <p>Add Slot</p>
+    <SecondaryCard className={`flex flex-col gap-2 justify-center items-center ${className}`}>
       {Object.entries(colonySlotsData.resourceCosts).map(([resource], i) => (
         <SlotResourceDisplay
           key={`slot-resource-${i}`}
@@ -85,18 +80,19 @@ const SlotResourceDisplay: React.FC<{
   resource: Entity;
   onClick?: () => void;
 }> = ({ active, asteroidEntity, playerEntity, resource, onClick }) => {
-  const resourceCount = useFullResourceCount(resource, asteroidEntity)?.resourceCount;
+  const { tables } = useCore();
+  const resourceCount = useResourceCount(resource, asteroidEntity)?.resourceCount;
 
-  const config = components.P_ColonySlotsConfig.use();
+  const config = tables.P_ColonySlotsConfig.use() ?? tables.P_ColonySlotsConfig.get();
   if (!config) throw new Error("No colony slots config found");
   const index = config?.resources.findIndex((r) => r === ResourceEnumLookup[resource]);
   const paid =
-    components.ColonySlotsInstallments.useWithKeys({
+    tables.ColonySlotsInstallments.useWithKeys({
       playerEntity: playerEntity as Hex,
       resourceIndex: BigInt(index),
     })?.amounts ?? 0n;
 
-  const costMultiplier = getColonySlotsCostMultiplier(playerEntity);
+  const costMultiplier = useColonySlotsCostMultiplier(playerEntity);
   const cost = config.amounts[index] * costMultiplier;
   const complete = cost == paid;
 

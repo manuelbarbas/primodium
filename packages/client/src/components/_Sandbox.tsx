@@ -17,9 +17,9 @@ import { Range } from "@/components/core/Range";
 import { Tabs } from "@/components/core/Tabs";
 import { TextInput } from "@/components/core/TextInput";
 import { Toggle } from "@/components/core/Toggle";
-import { EntityType } from "@/util/constants";
 import { InterfaceIcons } from "@primodiumxyz/assets";
 import { useState } from "react";
+import { EntityType } from "@primodiumxyz/core";
 
 export const _Sandbox = () => {
   const [dropdownValue, setDropdownValue] = useState(1);

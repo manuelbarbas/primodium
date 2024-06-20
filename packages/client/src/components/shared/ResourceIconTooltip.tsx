@@ -1,9 +1,7 @@
-import { Entity } from "@latticexyz/recs";
-import { useHasEnoughOfResource } from "src/hooks/useHasEnoughOfResource";
-import { ResourceType } from "src/util/constants";
-import { formatNumber } from "src/util/number";
-import { getScale } from "src/util/resource";
+import { Entity } from "@primodiumxyz/reactive-tables";
 import { IconLabel } from "../core/IconLabel";
+import { formatNumber, getScale, ResourceType } from "@primodiumxyz/core";
+import { useHasEnoughOfResource } from "@primodiumxyz/core/react";
 
 type ResourceIconProps<V extends boolean | undefined> = {
   image: string;

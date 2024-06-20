@@ -1,9 +1,8 @@
 import { cn } from "@/util/client";
-import { UnitStorages } from "@/util/constants";
-import { EntityToResourceImage, EntityToUnitImage } from "@/util/mappings";
-import { Entity } from "@latticexyz/recs";
-import { Button } from "src/components/core/Button";
-import { formatResourceCount } from "src/util/number";
+import { EntityToResourceImage, EntityToUnitImage } from "@/util/image";
+import { formatResourceCount, UnitStorages } from "@primodiumxyz/core";
+import { Entity } from "@primodiumxyz/reactive-tables";
+import { Button } from "@/components/core/Button";
 
 export const ResourceIcon = ({
   resource,

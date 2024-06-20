@@ -1,14 +1,5 @@
 // Visit https://aka.ms/tsconfig.json for all config options
 {
-  "compilerOptions": {
-    "target": "es2022",
-    "module": "ESNext",
-    "strict": true,
-    "resolveJsonModule": true,
-    "esModuleInterop": true,
-    "skipLibCheck": true,
-    "forceConsistentCasingInFileNames": true,
-    "moduleResolution": "node"
-  },
+  "extends": "../../.tsconfigs/bundler/dom/library-monorepo.json",
   "exclude": ["config/ores.tsx"]
 }

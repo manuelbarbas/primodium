@@ -1,6 +1,6 @@
 import { FaInfoCircle } from "react-icons/fa";
-import { SecondaryCard } from "src/components/core/Card";
-import { Navigator } from "src/components/core/Navigator";
+import { SecondaryCard } from "@/components/core/Card";
+import { Navigator } from "@/components/core/Navigator";
 
 export const BuildingInfo: React.FC = () => {
   return (

@@ -1,35 +1,45 @@
 import { Tooltip } from "@/components/core/Tooltip";
-import { useMud } from "@/hooks";
-import { Entity } from "@latticexyz/recs";
+import { Entity } from "@primodiumxyz/reactive-tables";
 import { InterfaceIcons } from "@primodiumxyz/assets";
 import { EFleetStance } from "contracts/config/enums";
 import { useMemo } from "react";
-import { Card, SecondaryCard } from "src/components/core/Card";
-import { IconLabel } from "src/components/core/IconLabel";
-import { Loader } from "src/components/core/Loader";
-import { useInCooldownEnd } from "src/hooks/useCooldownEnd";
-import { useInGracePeriod } from "src/hooks/useInGracePeriod";
-import { useSyncStatus } from "src/hooks/useSyncStatus";
-import { components } from "src/network/components";
-import { EntityType } from "src/util/constants";
-import { entityToFleetName, entityToRockName } from "src/util/name";
-import { formatNumber, formatResourceCount, formatTime, formatTimeShort } from "src/util/number";
-import { getFleetStats } from "src/util/unit";
+import { Card, SecondaryCard } from "@/components/core/Card";
+import { IconLabel } from "@/components/core/IconLabel";
+import { Loader } from "@/components/core/Loader";
+import { useAccountClient, useCore, useInCooldown, useInGracePeriod, useSyncStatus } from "@primodiumxyz/core/react";
+import {
+  entityToFleetName,
+  entityToRockName,
+  EntityType,
+  formatNumber,
+  formatResourceCount,
+  formatTime,
+  formatTimeShort,
+} from "@primodiumxyz/core";
 
 type FleetCardProps = {
   stance?: string;
   destination?: Entity;
   home?: Entity;
-  stats: ReturnType<typeof getFleetStats>;
+  stats: {
+    title: string;
+    attack: bigint;
+    defense: bigint;
+    hp: bigint;
+    cargo: bigint;
+    speed: bigint;
+    decryption: bigint;
+  };
   cooldown?: bigint;
   grace?: bigint;
   hostile?: boolean;
 };
 
 export const _FleetCard: React.FC<FleetCardProps> = (props) => {
+  const { tables } = useCore();
   const { hostile, stats, destination, grace, cooldown, home: ownerAsteroid, stance: fleetStateText } = props;
 
-  const ownerPlayer = components.OwnedBy.use(ownerAsteroid)?.value as Entity | undefined;
+  const ownerPlayer = tables.OwnedBy.use(ownerAsteroid)?.value as Entity | undefined;
 
   return (
     <SecondaryCard className="w-full gap-1">
@@ -89,17 +99,18 @@ export const _FleetCard: React.FC<FleetCardProps> = (props) => {
   );
 };
 export const FleetCard: React.FC<{ entity: Entity }> = ({ entity }) => {
+  const { tables, utils } = useCore();
   const { loading } = useSyncStatus(entity);
-  const fleetStats = getFleetStats(entity);
-  const movement = components.FleetMovement.use(entity);
-  const time = components.Time.use()?.value ?? 0n;
-  const stance = components.FleetStance.use(entity);
+  const fleetStats = utils.getFleetStats(entity);
+  const movement = tables.FleetMovement.use(entity);
+  const time = tables.Time.use()?.value ?? 0n;
+  const stance = tables.FleetStance.use(entity);
   const { inGracePeriod, duration } = useInGracePeriod(entity);
-  const { inCooldown, duration: coolDownDuration } = useInCooldownEnd(entity);
-  const ownerAsteroid = components.OwnedBy.use(entity)?.value as Entity | undefined;
+  const { inCooldown, duration: coolDownDuration } = useInCooldown(entity);
+  const ownerAsteroid = tables.OwnedBy.use(entity)?.value as Entity | undefined;
 
-  const playerEntity = useMud().playerAccount.entity;
-  const ownerPlayer = components.OwnedBy.use(ownerAsteroid)?.value as Entity | undefined;
+  const playerEntity = useAccountClient().playerAccount.entity;
+  const ownerPlayer = tables.OwnedBy.use(ownerAsteroid)?.value as Entity | undefined;
   const fleetStateText = useMemo(() => {
     const arrivalTime = movement?.arrivalTime ?? 0n;
     const inTransit = arrivalTime > (time ?? 0n);

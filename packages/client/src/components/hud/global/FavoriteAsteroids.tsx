@@ -1,23 +1,24 @@
 import { CapacityBar } from "@/components/core/CapacityBar";
 import { Dropdown } from "@/components/core/Dropdown";
-import { usePlayerAsteroids } from "@/hooks/usePlayerAsteroids";
-import { EntityToResourceImage } from "@/util/mappings";
-import { formatResourceCount } from "@/util/number";
-import { Entity } from "@latticexyz/recs";
+import { EntityToResourceImage } from "@/util/image";
+import { entityToRockName, EntityType, formatResourceCount } from "@primodiumxyz/core";
+import {
+  useAccountClient,
+  useAsteroidStrength,
+  useCore,
+  usePlayerAsteroids,
+  useResourceCount,
+} from "@primodiumxyz/core/react";
+import { Entity } from "@primodiumxyz/reactive-tables";
 import { useState } from "react";
-import { useMud } from "src/hooks";
-import { useAsteroidStrength } from "src/hooks/useAsteroidStrength";
-import { useFullResourceCount } from "src/hooks/useFullResourceCount";
-import { components } from "src/network/components";
-import { EntityType } from "src/util/constants";
-import { entityToRockName } from "src/util/name";
 
 export const FavoriteAsteroids = () => {
-  const playerEntity = useMud().playerAccount.entity;
+  const playerEntity = useAccountClient().playerAccount.entity;
+  const { tables } = useCore();
 
   const asteroids = usePlayerAsteroids(playerEntity);
 
-  const home = components.Home.use(playerEntity)?.value as Entity;
+  const home = tables.Home.use(playerEntity)?.value as Entity;
   const [selectedAsteroid, setSelectedAsteroid] = useState<Entity | null>(asteroids.length > 0 ? asteroids[0] : null);
   if (!selectedAsteroid) return null;
 
@@ -39,7 +40,7 @@ export const FavoriteAsteroids = () => {
 };
 
 const SelectedFavoriteAsteroid = ({ asteroid }: { asteroid: Entity }) => {
-  const { resourceCount: encryption, resourceStorage: maxEncryption } = useFullResourceCount(
+  const { resourceCount: encryption, resourceStorage: maxEncryption } = useResourceCount(
     EntityType.Encryption,
     asteroid
   );

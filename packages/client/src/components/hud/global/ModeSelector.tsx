@@ -1,22 +1,21 @@
 import { Button } from "@/components/core/Button";
 import { IconLabel } from "@/components/core/IconLabel";
-import { useMud } from "@/hooks";
 
-import { Mode } from "@/util/constants";
-import { Entity } from "@latticexyz/recs";
-import { singletonEntity } from "@latticexyz/store-sync/recs";
+import { Entity } from "@primodiumxyz/reactive-tables";
 import { InterfaceIcons } from "@primodiumxyz/assets";
 import { FaMagnifyingGlassMinus, FaMagnifyingGlassPlus } from "react-icons/fa6";
+import { useCore } from "@primodiumxyz/core/react";
+import { Mode } from "@primodiumxyz/core";
 
 export const ModeSelector = () => {
-  const { components } = useMud();
-  const playerEntity = components.Account.use()?.value;
-  const buildRock = components.BuildRock.use()?.value;
-  const playerHome = components.Home.use(playerEntity)?.value as Entity | undefined;
-  const currentMode = components.SelectedMode.use()?.value;
-  const selectedRock = components.SelectedRock.use()?.value;
-  const ownedBy = components.OwnedBy.use(selectedRock)?.value;
-  const isShard = !!components.ShardAsteroid.use(selectedRock);
+  const { tables } = useCore();
+  const playerEntity = tables.Account.use()?.value;
+  const buildRock = tables.BuildRock.use()?.value;
+  const playerHome = tables.Home.use(playerEntity)?.value as Entity | undefined;
+  const currentMode = tables.SelectedMode.use()?.value;
+  const selectedRock = tables.SelectedRock.use()?.value;
+  const ownedBy = tables.OwnedBy.use(selectedRock)?.value;
+  const isShard = !!tables.ShardAsteroid.use(selectedRock);
   const ownedByPlayer = ownedBy === playerEntity;
 
   return (
@@ -31,7 +30,7 @@ export const ModeSelector = () => {
               motion="disabled"
               clickSound="Execute"
               onClick={() => {
-                components.SelectedMode.set({
+                tables.SelectedMode.set({
                   value: Mode.CommandCenter,
                 });
               }}
@@ -54,7 +53,7 @@ export const ModeSelector = () => {
               keybind="PrevHotbar"
               motion="disabled"
               onClick={() => {
-                components.SelectedMode.set({
+                tables.SelectedMode.set({
                   value: Mode.Starmap,
                 });
               }}
@@ -79,7 +78,7 @@ export const ModeSelector = () => {
               motion="disabled"
               clickSound="Execute"
               onClick={() => {
-                components.SelectedMode.set({
+                tables.SelectedMode.set({
                   value: Mode.Starmap,
                 });
               }}
@@ -102,8 +101,10 @@ export const ModeSelector = () => {
                 keybind="PrevHotbar"
                 motion="disabled"
                 onClick={() => {
-                  components.ActiveRock.set({ value: selectedRock ?? buildRock ?? playerHome ?? singletonEntity });
-                  components.SelectedMode.set({
+                  const rock = selectedRock ?? buildRock ?? playerHome;
+                  if (rock) tables.ActiveRock.set({ value: rock });
+                  else tables.ActiveRock.remove();
+                  tables.SelectedMode.set({
                     value: Mode.Asteroid,
                   });
                 }}
@@ -127,8 +128,8 @@ export const ModeSelector = () => {
                 onClick={() => {
                   if (!selectedRock) return;
 
-                  components.ActiveRock.set({ value: selectedRock });
-                  components.SelectedMode.set({
+                  tables.ActiveRock.set({ value: selectedRock });
+                  tables.SelectedMode.set({
                     value: Mode.Spectate,
                   });
                 }}
@@ -154,8 +155,9 @@ export const ModeSelector = () => {
               motion="disabled"
               clickSound="Execute"
               onClick={() => {
-                components.ActiveRock.set({ value: (playerHome ?? singletonEntity) as Entity });
-                components.SelectedMode.set({
+                if (playerHome) tables.ActiveRock.set({ value: playerHome as Entity });
+                else tables.ActiveRock.remove();
+                tables.SelectedMode.set({
                   value: Mode.Asteroid,
                 });
               }}
@@ -177,7 +179,7 @@ export const ModeSelector = () => {
               keybind="PrevHotbar"
               motion="disabled"
               onClick={() => {
-                components.SelectedMode.set({
+                tables.SelectedMode.set({
                   value: Mode.CommandCenter,
                 });
               }}

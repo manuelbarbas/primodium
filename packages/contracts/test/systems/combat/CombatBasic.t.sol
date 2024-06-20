@@ -32,7 +32,8 @@ contract CombatSystemTest is PrimodiumTest {
 
   bytes32 fleetEntity;
 
-  uint256[] initResources = new uint256[](uint8(EResource.LENGTH));
+  uint256[] initResourcesAlice = new uint256[](uint8(EResource.LENGTH));
+  uint256[] initResourcesBob = new uint256[](uint8(EResource.LENGTH));
 
   function setUp() public override {
     super.setUp();
@@ -44,7 +45,8 @@ contract CombatSystemTest is PrimodiumTest {
     eveHomeAsteroid = spawn(eve);
 
     for (uint8 i = 0; i < uint8(EResource.LENGTH); i++) {
-      initResources[i] = ResourceCount.get(aliceHomeAsteroid, i);
+      initResourcesAlice[i] = ResourceCount.get(aliceHomeAsteroid, i);
+      initResourcesBob[i] = ResourceCount.get(bobHomeAsteroid, i);
     }
   }
 
@@ -56,7 +58,7 @@ contract CombatSystemTest is PrimodiumTest {
     //create fleet with 1 minuteman marine
     bytes32 unitPrototype = P_EnumToPrototype.get(UnitKey, uint8(EUnit.MinutemanMarine));
     for (uint256 i = 0; i < unitPrototypes.length; i++) {
-      if (unitPrototypes[i] == unitPrototype) unitCounts[i] = 1;
+      if (unitPrototypes[i] == unitPrototype) unitCounts[i] = 100;
     }
 
     //create fleet with 1 iron
@@ -225,7 +227,7 @@ contract CombatSystemTest is PrimodiumTest {
     increaseProduction(bobHomeAsteroid, EResource.R_HP, hpProduction);
     assertEq(
       LibCombatAttributes.getDefense(bobHomeAsteroid),
-      defense,
+      defense + initResourcesBob[uint8(EResource.U_Defense)],
       "asteroid defense should match increased defense"
     );
 
@@ -282,7 +284,7 @@ contract CombatSystemTest is PrimodiumTest {
       if (P_IsUtility.get(requiredResources.resources[i])) {
         assertEq(
           ResourceCount.get(aliceHomeAsteroid, requiredResources.resources[i]) -
-            initResources[requiredResources.resources[i]],
+            initResourcesAlice[requiredResources.resources[i]],
           requiredResources.amounts[i] * casualtyCount,
           "utility should have been refunded to owner soace asteroid when fleet took casualties"
         );

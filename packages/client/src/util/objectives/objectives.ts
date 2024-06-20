@@ -1,8 +1,8 @@
-import { Entity } from "@latticexyz/recs";
+import { Entity } from "@primodiumxyz/reactive-tables";
 import { InterfaceIcons } from "@primodiumxyz/assets";
 import { EObjectives } from "contracts/config/enums";
-import { EntityType, ObjectiveEnumLookup } from "../constants";
 import { Objective } from "./types";
+import { EntityType, ObjectiveEnumLookup } from "@primodiumxyz/core";
 
 export const getObjective = (objectiveEntity: Entity) => {
   const objectiveEnum = ObjectiveEnumLookup[objectiveEntity];
@@ -427,7 +427,7 @@ export const Objectives = new Map<EObjectives, Objective>([
       unitType: EntityType.ColonyShip,
       unitCount: 1n,
       description:
-        "To train a colony ship, click on Shipyard and select Commission. Unlock a Colony Ship slot by paying required resources and then commmission a ship. Fleets containing colony ships conquer asteroids.",
+        "To train a colony ship, click on Shipyard and select Commission. Unlock a Colony Ship slot by paying required resources and then commission a ship. Fleets containing colony ships conquer asteroids.",
     },
   ],
   [
@@ -580,7 +580,7 @@ export const Objectives = new Map<EObjectives, Objective>([
       description:
         "Defending an asteroid with a fleet bolsters that asteroid's strength. To defend, go to the fleet's Management pane in the Command Center and select Defend.",
       icon: InterfaceIcons.Fleet,
-      tooltip: "Landed a fleet",
+      tooltip: "Defended with a fleet",
     },
   ],
   [
@@ -592,7 +592,7 @@ export const Objectives = new Map<EObjectives, Objective>([
       description:
         "Blocking an asteroid with a fleet prevents all fleets from leaving that asteroid. To block, go to the fleet's Management pane in the Command Center and select Block.",
       icon: InterfaceIcons.Fleet,
-      tooltip: "Landed a fleet",
+      tooltip: "Blocked with a fleet",
     },
   ],
   [
@@ -602,7 +602,7 @@ export const Objectives = new Map<EObjectives, Objective>([
       type: "Claim",
       requiredObjectives: [EObjectives.BlockWithFleet],
       description:
-        "Landing a fleet on an asteroid sets the fleet's owner to that asteroid. It transfers all fleet resources and units. To land, select a fleet in the Command Center and select Land.",
+        "Set Homebase reassigns the fleet's owner to that asteroid. It transfers all fleet resources and units as well. To land, select a fleet in the Command Center and select Set Homebase.",
       icon: InterfaceIcons.Fleet,
       tooltip: "Landed a fleet",
     },
@@ -627,7 +627,7 @@ export const Objectives = new Map<EObjectives, Objective>([
     {
       category: "Unit Production",
       type: "Train",
-      requiredMainBase: 8n,
+      requiredMainBase: 5n,
       requiredObjectives: [EObjectives.TrainMinutemanMarine],
       unitType: EntityType.TridentMarine,
       unitCount: 32n,
@@ -818,7 +818,7 @@ export const Objectives = new Map<EObjectives, Objective>([
     {
       category: "Defense",
       type: "Build",
-      requiredMainBase: 6n,
+      requiredMainBase: 4n,
       buildingType: EntityType.SAMLauncher,
       description:
         "SAM launchers give your asteroid native defense and additional health, protecting you from enemy attacks. You need electricity to power them. To build, select the SAM Launcher from the Blueprints menu and place it on an empty tile.",

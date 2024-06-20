@@ -1,8 +1,8 @@
-import { Entity } from "@latticexyz/recs";
+import { Entity } from "@primodiumxyz/reactive-tables";
 import { ComponentProps } from "react";
-import { Button } from "src/components/core/Button";
-import { components } from "src/network/components";
-import { formatTime } from "src/util/number";
+import { Button } from "@/components/core/Button";
+import { components } from "@/network/components";
+import { formatTime } from "@/util/number";
 import { FleetEntityHeader } from "../../../widgets/fleets/FleetHeader";
 
 export const FleetButton: React.FC<

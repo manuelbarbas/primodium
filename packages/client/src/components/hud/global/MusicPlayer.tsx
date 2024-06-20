@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { getNextSong, getPrevSong, getRandomSong } from "@/util/soundtrack";
 import { FaMusic, FaPause, FaPlay, FaStepBackward, FaStepForward } from "react-icons/fa";
-import { usePersistentStore } from "@/game/stores/PersistentStore";
+import { usePersistentStore } from "@primodiumxyz/game/src/stores/PersistentStore";
 import { SecondaryCard } from "@/components/core/Card";
 import { cn } from "@/util/client";
 import { Button } from "@/components/core/Button";

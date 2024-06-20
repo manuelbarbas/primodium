@@ -1,29 +1,31 @@
-import { EntityToResourceImage } from "@/util/mappings";
-import { Entity } from "@latticexyz/recs";
+import { Entity } from "@primodiumxyz/reactive-tables";
 import { InterfaceIcons, ResourceImages } from "@primodiumxyz/assets";
-import { Loader } from "src/components/core/Loader";
-import { AccountDisplay } from "src/components/shared/AccountDisplay";
-import { useShardAsteroid } from "src/hooks/primodium/useShardAsteroid";
-import { useSyncStatus } from "src/hooks/useSyncStatus";
-import { components } from "src/network/components";
-import { EntityType, Keys } from "src/util/constants";
-import { hashEntities } from "src/util/encode";
-import { entityToRockName } from "src/util/name";
-import { formatResourceCount, formatTimeShort } from "src/util/number";
+import { Loader } from "@/components/core/Loader";
+import { AccountDisplay } from "@/components/shared/AccountDisplay";
 import { CapacityBar } from "@/components/core/CapacityBar";
-import { useFullResourceCount } from "@/hooks/useFullResourceCount";
 import { IconLabel } from "@/components/core/IconLabel";
+import { useCore, useResourceCount, useShardAsteroid, useSyncStatus } from "@primodiumxyz/core/react";
+import {
+  entityToRockName,
+  EntityType,
+  formatResourceCount,
+  formatTimeShort,
+  hashEntities,
+  Keys,
+} from "@primodiumxyz/core";
+import { EntityToResourceImage } from "@/util/image";
 
 export const ShardAsteroidHover: React.FC<{ entity: Entity }> = ({ entity }) => {
   const { loading } = useSyncStatus(hashEntities(Keys.SELECTED, entity));
+  const { tables } = useCore();
   const name = entityToRockName(entity);
 
   const shardData = useShardAsteroid(entity);
-  const position = components.Position.use(entity) ?? { x: 0, y: 0 };
-  const ownedBy = components.OwnedBy.use(entity)?.value as Entity | undefined;
+  const position = tables.Position.use(entity) ?? { x: 0, y: 0 };
+  const ownedBy = tables.OwnedBy.use(entity)?.value as Entity | undefined;
 
   const encryptionImg = EntityToResourceImage[EntityType.Encryption] ?? "";
-  const { resourceCount: encryption, resourceStorage: maxEncryption } = useFullResourceCount(
+  const { resourceCount: encryption, resourceStorage: maxEncryption } = useResourceCount(
     EntityType.Encryption,
     entity,
     loading

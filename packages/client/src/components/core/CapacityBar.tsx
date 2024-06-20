@@ -1,6 +1,6 @@
-import { Entity } from "@latticexyz/recs";
+import { Entity } from "@primodiumxyz/reactive-tables";
 import { FC } from "react";
-import { EntityType } from "src/util/constants";
+import { EntityType } from "@primodiumxyz/core";
 
 type SegmentedCapacityBarProps = {
   current: bigint;

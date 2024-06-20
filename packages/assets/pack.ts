@@ -39,7 +39,7 @@ import asteroidLarge from "./tile/maps/asteroid-large.tmj?url";
 //fonts
 import teletactile from "./fonts/bitmap/teletactile/teletactile.png?url";
 import teletactileXML from "./fonts/bitmap/teletactile/teletactile.xml?url";
-import { PackConfig } from "types";
+import { PackConfig } from "@/types";
 
 export const pack: PackConfig = {
   image: [

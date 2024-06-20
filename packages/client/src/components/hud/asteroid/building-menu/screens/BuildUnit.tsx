@@ -1,39 +1,32 @@
-import { EntityToResourceImage, EntityToUnitImage } from "@/util/mappings";
-import { Entity } from "@latticexyz/recs";
+import { Entity } from "@primodiumxyz/reactive-tables";
 import { InterfaceIcons } from "@primodiumxyz/assets";
 import { useEffect, useMemo, useState } from "react";
 import { FaInfoCircle } from "react-icons/fa";
-import { Badge } from "src/components/core/Badge";
-import { SecondaryCard } from "src/components/core/Card";
-import { Navigator } from "src/components/core/Navigator";
-import { NumberInput } from "src/components/core/NumberInput";
-import { useMud } from "src/hooks";
-import { useMaxCountOfRecipe } from "src/hooks/useMaxCountOfRecipe";
-import { components } from "src/network/components";
-import { train } from "src/network/setup/contractCalls/train";
-import { getEntityTypeName } from "src/util/common";
-import { EntityType, UnitEnumLookup } from "src/util/constants";
-import { formatNumber, formatResourceCount } from "src/util/number";
-import { getRecipe } from "src/util/recipe";
-import { getUnitStats } from "src/util/unit";
+import { Badge } from "@/components/core/Badge";
+import { SecondaryCard } from "@/components/core/Card";
+import { Navigator } from "@/components/core/Navigator";
+import { NumberInput } from "@/components/core/NumberInput";
+import { useCore, useMaxCountOfRecipe } from "@primodiumxyz/core/react";
 import { Hex } from "viem";
-import { ResourceIconTooltip } from "../../../../shared/ResourceIconTooltip";
+import { EntityType, formatNumber, formatResourceCount, getEntityTypeName, UnitEnumLookup } from "@primodiumxyz/core";
+import { EntityToResourceImage, EntityToUnitImage } from "@/util/image";
+import { useContractCalls } from "@/hooks/useContractCalls";
+import { ResourceIconTooltip } from "@/components/shared/ResourceIconTooltip";
 
 export const BuildUnit: React.FC<{
   building: Entity;
 }> = ({ building }) => {
   const [selectedUnit, setSelectedUnit] = useState<Entity>();
 
-  const { P_UnitProdTypes, BuildingType, Level } = components;
-  const activeRock = components.ActiveRock.use()?.value;
+  const { tables, utils } = useCore();
+  const { P_UnitProdTypes, BuildingType, Level } = tables;
+  const activeRock = tables.ActiveRock.use()?.value ?? tables.ActiveRock.get()?.value;
   if (!activeRock) throw new Error("[BuildUnit] No active rock selected");
 
   const buildingType = (BuildingType.get(building)?.value as Entity) ?? EntityType.NULL;
   const buildingLevel = Level.use(building)?.value ?? 1n;
   const trainableUnits = useMemo(() => {
-    return (
-      (P_UnitProdTypes.getWithKeys({ prototype: buildingType as Hex, level: buildingLevel })?.value as Entity[]) ?? []
-    );
+    return (P_UnitProdTypes.getWithKeys({ prototype: buildingType, level: buildingLevel })?.value as Entity[]) ?? [];
   }, [buildingType, buildingLevel, P_UnitProdTypes]);
 
   useEffect(() => {
@@ -79,7 +72,7 @@ export const BuildUnit: React.FC<{
               <p className="uppercase font-bold">{getEntityTypeName(selectedUnit)}</p>
 
               <div className="grid grid-cols-6 gap-2 border-y border-cyan-400/30 mx-auto">
-                {Object.entries(getUnitStats(selectedUnit, activeRock)).map(([name, value]) => {
+                {Object.entries(utils.getUnitStats(selectedUnit, activeRock)).map(([name, value]) => {
                   return (
                     <div key={name} className="flex flex-col items-center">
                       <p className="text-xs opacity-50">{name}</p>
@@ -102,18 +95,19 @@ export const BuildUnit: React.FC<{
 
 const TrainShip = ({ building, unit, asteroid }: { building: Entity; unit: Entity; asteroid: Entity }) => {
   const [count, setCount] = useState("");
+  const { tables, utils } = useCore();
+  const { train } = useContractCalls();
 
   useEffect(() => {
     setCount("");
   }, [unit]);
 
-  const mud = useMud();
   const unitLevel = useMemo(() => {
-    return components.UnitLevel.getWithKeys({ entity: asteroid as Hex, unit: unit as Hex })?.value ?? 1n;
+    return tables.UnitLevel.getWithKeys({ entity: asteroid as Hex, unit: unit as Hex })?.value ?? 1n;
   }, [unit, asteroid]);
 
   const recipe = useMemo(() => {
-    return getRecipe(unit, unitLevel);
+    return utils.getRecipe(unit, unitLevel);
   }, [unit, unitLevel]);
 
   const maximum = useMaxCountOfRecipe(recipe, asteroid);
@@ -149,7 +143,7 @@ const TrainShip = ({ building, unit, asteroid }: { building: Entity; unit: Entit
           onClick={() => {
             if (!unit) return;
 
-            train(mud, building, UnitEnumLookup[unit], BigInt(count));
+            train(building, UnitEnumLookup[unit], BigInt(count));
           }}
         >
           Train

@@ -1,4 +1,4 @@
-import { Entity } from "@latticexyz/recs";
+import { Entity } from "@primodiumxyz/reactive-tables";
 import { Navigator } from "@/components/core/Navigator";
 import { Card, GlassCard } from "@/components/core/Card";
 import { InitialScreen } from "@/components/hud/command/battle-menu/screens/InitialScreen";
