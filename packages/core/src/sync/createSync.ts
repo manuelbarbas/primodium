@@ -24,7 +24,7 @@ import { StorageAdapterLog } from "@primodiumxyz/reactive-tables/utils";
 export function createSync(config: CoreConfig, network: CreateNetworkResult, tables: Tables) {
   const { tableDefs, world, publicClient, storageAdapter } = network;
   const indexerUrl = config.chain.indexerUrl;
-  const fromBlock = config.initialBlockNumber ?? 0n;
+  let fromBlock = config.initialBlockNumber ?? 0n;
 
   const syncFromRPC = (
     fromBlock: bigint,
@@ -176,7 +176,10 @@ export function createSync(config: CoreConfig, network: CreateNetworkResult, tab
         message: `Hydrating from Indexer`,
       });
 
-      if (progress === 1) onComplete();
+      if (progress === 1) {
+        onComplete();
+        fromBlock = blockNumber;
+      }
     }, onError);
 
     world.registerDisposer(sync.unsubscribe);
@@ -197,7 +200,7 @@ export function createSync(config: CoreConfig, network: CreateNetworkResult, tab
       writer: storageAdapter,
     });
 
-    sync.start(async (_, blockNumber, progress) => {
+    sync.start(async (_, __, progress) => {
       tables.SyncStatus.set(
         {
           step: SyncStep.Syncing,
