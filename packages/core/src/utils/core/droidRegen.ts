@@ -27,7 +27,7 @@ export function createDroidRegenUtils(tables: Tables) {
     const droidCount = tables.UnitCount.getWithKeys({ entity: homeHex, unit: EntityType.Droid as Hex })?.value ?? 0n;
 
     const droidRegenRate =
-      tables.P_Unit.getWithKeys({ entity: EntityType.Droid as Hex, level: 0n })?.trainingTime ?? 0n;
+      tables.P_Unit.getWithKeys({ entity: EntityType.Droid as Hex, level: 0n })?.trainingTime ?? 1n;
     const totalDroidCount = droidCount + timeSinceClaimed / droidRegenRate;
 
     return bigIntMin(totalDroidCount, maxDroidCount);
