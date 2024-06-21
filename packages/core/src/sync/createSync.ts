@@ -9,7 +9,7 @@ import { getActiveAsteroidQuery, getAsteroidFilter, getShardAsteroidFilter } fro
 import { getBattleReportQuery } from "./queries/battleReportQueries";
 import { getFleetFilter } from "./queries/fleetQueries";
 import { getInitialQuery } from "./queries/initialQueries";
-import { getPlayerFilter } from "./queries/playerQueries";
+import { getPlayerQuery } from "./queries/playerQueries";
 import { getSecondaryQuery } from "@/sync/queries/secondaryQueries";
 import { StorageAdapterLog } from "@primodiumxyz/reactive-tables/utils";
 
@@ -239,9 +239,9 @@ export function createSync(config: CoreConfig, network: CreateNetworkResult, tab
     }
 
     const syncData = Sync.withCustom({
-      reader: Read.fromIndexer.filter({
+      reader: Read.fromDecodedIndexer.query({
         indexerUrl,
-        filter: getPlayerFilter({
+        query: getPlayerQuery({
           tables: tableDefs,
           playerEntity: playerEntity as Hex,
           worldAddress: config.worldAddress as Hex,
