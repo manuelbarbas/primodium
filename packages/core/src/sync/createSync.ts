@@ -11,6 +11,7 @@ import { getFleetFilter } from "./queries/fleetQueries";
 import { getInitialQuery } from "./queries/initialQueries";
 import { getPlayerFilter } from "./queries/playerQueries";
 import { getSecondaryQuery } from "@/sync/queries/secondaryQueries";
+import { StorageAdapterLog } from "@primodiumxyz/reactive-tables/utils";
 
 /**
  * Creates sync object. Includes methods to sync data from RPC and Indexer
@@ -70,12 +71,26 @@ export function createSync(config: CoreConfig, network: CreateNetworkResult, tab
   };
 
   const subscribeToRPC = () => {
+    // Store logs that come in during indexer & rpc sync
+    const pendingLogs: StorageAdapterLog[] = [];
+    const storePendingLogs = (log: StorageAdapterLog) => pendingLogs.push(log);
+    // Process logs right after sync and before switching to live
+    const processPendingLogs = () =>
+      pendingLogs.forEach((log, index) => {
+        storageAdapter(log);
+        tables.SyncStatus.update({
+          message: "Processing pending logs",
+          progress: index / pendingLogs.length,
+        });
+      });
+
     const sync = Sync.withCustom({
       reader: Read.fromRPC.subscribe({
         address: config.worldAddress as Hex,
         publicClient,
       }),
-      writer: storageAdapter,
+      writer: (logs) =>
+        tables.SyncStatus.get()?.step === SyncStep.Live ? storageAdapter(logs) : storePendingLogs(logs),
     });
 
     sync.start((_, blockNumber) => {
@@ -83,6 +98,7 @@ export function createSync(config: CoreConfig, network: CreateNetworkResult, tab
     });
 
     world.registerDisposer(sync.unsubscribe);
+    return processPendingLogs;
   };
 
   function createSyncHandlers(
