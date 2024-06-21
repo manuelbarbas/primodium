@@ -1,4 +1,4 @@
-import { memo, useMemo } from "react";
+import { memo, useMemo, useRef } from "react";
 
 import "react-toastify/dist/ReactToastify.min.css";
 import { useShallow } from "zustand/react/shallow";
@@ -6,7 +6,7 @@ import { useAccount } from "wagmi";
 import AppLoadingState from "./AppLoadingState";
 import { Initializing } from "./components/shared/Initializing";
 import { Maintenance } from "./screens/Maintenance";
-import { createCore } from "@primodiumxyz/core";
+import { Core as CoreType, createCore } from "@primodiumxyz/core";
 import { AccountClientProvider, CoreProvider } from "@primodiumxyz/core/react";
 import { getCoreConfig } from "@/config/getCoreConfig";
 import { usePersistentStore } from "@primodiumxyz/game/src/stores/PersistentStore";
@@ -16,12 +16,17 @@ import { generatePrivateKey, privateKeyToAddress } from "viem/accounts";
 const MAINTENANCE = import.meta.env.PRI_MAINTENANCE === "true";
 
 function Core() {
+  const coreRef = useRef<CoreType | null>(null);
   const externalAccount = useAccount();
   const { noExternalAccount } = usePersistentStore(
     useShallow((state) => ({ noExternalAccount: state.noExternalAccount }))
   );
 
   const { playerPrivateKey, playerAddress, core } = useMemo(() => {
+    if (coreRef.current) {
+      coreRef.current.network.world.dispose();
+    }
+
     const config = getCoreConfig();
     const playerPrivateKey = noExternalAccount
       ? (localStorage.getItem("primodiumPlayerAccount") as Hex) ?? generatePrivateKey()
@@ -29,6 +34,7 @@ function Core() {
 
     const playerAddress = playerPrivateKey ? privateKeyToAddress(playerPrivateKey) : externalAccount.address;
     const core = createCore({ ...config, playerAddress });
+    coreRef.current = core;
     const ret = { playerPrivateKey, playerAddress, core };
     return ret;
   }, [noExternalAccount, externalAccount.address]);
