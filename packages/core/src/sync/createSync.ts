@@ -44,6 +44,7 @@ export function createSync(config: CoreConfig, network: CreateNetworkResult, tab
     });
 
     sync.start((_, __, progress) => {
+      console.log("syncing from rpc", (progress * 100).toFixed(2) + "%");
       tables.SyncStatus.set(
         {
           step: SyncStep.Syncing,
@@ -209,10 +210,15 @@ export function createSync(config: CoreConfig, network: CreateNetworkResult, tab
       // sync remaining blocks from RPC
       if (progress === 1) {
         const latestBlockNumber = await publicClient.getBlockNumber();
+        const processPendingLogs = subscribeToRPC();
+
         syncFromRPC(
           fromBlock,
           latestBlockNumber,
-          onComplete,
+          () => {
+            processPendingLogs();
+            onComplete();
+          },
           () => {
             console.warn("Failed to sync remaining blocks. Client may be out of sync!");
           },

@@ -18,14 +18,12 @@ export const runInitialSync = async (core: Core, playerAddress?: Hex) => {
   const { publicClient, triggerUpdateStream } = network;
   const fromBlock = config.initialBlockNumber ?? 0n;
 
-  // Start live sync right away (it will store logs until `SyncStatus` is `SyncStep.Live`)
-  const processPendingLogs = subscribeToRPC();
-
   // Once historical sync (indexer > rpc) is complete
-  const onSyncComplete = () => {
-    tables.SyncSource.set({ value: SyncSourceType.RPC });
+  const onSyncComplete = (processPendingLogs?: () => void) => {
     // process logs that came in the meantime
-    processPendingLogs();
+    processPendingLogs?.();
+
+    tables.SyncSource.set({ value: SyncSourceType.RPC });
     // set sync status to live so it processed incoming blocks immediately
     tables.SyncStatus.set({ step: SyncStep.Live, progress: 1, message: "Subscribed to live updates" });
     // trigger update stream for all entities in all tables
@@ -35,11 +33,14 @@ export const runInitialSync = async (core: Core, playerAddress?: Hex) => {
   if (!config.chain.indexerUrl) {
     console.warn("No indexer url found, hydrating from RPC");
     const toBlock = await publicClient.getBlockNumber();
+    // Start live sync right away (it will store logs until `SyncStatus` is `SyncStep.Live`)
+    const processPendingLogs = subscribeToRPC();
+
     syncFromRPC(
       fromBlock,
       toBlock,
       //on complete
-      onSyncComplete,
+      () => onSyncComplete(processPendingLogs),
       //on error
       (err: unknown) => {
         tables.SyncStatus.set({
@@ -58,13 +59,14 @@ export const runInitialSync = async (core: Core, playerAddress?: Hex) => {
 
   const onError = async (err: unknown) => {
     console.warn("Failed to fetch from indexer, hydrating from RPC");
-
     const toBlock = await publicClient.getBlockNumber();
+    const processPendingLogs = subscribeToRPC();
+
     syncFromRPC(
       fromBlock,
       toBlock,
       //on complete
-      onSyncComplete,
+      () => onSyncComplete(processPendingLogs),
       //on error
       (err: unknown) => {
         tables.SyncStatus.set({
