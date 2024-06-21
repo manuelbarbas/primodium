@@ -1,6 +1,5 @@
 import { SyncSourceType, SyncStep } from "@/lib/types";
 import { Core } from "../lib/types";
-import { Hex } from "viem";
 
 /**
  * Runs default initial sync process. Syncs to indexer. If indexer is not available, syncs to RPC.
@@ -8,7 +7,7 @@ import { Hex } from "viem";
  * @param core {@link Core}
  * @param playerAddress player address (optional). If included, will fetch player data on initial sync
  */
-export const runInitialSync = async (core: Core, playerAddress?: Hex) => {
+export const runInitialSync = async (core: Core) => {
   const {
     network,
     tables,
@@ -81,7 +80,6 @@ export const runInitialSync = async (core: Core, playerAddress?: Hex) => {
 
   // sync initial game state from indexer
   syncInitialGameState(
-    playerAddress,
     // on complete
     () => {
       tables.SyncSource.set({ value: SyncSourceType.Indexer });

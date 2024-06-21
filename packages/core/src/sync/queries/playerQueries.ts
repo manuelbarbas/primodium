@@ -1,15 +1,13 @@
 import { ContractTableDefs } from "@primodiumxyz/reactive-tables";
 import { LogFilter } from "@primodiumxyz/sync-stack/types";
-import { Hex, pad } from "viem";
+import { Hex } from "viem";
 
 export const getPlayerFilter = ({
   tables,
-  playerAddress,
   playerEntity,
   worldAddress,
 }: {
   tables: ContractTableDefs;
-  playerAddress: Hex;
   playerEntity: Hex;
   worldAddress: Hex;
 }): LogFilter => {
@@ -18,7 +16,7 @@ export const getPlayerFilter = ({
     filters: [
       {
         tableId: tables.UserDelegationControl.tableId,
-        key0: pad(playerAddress, { size: 32 }),
+        key0: playerEntity,
       },
       {
         tableId: tables.Spawned.tableId,

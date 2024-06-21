@@ -22,20 +22,20 @@ function Core() {
     useShallow((state) => ({ noExternalAccount: state.noExternalAccount }))
   );
 
-  const { playerPrivateKey, playerAddress, core } = useMemo(() => {
-    if (coreRef.current) {
-      coreRef.current.network.world.dispose();
-    }
-
+  const core = useMemo(() => {
+    if (coreRef.current) coreRef.current.network.world.dispose();
     const config = getCoreConfig();
+    return createCore(config);
+  }, []);
+
+  const { playerPrivateKey, playerAddress } = useMemo(() => {
     const playerPrivateKey = noExternalAccount
       ? (localStorage.getItem("primodiumPlayerAccount") as Hex) ?? generatePrivateKey()
       : undefined;
 
     const playerAddress = playerPrivateKey ? privateKeyToAddress(playerPrivateKey) : externalAccount.address;
-    const core = createCore({ ...config, playerAddress });
-    coreRef.current = core;
-    const ret = { playerPrivateKey, playerAddress, core };
+
+    const ret = { playerPrivateKey, playerAddress };
     return ret;
   }, [noExternalAccount, externalAccount.address]);
   if (MAINTENANCE) return <Maintenance />;
