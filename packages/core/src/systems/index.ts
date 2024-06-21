@@ -1,6 +1,6 @@
 import { Mode } from "@/lib";
 import { Core } from "@/lib/types";
-import { setupBattleComponents } from "@/systems/setupBattleComponents";
+import { setupBattleTables } from "@/systems/setupBattleTables";
 import { setupBlockNumber } from "@/systems/setupBlockNumber";
 import { setupBuildingReversePosition } from "@/systems/setupBuildingReversePosition";
 import { setupBuildRock } from "@/systems/setupBuildRock";
@@ -18,7 +18,7 @@ export function runCoreSystems(core: Core) {
 
   tables.SelectedMode.set({ value: Mode.Asteroid });
   setupHomeAsteroid(core);
-  setupBattleComponents(core);
+  setupBattleTables(core);
   setupBlockNumber(core);
   setupBuildingReversePosition(core);
   setupBuildRock(core);
