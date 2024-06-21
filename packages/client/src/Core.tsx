@@ -25,7 +25,9 @@ function Core() {
   const core = useMemo(() => {
     if (coreRef.current) coreRef.current.network.world.dispose();
     const config = getCoreConfig();
-    return createCore(config);
+    const core = createCore(config);
+    coreRef.current = core;
+    return core;
   }, []);
 
   const { playerPrivateKey, playerAddress } = useMemo(() => {
