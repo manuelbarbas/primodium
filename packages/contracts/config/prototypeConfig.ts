@@ -1858,7 +1858,7 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
     levels: {
       1: {
         P_RequiredBaseLevel: { value: 4n },
-        P_RequiredResources: getResourceValues({ IronPlate: 100, PVCell: 100, Alloy: 100 }),
+        P_RequiredResources: getResourceValues({ Iron: 250, Copper: 250, Lithium: 250 }),
         P_Production: getResourceValues({ U_Defense: 400 }),
         P_ListMaxResourceUpgrades: {
           value: upgradesToList(samSiteStorageUpgrades[1]),
@@ -1866,7 +1866,7 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
       },
       2: {
         P_RequiredBaseLevel: { value: 4n },
-        P_RequiredResources: getResourceValues({ IronPlate: 200, PVCell: 200, Alloy: 200 }),
+        P_RequiredResources: getResourceValues({ IronPlate: 100, PVCell: 100, Alloy: 100 }),
 
         P_Production: getResourceValues({ U_Defense: 800 }),
         P_ListMaxResourceUpgrades: {
@@ -1875,7 +1875,7 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
       },
       3: {
         P_RequiredBaseLevel: { value: 5n },
-        P_RequiredResources: getResourceValues({ IronPlate: 300, PVCell: 300, Alloy: 300, U_Electricity: 10 }),
+        P_RequiredResources: getResourceValues({ IronPlate: 250, PVCell: 250, Alloy: 250, U_Electricity: 10 }),
 
         P_Production: getResourceValues({ U_Defense: 1200 }),
         P_ListMaxResourceUpgrades: {
