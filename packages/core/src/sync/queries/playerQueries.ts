@@ -38,11 +38,11 @@ export const getPlayerQuery = ({
       },
       {
         tableId: tables.MaxColonySlots.tableId,
-        where: { column: "playerEntity", operation: "eq", value: playerEntity },
+        where: { column: "player_entity", operation: "eq", value: playerEntity },
       },
       {
         tableId: tables.ColonySlotsInstallments.tableId,
-        where: { column: "playerEntity", operation: "eq", value: playerEntity },
+        where: { column: "player_entity", operation: "eq", value: playerEntity },
       },
       {
         tableId: tables.OwnedBy.tableId,
