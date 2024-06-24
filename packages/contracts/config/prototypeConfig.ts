@@ -3040,7 +3040,7 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
       P_ResourceReward: getResourceValues({ Iron: 25, Copper: 25, Lithium: 25 }),
     },
   },
-  LandFleet: {
+  SetHomebase: {
     tables: {
       P_ResourceReward: getResourceValues({ Iron: 25, Copper: 25, Lithium: 25 }),
     },
