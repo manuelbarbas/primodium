@@ -596,7 +596,7 @@ export const Objectives = new Map<EObjectives, Objective>([
     },
   ],
   [
-    EObjectives.LandFleet,
+    EObjectives.SetHomebase,
     {
       category: "Fleet",
       type: "Claim",
