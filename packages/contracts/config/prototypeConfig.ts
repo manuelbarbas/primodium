@@ -2692,7 +2692,7 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
           defense: 80,
           cargo: 50,
           speed: 150,
-          trainingTime: 360,
+          trainingTime: 450,
         }),
       },
       1: {
@@ -2705,7 +2705,7 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
           defense: 84,
           cargo: 60,
           speed: 160,
-          trainingTime: 350,
+          trainingTime: 420,
         }),
       },
       2: {
@@ -2718,7 +2718,7 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
           defense: 88,
           cargo: 70,
           speed: 170,
-          trainingTime: 340,
+          trainingTime: 390,
         }),
       },
       3: {
@@ -2731,7 +2731,7 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
           defense: 92,
           cargo: 80,
           speed: 180,
-          trainingTime: 330,
+          trainingTime: 360,
         }),
       },
       4: {
@@ -2744,7 +2744,7 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
           defense: 96,
           cargo: 90,
           speed: 190,
-          trainingTime: 320,
+          trainingTime: 330,
         }),
       },
       5: {
