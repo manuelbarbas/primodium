@@ -2038,7 +2038,7 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
     },
     levels: {
       1: {
-        P_RequiredBaseLevel: { value: 6n },
+        P_RequiredBaseLevel: { value: 5n },
         P_RequiredResources: getResourceValues({ IronPlate: 100, Alloy: 100, PVCell: 100, U_Electricity: 50 }),
       },
     },

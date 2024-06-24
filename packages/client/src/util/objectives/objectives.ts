@@ -968,7 +968,7 @@ export const Objectives = new Map<EObjectives, Objective>([
     {
       category: "Market",
       type: "Build",
-      requiredMainBase: 6n,
+      requiredMainBase: 5n,
       buildingType: EntityType.Market,
       description:
         "Markets grant access to the global resource marketplace. It's perfect for moments when you are missing a rare resource! To build, select the Solar Panel from the Blueprints menu and place it on any empty tile.",
