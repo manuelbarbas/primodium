@@ -4,10 +4,12 @@ import { Hex } from "viem";
 
 export const getPlayerQuery = ({
   tables,
+  playerAddress,
   playerEntity,
   worldAddress,
 }: {
   tables: ContractTableDefs;
+  playerAddress: Hex;
   playerEntity: Hex;
   worldAddress: Hex;
 }): DecodedIndexerQuery => {
@@ -16,7 +18,7 @@ export const getPlayerQuery = ({
     queries: [
       {
         tableId: tables.UserDelegationControl.tableId,
-        where: { column: "delegator", operation: "eq", value: playerEntity },
+        where: { column: "delegator", operation: "eq", value: playerAddress },
       },
       {
         tableId: tables.Spawned.tableId,

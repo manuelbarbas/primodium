@@ -227,8 +227,8 @@ export function createSync(config: CoreConfig, network: CreateNetworkResult, tab
     world.registerDisposer(sync.unsubscribe);
   };
 
-  const syncPlayerData = (playerEntity: Entity | undefined) => {
-    if (!playerEntity || !indexerUrl) return;
+  const syncPlayerData = (playerAddress: Hex | undefined, playerEntity: Entity | undefined) => {
+    if (!playerAddress || !playerEntity || !indexerUrl) return;
 
     // if we're already syncing from RPC, don't sync from indexer
     if (tables.SyncSource.get()?.value === SyncSourceType.RPC) return;
@@ -243,6 +243,7 @@ export function createSync(config: CoreConfig, network: CreateNetworkResult, tab
         indexerUrl,
         query: getPlayerQuery({
           tables: tableDefs,
+          playerAddress: playerAddress,
           playerEntity: playerEntity as Hex,
           worldAddress: config.worldAddress as Hex,
         }),
