@@ -33,10 +33,6 @@ export type CoreConfig = {
   chain: ChainConfig;
   worldAddress: Address;
   initialBlockNumber?: bigint;
-  /**
-   * Used to fetch player data on initial sync when syncing from indexer
-   */
-  playerAddress?: Address;
 
   /**
    * Used to automatically drip eth to accounts in dev mode.

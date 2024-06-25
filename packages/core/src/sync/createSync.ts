@@ -1,6 +1,6 @@
 import { defaultEntity, Entity } from "@primodiumxyz/reactive-tables";
 import { Read, Sync } from "@primodiumxyz/sync-stack";
-import { Tables, CoreConfig, CreateNetworkResult, SyncSourceType, SyncStep, Sync as SyncType } from "@/lib/types";
+import { Tables, CoreConfig, CreateNetworkResult, SyncSourceType, SyncStep } from "@/lib/types";
 import { Keys } from "@/lib/constants";
 import { hashEntities } from "@/utils/global/encode";
 import { Hex } from "viem";
@@ -9,7 +9,7 @@ import { getActiveAsteroidQuery, getAsteroidFilter, getShardAsteroidFilter } fro
 import { getBattleReportQuery } from "./queries/battleReportQueries";
 import { getFleetFilter } from "./queries/fleetQueries";
 import { getInitialQuery } from "./queries/initialQueries";
-import { getPlayerFilter } from "./queries/playerQueries";
+import { getPlayerQuery } from "./queries/playerQueries";
 import { getSecondaryQuery } from "@/sync/queries/secondaryQueries";
 import { StorageAdapterLog } from "@primodiumxyz/reactive-tables/utils";
 
@@ -44,7 +44,6 @@ export function createSync(config: CoreConfig, network: CreateNetworkResult, tab
     });
 
     sync.start((_, __, progress) => {
-      console.log("syncing from rpc", (progress * 100).toFixed(2) + "%");
       tables.SyncStatus.set(
         {
           step: SyncStep.Syncing,
@@ -147,11 +146,7 @@ export function createSync(config: CoreConfig, network: CreateNetworkResult, tab
     ];
   }
 
-  const syncInitialGameState = (
-    playerAddress: Hex | undefined,
-    onComplete: () => void,
-    onError: (err: unknown) => void
-  ) => {
+  const syncInitialGameState = (onComplete: () => void, onError: (err: unknown) => void) => {
     // if we're already syncing from RPC, don't sync from indexer
     if (tables.SyncSource.get()?.value === SyncSourceType.RPC) return;
 
@@ -162,7 +157,6 @@ export function createSync(config: CoreConfig, network: CreateNetworkResult, tab
         indexerUrl,
         query: getInitialQuery({
           tables: tableDefs,
-          playerAddress,
           worldAddress: config.worldAddress as Hex,
         }),
       }),
@@ -214,7 +208,6 @@ export function createSync(config: CoreConfig, network: CreateNetworkResult, tab
       if (progress === 1) {
         const latestBlockNumber = await publicClient.getBlockNumber();
         const processPendingLogs = subscribeToRPC();
-
         syncFromRPC(
           fromBlock,
           latestBlockNumber,
@@ -233,8 +226,8 @@ export function createSync(config: CoreConfig, network: CreateNetworkResult, tab
     world.registerDisposer(sync.unsubscribe);
   };
 
-  const syncPlayerData = (playerEntity: Entity | undefined, playerAddress: Hex) => {
-    if (!playerEntity || !indexerUrl) return;
+  const syncPlayerData = (playerAddress: Hex | undefined, playerEntity: Entity | undefined) => {
+    if (!playerAddress || !playerEntity || !indexerUrl) return;
 
     // if we're already syncing from RPC, don't sync from indexer
     if (tables.SyncSource.get()?.value === SyncSourceType.RPC) return;
@@ -245,11 +238,11 @@ export function createSync(config: CoreConfig, network: CreateNetworkResult, tab
     }
 
     const syncData = Sync.withCustom({
-      reader: Read.fromIndexer.filter({
+      reader: Read.fromDecodedIndexer.query({
         indexerUrl,
-        filter: getPlayerFilter({
+        query: getPlayerQuery({
           tables: tableDefs,
-          playerAddress,
+          playerAddress: playerAddress,
           playerEntity: playerEntity as Hex,
           worldAddress: config.worldAddress as Hex,
         }),

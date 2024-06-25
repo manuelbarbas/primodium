@@ -1,6 +1,5 @@
 import { SyncSourceType, SyncStep } from "@/lib/types";
 import { Core } from "../lib/types";
-import { Hex } from "viem";
 
 /**
  * Runs default initial sync process. Syncs to indexer. If indexer is not available, syncs to RPC.
@@ -8,14 +7,14 @@ import { Hex } from "viem";
  * @param core {@link Core}
  * @param playerAddress player address (optional). If included, will fetch player data on initial sync
  */
-export const runInitialSync = async (core: Core, playerAddress?: Hex) => {
+export const runInitialSync = async (core: Core) => {
   const {
     network,
     tables,
     config,
     sync: { syncFromRPC, subscribeToRPC, syncInitialGameState, syncSecondaryGameState },
   } = core;
-  const { publicClient, triggerUpdateStream } = network;
+  const { publicClient } = network;
   const fromBlock = config.initialBlockNumber ?? 0n;
 
   // Once historical sync (indexer > rpc) is complete
@@ -23,15 +22,14 @@ export const runInitialSync = async (core: Core, playerAddress?: Hex) => {
     // process logs that came in the meantime
     processPendingLogs?.();
 
-    tables.SyncSource.set({ value: SyncSourceType.RPC });
     // set sync status to live so it processed incoming blocks immediately
     tables.SyncStatus.set({ step: SyncStep.Live, progress: 1, message: "Subscribed to live updates" });
-    // trigger update stream for all entities in all tables
-    triggerUpdateStream();
   };
 
   if (!config.chain.indexerUrl) {
     console.warn("No indexer url found, hydrating from RPC");
+    tables.SyncSource.set({ value: SyncSourceType.RPC });
+
     const toBlock = await publicClient.getBlockNumber();
     // Start live sync right away (it will store logs until `SyncStatus` is `SyncStep.Live`)
     const processPendingLogs = subscribeToRPC();
@@ -79,12 +77,11 @@ export const runInitialSync = async (core: Core, playerAddress?: Hex) => {
     );
   };
 
+  tables.SyncSource.set({ value: SyncSourceType.Indexer });
   // sync initial game state from indexer
   syncInitialGameState(
-    playerAddress,
     // on complete
     () => {
-      tables.SyncSource.set({ value: SyncSourceType.Indexer });
       tables.SyncStatus.set({
         step: SyncStep.Complete,
         progress: 1,
@@ -100,4 +97,15 @@ export const runInitialSync = async (core: Core, playerAddress?: Hex) => {
     },
     onError
   );
+
+  // resolve when sync is live
+  return await new Promise<void>((resolve) => {
+    tables.SyncStatus.watch({
+      onChange: ({ properties }) => {
+        if (properties.current?.step === SyncStep.Live) {
+          resolve();
+        }
+      },
+    });
+  });
 };

@@ -26,23 +26,15 @@ export function createNetwork(config: CoreConfig): CreateNetworkResult {
   const publicClient = createPublicClient(clientOptions);
 
   const syncTables = setupSyncTables(world);
-  const {
-    tables,
-    tableDefs,
-    storageAdapter,
-    triggerUpdateStream,
-    latestBlock$,
-    latestBlockNumber$,
-    storedBlockLogs$,
-    waitForTransaction,
-  } = setupRecs({
-    mudConfig,
-    world,
-    publicClient,
-    address: config.worldAddress as Hex,
-    otherTableDefs,
-    syncTables,
-  });
+  const { tables, tableDefs, storageAdapter, latestBlock$, latestBlockNumber$, storedBlockLogs$, waitForTransaction } =
+    setupRecs({
+      mudConfig,
+      world,
+      publicClient,
+      address: config.worldAddress as Hex,
+      otherTableDefs,
+      syncTables,
+    });
 
   const clock = createClock(world, latestBlock$, {
     period: 1100,
@@ -55,7 +47,6 @@ export function createNetwork(config: CoreConfig): CreateNetworkResult {
     tables: { ...tables, ...syncTables },
     tableDefs,
     storageAdapter,
-    triggerUpdateStream,
     publicClient,
     mudConfig,
     clock,
