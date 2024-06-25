@@ -22,7 +22,6 @@ export const runInitialSync = async (core: Core) => {
     // process logs that came in the meantime
     processPendingLogs?.();
 
-    tables.SyncSource.set({ value: SyncSourceType.RPC });
     // set sync status to live so it processed incoming blocks immediately
     tables.SyncStatus.set({ step: SyncStep.Live, progress: 1, message: "Subscribed to live updates" });
     // trigger update stream for all entities in all tables
@@ -31,6 +30,8 @@ export const runInitialSync = async (core: Core) => {
 
   if (!config.chain.indexerUrl) {
     console.warn("No indexer url found, hydrating from RPC");
+    tables.SyncSource.set({ value: SyncSourceType.RPC });
+
     const toBlock = await publicClient.getBlockNumber();
     // Start live sync right away (it will store logs until `SyncStatus` is `SyncStep.Live`)
     const processPendingLogs = subscribeToRPC();
@@ -78,11 +79,11 @@ export const runInitialSync = async (core: Core) => {
     );
   };
 
+  tables.SyncSource.set({ value: SyncSourceType.Indexer });
   // sync initial game state from indexer
   syncInitialGameState(
     // on complete
     () => {
-      tables.SyncSource.set({ value: SyncSourceType.Indexer });
       tables.SyncStatus.set({
         step: SyncStep.Complete,
         progress: 1,
@@ -100,7 +101,7 @@ export const runInitialSync = async (core: Core) => {
   );
 
   // resolve when sync is live
-  return new Promise<void>((resolve) => {
+  return await new Promise<void>((resolve) => {
     tables.SyncStatus.watch({
       onChange: ({ properties }) => {
         if (properties.current?.step === SyncStep.Live) {
