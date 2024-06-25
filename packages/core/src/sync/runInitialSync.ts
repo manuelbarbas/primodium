@@ -14,7 +14,7 @@ export const runInitialSync = async (core: Core) => {
     config,
     sync: { syncFromRPC, subscribeToRPC, syncInitialGameState, syncSecondaryGameState },
   } = core;
-  const { publicClient, triggerUpdateStream } = network;
+  const { publicClient } = network;
   const fromBlock = config.initialBlockNumber ?? 0n;
 
   // Once historical sync (indexer > rpc) is complete
@@ -24,8 +24,6 @@ export const runInitialSync = async (core: Core) => {
 
     // set sync status to live so it processed incoming blocks immediately
     tables.SyncStatus.set({ step: SyncStep.Live, progress: 1, message: "Subscribed to live updates" });
-    // trigger update stream for all entities in all tables
-    triggerUpdateStream();
   };
 
   if (!config.chain.indexerUrl) {
