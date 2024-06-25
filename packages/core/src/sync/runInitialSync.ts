@@ -98,4 +98,15 @@ export const runInitialSync = async (core: Core) => {
     },
     onError
   );
+
+  // resolve when sync is live
+  return new Promise<void>((resolve) => {
+    tables.SyncStatus.watch({
+      onChange: ({ properties }) => {
+        if (properties.current?.step === SyncStep.Live) {
+          resolve();
+        }
+      },
+    });
+  });
 };
