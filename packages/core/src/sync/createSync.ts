@@ -44,7 +44,6 @@ export function createSync(config: CoreConfig, network: CreateNetworkResult, tab
     });
 
     sync.start((_, __, progress) => {
-      console.log("syncing from rpc", (progress * 100).toFixed(2) + "%");
       tables.SyncStatus.set(
         {
           step: SyncStep.Syncing,
