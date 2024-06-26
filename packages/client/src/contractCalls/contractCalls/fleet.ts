@@ -139,7 +139,7 @@ export const createFleetCalls = (core: Core, { playerAccount }: AccountClient, {
         id: "landFleet",
       },
       onComplete: (receipt) => {
-        makeObjectiveClaimable(core, playerAccount.entity, EObjectives.LandFleet);
+        makeObjectiveClaimable(core, playerAccount.entity, EObjectives.SetHomebase);
 
         ampli.systemFleetLandSystemPrimodiumLandFleet({
           fleets: [fleet],

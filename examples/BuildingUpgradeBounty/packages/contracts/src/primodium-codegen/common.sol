@@ -129,7 +129,7 @@ enum EObjectives {
   CreateFleet2,
   DefendWithFleet,
   BlockWithFleet,
-  LandFleet,
+  SetHomebase,
   TrainMinutemanMarine,
   TrainTridentMarine,
   TrainLightningCraft,

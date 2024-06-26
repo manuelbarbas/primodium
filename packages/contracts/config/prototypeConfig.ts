@@ -43,7 +43,7 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
         unitProductionRate: 100n,
         travelTime: 10n,
         worldSpeed: 100n,
-        unitDeathLimit: 10_000_000n,
+        unitDeathLimit: 5_000_000n,
       },
 
       P_WormholeAsteroidConfig: {
@@ -1764,18 +1764,18 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
     levels: {
       1: {
         P_RequiredResources: getResourceValues({ Iron: 1000, Copper: 1000, Lithium: 1000, U_Electricity: 20 }),
-        P_RequiredBaseLevel: { value: 8n },
+        P_RequiredBaseLevel: { value: 7n },
         P_UnitProdMultiplier: { value: 100n },
         P_UnitProdTypes: { value: encodeArray(["ColonyShip"]) },
       },
       2: {
-        P_RequiredBaseLevel: { value: 8n },
+        P_RequiredBaseLevel: { value: 7n },
         P_RequiredResources: getResourceValues({ IronPlate: 1000, Alloy: 1000, PVCell: 1000, U_Electricity: 20 }),
         P_UnitProdMultiplier: { value: 120n },
         P_UnitProdTypes: { value: encodeArray(["ColonyShip"]) },
       },
       3: {
-        P_RequiredBaseLevel: { value: 9n },
+        P_RequiredBaseLevel: { value: 8n },
         P_RequiredResources: getResourceValues({ IronPlate: 2000, Alloy: 2000, PVCell: 2000, U_Electricity: 20 }),
         P_UnitProdMultiplier: { value: 140n },
         P_UnitProdTypes: { value: encodeArray(["ColonyShip"]) },
@@ -1858,7 +1858,7 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
     levels: {
       1: {
         P_RequiredBaseLevel: { value: 4n },
-        P_RequiredResources: getResourceValues({ IronPlate: 100, PVCell: 100, Alloy: 100 }),
+        P_RequiredResources: getResourceValues({ Iron: 250, Copper: 250, Lithium: 250 }),
         P_Production: getResourceValues({ U_Defense: 400 }),
         P_ListMaxResourceUpgrades: {
           value: upgradesToList(samSiteStorageUpgrades[1]),
@@ -1866,7 +1866,7 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
       },
       2: {
         P_RequiredBaseLevel: { value: 4n },
-        P_RequiredResources: getResourceValues({ IronPlate: 200, PVCell: 200, Alloy: 200 }),
+        P_RequiredResources: getResourceValues({ IronPlate: 100, PVCell: 100, Alloy: 100 }),
 
         P_Production: getResourceValues({ U_Defense: 800 }),
         P_ListMaxResourceUpgrades: {
@@ -1875,7 +1875,7 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
       },
       3: {
         P_RequiredBaseLevel: { value: 5n },
-        P_RequiredResources: getResourceValues({ IronPlate: 300, PVCell: 300, Alloy: 300, U_Electricity: 10 }),
+        P_RequiredResources: getResourceValues({ IronPlate: 250, PVCell: 250, Alloy: 250, U_Electricity: 10 }),
 
         P_Production: getResourceValues({ U_Defense: 1200 }),
         P_ListMaxResourceUpgrades: {
@@ -1956,19 +1956,19 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
     },
     levels: {
       1: {
-        P_RequiredBaseLevel: { value: 7n },
+        P_RequiredBaseLevel: { value: 8n },
         P_RequiredResources: getResourceValues({ IronPlate: 1000, Alloy: 1000, PVCell: 1000, U_Electricity: 100 }),
-        P_Production: getResourceValues({ M_DefenseMultiplier: 5, R_HP: 0.008 }),
+        P_Production: getResourceValues({ M_DefenseMultiplier: 7, R_HP: 0.008 }),
       },
       2: {
         P_RequiredBaseLevel: { value: 11n },
         P_RequiredResources: getResourceValues({ Titanium: 500, Iridium: 500, Platinum: 500, U_Electricity: 400 }),
-        P_Production: getResourceValues({ M_DefenseMultiplier: 10, R_HP: 0.016 }),
+        P_Production: getResourceValues({ M_DefenseMultiplier: 14, R_HP: 0.016 }),
       },
       3: {
-        P_RequiredBaseLevel: { value: 15n },
+        P_RequiredBaseLevel: { value: 14n },
         P_RequiredResources: getResourceValues({ Kimberlite: 4000, U_Electricity: 700 }),
-        P_Production: getResourceValues({ M_DefenseMultiplier: 20, R_HP: 0.024 }),
+        P_Production: getResourceValues({ M_DefenseMultiplier: 21, R_HP: 0.024 }),
       },
     },
   },
@@ -2038,7 +2038,7 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
     },
     levels: {
       1: {
-        P_RequiredBaseLevel: { value: 6n },
+        P_RequiredBaseLevel: { value: 5n },
         P_RequiredResources: getResourceValues({ IronPlate: 100, Alloy: 100, PVCell: 100, U_Electricity: 50 }),
       },
     },
@@ -2692,7 +2692,7 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
           defense: 80,
           cargo: 50,
           speed: 150,
-          trainingTime: 360,
+          trainingTime: 450,
         }),
       },
       1: {
@@ -2705,7 +2705,7 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
           defense: 84,
           cargo: 60,
           speed: 160,
-          trainingTime: 350,
+          trainingTime: 420,
         }),
       },
       2: {
@@ -2718,7 +2718,7 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
           defense: 88,
           cargo: 70,
           speed: 170,
-          trainingTime: 340,
+          trainingTime: 390,
         }),
       },
       3: {
@@ -2731,7 +2731,7 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
           defense: 92,
           cargo: 80,
           speed: 180,
-          trainingTime: 330,
+          trainingTime: 360,
         }),
       },
       4: {
@@ -2744,7 +2744,7 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
           defense: 96,
           cargo: 90,
           speed: 190,
-          trainingTime: 320,
+          trainingTime: 330,
         }),
       },
       5: {
@@ -3040,7 +3040,7 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
       P_ResourceReward: getResourceValues({ Iron: 25, Copper: 25, Lithium: 25 }),
     },
   },
-  LandFleet: {
+  SetHomebase: {
     tables: {
       P_ResourceReward: getResourceValues({ Iron: 25, Copper: 25, Lithium: 25 }),
     },
