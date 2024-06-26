@@ -14,13 +14,16 @@ export const runInitialSync = async (core: Core) => {
     config,
     sync: { syncFromRPC, subscribeToRPC, syncInitialGameState, syncSecondaryGameState },
   } = core;
-  const { publicClient } = network;
+  const { publicClient, triggerUpdateStream } = network;
   const fromBlock = config.initialBlockNumber ?? 0n;
 
   // Once historical sync (indexer > rpc) is complete
   const onSyncComplete = (processPendingLogs?: () => void) => {
     // process logs that came in the meantime
     processPendingLogs?.();
+
+    // trigger update stream for all entities in all components (to update UI on hooks and watchers)
+    triggerUpdateStream();
 
     // set sync status to live so it processed incoming blocks immediately
     tables.SyncStatus.set({ step: SyncStep.Live, progress: 1, message: "Subscribed to live updates" });

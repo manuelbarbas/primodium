@@ -27,7 +27,7 @@ import { SyncStep } from "@/lib";
 
 export type Recs<config extends StoreConfig, extraTables extends ContractTableDefs> = Omit<
   WrapperResult<config, extraTables>,
-  "world" | "triggerUpdateStream"
+  "world"
 > & {
   latestBlock$: Observable<Block<bigint, false, "latest">>;
   latestBlockNumber$: Observable<bigint>;
@@ -46,7 +46,7 @@ export const setupRecs = <config extends StoreConfig, extraTables extends Contra
 }): Recs<config, extraTables> => {
   const { mudConfig, publicClient, world, address, otherTableDefs, syncTables } = args;
 
-  const { tables, tableDefs, storageAdapter } = createWrapper({
+  const { tables, tableDefs, storageAdapter, triggerUpdateStream } = createWrapper({
     mudConfig,
     world,
     otherTableDefs,
@@ -129,6 +129,7 @@ export const setupRecs = <config extends StoreConfig, extraTables extends Contra
     tables,
     tableDefs,
     storageAdapter,
+    triggerUpdateStream,
     latestBlock$,
     latestBlockNumber$,
     storedBlockLogs$,
