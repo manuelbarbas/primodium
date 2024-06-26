@@ -1764,18 +1764,18 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
     levels: {
       1: {
         P_RequiredResources: getResourceValues({ Iron: 1000, Copper: 1000, Lithium: 1000, U_Electricity: 20 }),
-        P_RequiredBaseLevel: { value: 8n },
+        P_RequiredBaseLevel: { value: 7n },
         P_UnitProdMultiplier: { value: 100n },
         P_UnitProdTypes: { value: encodeArray(["ColonyShip"]) },
       },
       2: {
-        P_RequiredBaseLevel: { value: 8n },
+        P_RequiredBaseLevel: { value: 7n },
         P_RequiredResources: getResourceValues({ IronPlate: 1000, Alloy: 1000, PVCell: 1000, U_Electricity: 20 }),
         P_UnitProdMultiplier: { value: 120n },
         P_UnitProdTypes: { value: encodeArray(["ColonyShip"]) },
       },
       3: {
-        P_RequiredBaseLevel: { value: 9n },
+        P_RequiredBaseLevel: { value: 8n },
         P_RequiredResources: getResourceValues({ IronPlate: 2000, Alloy: 2000, PVCell: 2000, U_Electricity: 20 }),
         P_UnitProdMultiplier: { value: 140n },
         P_UnitProdTypes: { value: encodeArray(["ColonyShip"]) },
@@ -1956,19 +1956,19 @@ export const prototypeConfig: PrototypesConfig<(typeof worldInput)["tables"]> = 
     },
     levels: {
       1: {
-        P_RequiredBaseLevel: { value: 7n },
+        P_RequiredBaseLevel: { value: 8n },
         P_RequiredResources: getResourceValues({ IronPlate: 1000, Alloy: 1000, PVCell: 1000, U_Electricity: 100 }),
-        P_Production: getResourceValues({ M_DefenseMultiplier: 5, R_HP: 0.008 }),
+        P_Production: getResourceValues({ M_DefenseMultiplier: 7, R_HP: 0.008 }),
       },
       2: {
         P_RequiredBaseLevel: { value: 11n },
         P_RequiredResources: getResourceValues({ Titanium: 500, Iridium: 500, Platinum: 500, U_Electricity: 400 }),
-        P_Production: getResourceValues({ M_DefenseMultiplier: 10, R_HP: 0.016 }),
+        P_Production: getResourceValues({ M_DefenseMultiplier: 14, R_HP: 0.016 }),
       },
       3: {
-        P_RequiredBaseLevel: { value: 15n },
+        P_RequiredBaseLevel: { value: 14n },
         P_RequiredResources: getResourceValues({ Kimberlite: 4000, U_Electricity: 700 }),
-        P_Production: getResourceValues({ M_DefenseMultiplier: 20, R_HP: 0.024 }),
+        P_Production: getResourceValues({ M_DefenseMultiplier: 21, R_HP: 0.024 }),
       },
     },
   },

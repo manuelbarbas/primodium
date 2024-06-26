@@ -399,7 +399,7 @@ export const Objectives = new Map<EObjectives, Objective>([
     {
       category: "Conquest",
       type: "Build",
-      requiredMainBase: 8n,
+      requiredMainBase: 7n,
       buildingType: EntityType.Shipyard,
       description:
         "Shipyards constuct Colony Ships, which colonize asteroids. To build a shipyard, go to the Blueprints menu and select military. Place a Shipyard on any open tile.",
@@ -422,7 +422,7 @@ export const Objectives = new Map<EObjectives, Objective>([
     {
       category: "Conquest",
       type: "Train",
-      requiredMainBase: 8n,
+      requiredMainBase: 7n,
       requiredObjectives: [EObjectives.BuildShipyard],
       unitType: EntityType.ColonyShip,
       unitCount: 1n,
@@ -772,7 +772,7 @@ export const Objectives = new Map<EObjectives, Objective>([
     {
       category: "Defense",
       type: "Build",
-      requiredMainBase: 7n,
+      requiredMainBase: 8n,
       buildingType: EntityType.ShieldGenerator,
       description:
         "Shield Generators boost defense provided by fleets and SAM launchers, and improve asteroid defense recovery. They are very power hungry. To build, select the Shield Generator from the Blueprints menu and place it on an empty tile.",
