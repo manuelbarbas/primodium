@@ -9,7 +9,7 @@ import { IPrimodiumGameObject } from "@game/lib/objects/interfaces";
 import { DepthLayers } from "@game/lib/constants/common";
 
 export class BuildingConstruction extends Phaser.GameObjects.Container implements IPrimodiumGameObject {
-  readonly id: Entity;
+  public readonly id: Entity;
 
   private coord: Coord;
   private _scene: PrimodiumScene;
@@ -56,7 +56,7 @@ export class BuildingConstruction extends Phaser.GameObjects.Container implement
     this._scene = scene;
 
     this._scene.objects.constructionBuilding.add(id, this);
-    this._scene.audio.play("Build", "sfx", { loop: true });
+    this._scene.audio.play("Build", "sfx");
   }
 
   setQueueText(text: string) {
@@ -80,8 +80,6 @@ export class BuildingConstruction extends Phaser.GameObjects.Container implement
   }
 
   override destroy() {
-    this._scene.audio.get("Build", "sfx")?.stop();
-
     this._scene.objects.constructionBuilding.remove(this.id);
     super.destroy();
   }

@@ -108,7 +108,7 @@ export function AccountClientProvider({ children, ...options }: AccountProviderP
     }
 
     requestDrip(account.address);
-    syncPlayerData(account.entity, account.address);
+    syncPlayerData(account.address, account.entity);
     playerAccountInterval.current = setInterval(() => requestDrip(account.address), 4000);
     tables.Account.set({ value: account.entity });
     return account;

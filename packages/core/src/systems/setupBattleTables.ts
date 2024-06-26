@@ -4,7 +4,7 @@ import { Entity, namespaceWorld } from "@primodiumxyz/reactive-tables";
 function isZeroHex(value: string): boolean {
   return /^0x0+$/i.test(value);
 }
-export const setupBattleComponents = (core: Core) => {
+export const setupBattleTables = (core: Core) => {
   const {
     network: { world },
     tables,

@@ -14,7 +14,7 @@ export const setupWormholeResource = async (core: Core) => {
   function getRandomResource(seed: Entity, turn: bigint, prevResource: Entity) {
     const transportableLength = tables.P_Transportables.get()?.value.length ?? 0;
     let resource = EntityType.NULL;
-    console.log({ seed, turn });
+
     do {
       seed = keccak256(
         encodeAbiParameters(

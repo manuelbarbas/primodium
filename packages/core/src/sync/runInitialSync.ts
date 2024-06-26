@@ -1,6 +1,5 @@
 import { SyncSourceType, SyncStep } from "@/lib/types";
 import { Core } from "../lib/types";
-import { Hex } from "viem";
 
 /**
  * Runs default initial sync process. Syncs to indexer. If indexer is not available, syncs to RPC.
@@ -8,7 +7,7 @@ import { Hex } from "viem";
  * @param core {@link Core}
  * @param playerAddress player address (optional). If included, will fetch player data on initial sync
  */
-export const runInitialSync = async (core: Core, playerAddress?: Hex) => {
+export const runInitialSync = async (core: Core) => {
   const {
     network,
     tables,
@@ -16,23 +15,30 @@ export const runInitialSync = async (core: Core, playerAddress?: Hex) => {
     sync: { syncFromRPC, subscribeToRPC, syncInitialGameState, syncSecondaryGameState },
   } = core;
   const { publicClient } = network;
-
   const fromBlock = config.initialBlockNumber ?? 0n;
+
+  // Once historical sync (indexer > rpc) is complete
+  const onSyncComplete = (processPendingLogs?: () => void) => {
+    // process logs that came in the meantime
+    processPendingLogs?.();
+
+    // set sync status to live so it processed incoming blocks immediately
+    tables.SyncStatus.set({ step: SyncStep.Live, progress: 1, message: "Subscribed to live updates" });
+  };
 
   if (!config.chain.indexerUrl) {
     console.warn("No indexer url found, hydrating from RPC");
+    tables.SyncSource.set({ value: SyncSourceType.RPC });
+
     const toBlock = await publicClient.getBlockNumber();
+    // Start live sync right away (it will store logs until `SyncStatus` is `SyncStep.Live`)
+    const processPendingLogs = subscribeToRPC();
+
     syncFromRPC(
       fromBlock,
       toBlock,
       //on complete
-      () => {
-        tables.SyncSource.set({ value: SyncSourceType.RPC });
-
-        //finally sync live
-        network.triggerUpdateStream();
-        subscribeToRPC();
-      },
+      () => onSyncComplete(processPendingLogs),
       //on error
       (err: unknown) => {
         tables.SyncStatus.set({
@@ -51,17 +57,14 @@ export const runInitialSync = async (core: Core, playerAddress?: Hex) => {
 
   const onError = async (err: unknown) => {
     console.warn("Failed to fetch from indexer, hydrating from RPC");
-
     const toBlock = await publicClient.getBlockNumber();
+    const processPendingLogs = subscribeToRPC();
+
     syncFromRPC(
       fromBlock,
       toBlock,
       //on complete
-      () => {
-        tables.SyncSource.set({ value: SyncSourceType.RPC });
-        network.triggerUpdateStream();
-        subscribeToRPC();
-      },
+      () => onSyncComplete(processPendingLogs),
       //on error
       (err: unknown) => {
         tables.SyncStatus.set({
@@ -74,12 +77,11 @@ export const runInitialSync = async (core: Core, playerAddress?: Hex) => {
     );
   };
 
+  tables.SyncSource.set({ value: SyncSourceType.Indexer });
   // sync initial game state from indexer
   syncInitialGameState(
-    playerAddress,
     // on complete
     () => {
-      tables.SyncSource.set({ value: SyncSourceType.Indexer });
       tables.SyncStatus.set({
         step: SyncStep.Complete,
         progress: 1,
@@ -89,10 +91,21 @@ export const runInitialSync = async (core: Core, playerAddress?: Hex) => {
       // initialize secondary state
       syncSecondaryGameState(
         // on complete
-        () => subscribeToRPC(),
+        onSyncComplete,
         onError
       );
     },
     onError
   );
+
+  // resolve when sync is live
+  return await new Promise<void>((resolve) => {
+    tables.SyncStatus.watch({
+      onChange: ({ properties }) => {
+        if (properties.current?.step === SyncStep.Live) {
+          resolve();
+        }
+      },
+    });
+  });
 };

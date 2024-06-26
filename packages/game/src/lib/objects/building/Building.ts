@@ -12,7 +12,7 @@ import { IPrimodiumGameObject } from "@game/lib/objects/interfaces";
 import { isValidClick, isValidHover } from "@game/lib/objects/inputGuards";
 
 export class Building extends Phaser.GameObjects.Sprite implements IPrimodiumGameObject {
-  readonly id: Entity;
+  public readonly id: Entity;
 
   private buildingType: Entity;
   private coord: Coord;

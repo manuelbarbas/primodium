@@ -26,7 +26,7 @@ export const setupSync = (core: Core) => {
 
   const systemWorld = namespaceWorld(world, "coreSystems");
 
-  //only run sync systems if we are using the indexer
+  // only run sync systems if we are using the indexer
   if (tables.SyncSource.get()?.value !== SyncSourceType.Indexer) return;
 
   tables.SelectedRock.watch({

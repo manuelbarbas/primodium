@@ -193,7 +193,7 @@
     },
     "Build": {
       "start": 85,
-      "end": 86.37501133786849,
+      "end": 87,
       "loop": false
     },
     "Demolish": {
@@ -206,29 +206,24 @@
       "end": 94.81049886621315,
       "loop": false
     },
-    "SingleBlaster": {
+    "Impact": {
       "start": 96,
-      "end": 100.66666666666667,
+      "end": 97.18396825396826,
+      "loop": false
+    },
+    "SingleBlaster": {
+      "start": 99,
+      "end": 103.66666666666667,
       "loop": false
     },
     "Upgrade": {
-      "start": 102,
-      "end": 103.40571428571428,
+      "start": 105,
+      "end": 109.7937641723356,
       "loop": false
     },
     "Whoosh": {
-      "start": 105,
-      "end": 107,
-      "loop": false
-    },
-    "background": {
-      "start": 108,
-      "end": 292.8480045351474,
-      "loop": false
-    },
-    "background2": {
-      "start": 294,
-      "end": 497.4959863945578,
+      "start": 111,
+      "end": 113,
       "loop": false
     }
   }

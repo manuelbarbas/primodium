@@ -35,7 +35,7 @@ export const FollowSocials = () => {
       {!twitterFollowed && (
         <Button
           tooltip="Follow&nbsp;our&nbsp;Twitter"
-          tooltipDirection="topRight"
+          tooltipDirection="topLeft"
           variant="ghost"
           size="sm"
           className="h-12 w-12 hover:scale-105 rounded-tl-xl rounded-tr-xl"
@@ -48,7 +48,7 @@ export const FollowSocials = () => {
       {!discordFollowed && (
         <Button
           tooltip="Join&nbsp;our&nbsp;Discord"
-          tooltipDirection="topRight"
+          tooltipDirection="topLeft"
           variant="ghost"
           size="sm"
           className="h-12 w-12 hover:scale-105 rounded-tl-xl rounded-tr-xl"

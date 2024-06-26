@@ -11,7 +11,7 @@
     "deploy:caldera-sepolia": "pnpm --filter 'contracts' deploy:caldera-sepolia",
     "deploy:local": "pnpm --filter 'contracts' deploy:local",
     "deploy:redstone-holesky": "pnpm --filter 'contracts' deploy:redstone-holesky",
-    "dev": "run-pty % pnpm dev:client % pnpm dev:node % pnpm deploy:local % pnpm dev:indexer % pnpm dev:core",
+    "dev": "run-pty % pnpm --filter 'client' run dev % pnpm dev:core % pnpm dev:node % pnpm deploy:local % pnpm dev:indexer",
     "dev:client": "run-pty % pnpm --filter 'client' run dev % pnpm dev:core",
     "dev:contracts": "run-pty % pnpm dev:node % pnpm deploy:local",
     "dev:core": "pnpm --filter 'core' run dev",

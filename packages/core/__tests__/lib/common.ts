@@ -88,7 +88,7 @@ export const commonTests = () => {
       const waitUntilSynced = async () => {
         let syncStatus = core.tables.SyncStatus.get()?.step ?? SyncStep.Syncing;
 
-        while (syncStatus !== SyncStep.Complete) {
+        while (syncStatus !== SyncStep.Live) {
           await new Promise((resolve) => setTimeout(resolve, 100));
           syncStatus = core.tables.SyncStatus.get()?.step ?? SyncStep.Syncing;
         }
