@@ -156,7 +156,7 @@ export enum EObjectives {
   CreateFleet2,
   DefendWithFleet,
   BlockWithFleet,
-  LandFleet,
+  SetHomebase,
 
   // (A-A-B) unit production
   TrainMinutemanMarine,
