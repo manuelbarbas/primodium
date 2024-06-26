@@ -10,6 +10,7 @@ import { InterfaceIcons } from "@primodiumxyz/assets";
 import { EntityType } from "@primodiumxyz/core";
 import { useEffect, useRef, useState } from "react";
 import { useShallow } from "zustand/react/shallow";
+import { IconLabel } from "@/components/core/IconLabel";
 
 export const StarmapNavigatorPane = () => {
   const [visibleDiv, setVisibleDiv] = useState(0);
@@ -85,39 +86,38 @@ export const StarmapNavigatorPane = () => {
         </div>
       </div>
       {!arePanesExpanded && (
-        <div className="flex flex-col">
+        <div>
           {labels.map((label, index) => (
             <Button
               key={index}
               onClick={() => showDiv(index)}
-              className={`!flex !items-center !bg-neutral/100 !border !border-secondary !py-3 px-4 ${
-                index === 3 ? "rounded-bl-lg" : ""
-              }`}
-              style={{ writingMode: "vertical-rl" }}
+              className={`flex !items-center !bg-neutral/100 !border !border-secondary py-4 w-12 ${
+                index === 3 ? "rounded-br-lg" : ""
+              } `}
+              style={{ writingMode: "vertical-lr" }}
             >
-              <img src={imagePaths[index]} alt={label} className="w-4 h-4" />
-              {/* Show title when active */}
-              {visibleDiv === index && (
-                <span
-                  className={` ${
-                    label === "Asteroids"
-                      ? "text-yellow-500"
-                      : label === "Fleets"
-                      ? "text-lime-600"
-                      : label === "Colony Ships"
-                      ? "text-violet-400"
-                      : label === "Volatile Shards"
-                      ? "text-rose-400"
-                      : ""
-                  }`}
-                >
-                  {label}
-                </span>
-              )}
+              <IconLabel
+                text={visibleDiv === index ? label : ""}
+                imageUri={imagePaths[index]}
+                className={`gap-2 ${
+                  label === "Asteroids"
+                    ? "text-yellow-500"
+                    : label === "Fleets"
+                    ? "text-lime-600"
+                    : label === "Colony Ships"
+                    ? "text-violet-400"
+                    : label === "Volatile Shards"
+                    ? "text-sky-500"
+                    : ""
+                }`}
+                style={{
+                  writingMode: "vertical-lr",
+                }}
+              />
             </Button>
           ))}
           {!hideHotkeys && (
-            <p className="flex text-xs kbd kbd-xs py-2 w-fit self-end" style={{ writingMode: "vertical-rl" }}>
+            <p className="flex text-xs kbd kbd-xs py-2 w-fit" style={{ writingMode: "vertical-lr" }}>
               {keybinds["Cycle"]?.entries().next().value[0] ?? "?"}
             </p>
           )}

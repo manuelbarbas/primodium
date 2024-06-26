@@ -9,6 +9,7 @@ import { useShallow } from "zustand/react/shallow";
 import { Hangar } from "@/components/hud/asteroid/inventory/hangar/Hangar";
 import { EntityToResourceImage, EntityToUnitImage } from "@/util/image";
 import { EntityType } from "@primodiumxyz/core";
+import { IconLabel } from "@/components/core/IconLabel";
 
 export const InventoryPane = () => {
   const [visibleDiv, setVisibleDiv] = useState(0);
@@ -66,19 +67,25 @@ export const InventoryPane = () => {
       {!arePanesExpanded && (
         <div>
           {labels.map((label, index) => (
-            <div className="flex" key={index}>
-              <Button
-                onClick={() => showDiv(index)}
-                className={`ml-auto !flex !items-center !bg-neutral/100 !border !border-secondary !py-3 px-4 ${
-                  index === 1 ? "rounded-bl-lg" : ""
-                }`}
-                style={{ writingMode: "vertical-rl" }}
-              >
-                <img src={imagePaths[index]} alt={label} className="w-4 h-4" />
-                {/* Show title when active */}
-                {visibleDiv === index && <span>{label}</span>}
-              </Button>
-            </div>
+            <Button
+              key={index}
+              onClick={() => showDiv(index)}
+              className={`flex !items-center !bg-neutral/100 !border !border-secondary py-4 w-12 ${
+                index === 1 ? "rounded-bl-lg" : ""
+              } `}
+              style={{ writingMode: "vertical-rl" }}
+            >
+              {/* Show title when active */}
+
+              <IconLabel
+                text={visibleDiv === index ? label : ""}
+                imageUri={imagePaths[index]}
+                className={`gap-2 $`}
+                style={{
+                  writingMode: "vertical-rl",
+                }}
+              />
+            </Button>
           ))}
           {!hideHotkeys && (
             <div className="flex">

@@ -18,7 +18,14 @@ export const Inventory = memo(() => {
           writingMode: "vertical-rl",
         }}
       >
-        <IconLabel text="Inventory" imageUri={EntityToResourceImage[EntityType.Iridium]} className="gap-2 py-4" />
+        <IconLabel
+          text="Inventory"
+          imageUri={EntityToResourceImage[EntityType.Iridium]}
+          className="gap-2 py-4"
+          style={{
+            writingMode: "vertical-lr",
+          }}
+        />
       </Tabs.Button>
 
       <Tabs.Pane index={0} fragment className="pointer-events-auto">

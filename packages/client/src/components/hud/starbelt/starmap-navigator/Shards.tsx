@@ -38,7 +38,7 @@ export const Shards = ({ className = "" }: { className?: string }) => {
     zoomTo(0.9);
   };
   return (
-    <Card className={className}>
+    <Card noDecor className={className}>
       {shards.length === 0 && (
         <p className="w-full h-full text-xs grid place-items-center opacity-50 uppercase">
           no volatile shards detected
