@@ -17,13 +17,15 @@ export const useSyncStatus = (syncId?: Entity) => {
   const syncProgress = tables.SyncStatus.use(syncEntity)?.progress;
   const syncMessage = tables.SyncStatus.use(syncEntity)?.message;
 
-  const [loading, setLoading] = useState(syncStatus ? syncStatus !== SyncStep.Complete : true);
+  const [loading, setLoading] = useState(
+    syncStatus ? syncStatus !== SyncStep.Complete && syncStatus !== SyncStep.Live : true
+  );
   const [error, setError] = useState(syncStatus === SyncStep.Error);
 
   //TODO: sync with time updates
   useEffect(() => {
     if (syncStatus === undefined) return;
-    if (syncStatus === SyncStep.Complete) {
+    if (syncStatus === SyncStep.Complete || syncStatus === SyncStep.Live) {
       setLoading(false);
       setError(false);
     } else if (syncStatus === SyncStep.Error) {
