@@ -5,6 +5,7 @@ import { useGame } from "@/hooks/useGame";
 import { InterfaceIcons } from "@primodiumxyz/assets";
 import { useEffect, useRef, useState } from "react";
 import { useShallow } from "zustand/react/shallow";
+import { IconLabel } from "@/components/core/IconLabel";
 
 export const BlueprintPane = () => {
   const [visibleDiv, setVisibleDiv] = useState(0);
@@ -97,35 +98,34 @@ export const BlueprintPane = () => {
 
       {/* Menu Buttons (hidden when expanded) */}
       {!arePanesExpanded && (
-        <div className="flex flex-col">
+        <div>
           {labels.map((label, index) => (
             <Button
               key={index}
               onClick={() => showDiv(index)}
-              className={`!flex !items-center !bg-neutral/100 !border !border-secondary !py-3 px-4 ${
+              className={`flex !items-center !bg-neutral/100 !border !border-secondary py-4 w-12 ${
                 index === 3 ? "rounded-br-lg" : ""
-              }`}
+              } `}
               style={{ writingMode: "vertical-lr" }}
             >
-              <img src={imagePaths[index]} alt={label} className="w-4 h-4" />
-              {/* Show title when active */}
-              {visibleDiv === index && (
-                <span
-                  className={` ${
-                    label === "Production"
-                      ? "text-yellow-500"
-                      : label === "Military"
-                      ? "text-lime-600"
-                      : label === "Storage"
-                      ? "text-violet-400"
-                      : label === "Infrastructure"
-                      ? "text-sky-500"
-                      : ""
-                  }`}
-                >
-                  {label}
-                </span>
-              )}
+              <IconLabel
+                text={visibleDiv === index ? label : ""}
+                imageUri={imagePaths[index]}
+                className={`gap-2 ${
+                  label === "Production"
+                    ? "text-yellow-500"
+                    : label === "Military"
+                    ? "text-lime-600"
+                    : label === "Storage"
+                    ? "text-violet-400"
+                    : label === "Infrastructure"
+                    ? "text-sky-500"
+                    : ""
+                }`}
+                style={{
+                  writingMode: "vertical-lr",
+                }}
+              />
             </Button>
           ))}
           {!hideHotkeys && (

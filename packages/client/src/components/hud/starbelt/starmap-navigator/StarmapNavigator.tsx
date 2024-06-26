@@ -24,7 +24,12 @@ export const StarmapNavigator = memo(() => {
           writingMode: "vertical-lr",
         }}
       >
-        <IconLabel text="Navigator" imageUri={InterfaceIcons.Navigator} className="gap-2 py-4" />
+        <IconLabel
+          text="Navigator"
+          imageUri={InterfaceIcons.Navigator}
+          className="gap-2 py-4"
+          style={{ writingMode: "vertical-lr" }}
+        />
       </Tabs.Button>
     </Tabs>
   );

@@ -89,7 +89,7 @@ export const OwnedFleets: React.FC<{ className?: string }> = ({ className }) => 
   };
 
   return (
-    <Card className={`relative ${className}`}>
+    <Card noDecor className={`relative ${className}`}>
       {fleets.length === 0 && (
         <p className="w-full h-full text-xs grid place-items-center opacity-50 uppercase">you control no fleets</p>
       )}

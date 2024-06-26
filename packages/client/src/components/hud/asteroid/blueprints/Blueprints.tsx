@@ -30,7 +30,14 @@ export const Blueprints = memo(() => {
           writingMode: "vertical-lr",
         }}
       >
-        <IconLabel text="Blueprints" imageUri={InterfaceIcons.Blueprints} className="gap-2 py-4" />
+        <IconLabel
+          text="Blueprints"
+          imageUri={InterfaceIcons.Blueprints}
+          className="gap-2 py-4"
+          style={{
+            writingMode: "vertical-lr",
+          }}
+        />
       </Tabs.Button>
     </Tabs>
   );
