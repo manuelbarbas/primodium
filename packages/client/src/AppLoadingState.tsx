@@ -31,7 +31,7 @@ export default function AppLoadingState() {
     requestDrip(playerAccount.address);
   }, [playerAccount.address, sessionBalanceData.isLoading, playerBalanceData.data?.value]);
 
-  const { loading, error, progress, message } = useSyncStatus();
+  const { loading, error, progress, message } = useSyncStatus(playerAccount.entity);
   const balanceReady = useMemo(() => {
     const playerBalanceReady = (playerBalanceData.data?.value ?? 0n) >= minEth;
     const sessionBalanceReady = !sessionAccount || (sessionBalanceData.data?.value ?? 0n) >= minEth;
