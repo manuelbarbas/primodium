@@ -3,7 +3,7 @@ pragma solidity >=0.8.24;
 
 import { PrimodiumSystem } from "systems/internal/PrimodiumSystem.sol";
 import { IWorld } from "codegen/world/IWorld.sol";
-import { Spawned, Home, Points, SpawnAllowed } from "codegen/index.sol";
+import { Spawned, Home, Points, SpawnAllowed, MaxColonySlots } from "codegen/index.sol";
 import { LibAsteroid } from "libraries/LibAsteroid.sol";
 import { EPointType } from "src/Types.sol";
 import { LibColony } from "libraries/LibColony.sol";
@@ -28,7 +28,7 @@ contract SpawnSystem is PrimodiumSystem {
     bytes32 playerEntity = _player();
 
     if (!Spawned.get(playerEntity)) {
-      LibColony.increaseMaxColonySlots(playerEntity);
+      MaxColonySlots.set(playerEntity, 1);
     } else {
       require(
         AsteroidSet.getAsteroidEntities(playerEntity, AsteroidOwnedByKey).length == 0,
