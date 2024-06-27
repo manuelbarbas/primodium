@@ -53,9 +53,9 @@ export const asteroidsLiveSystem = (starmapScene: PrimodiumScene, commandCenterS
 
       // we want to do this after to not block the rest of the update
 
-      if (!config.accountLinkUrl || !playerEntity) return;
+      if (!config.accountLinkUrl || !ownerEntity) return;
 
-      getEnsName(config.accountLinkUrl, playerEntity).then((addressObj) => {
+      getEnsName(config.accountLinkUrl, ownerEntity).then((addressObj) => {
         if (addressObj.ensName) asteroidLabel.setProperties({ ownerLabel: addressObj.ensName });
       });
     }
