@@ -1,4 +1,4 @@
-import { EntityToUnitImage } from "@/util/mappings";
+import { EntityToUnitImage } from "@/util/image";
 import { InterfaceIcons } from "@primodiumxyz/assets";
 import React from "react";
 

@@ -1,16 +1,17 @@
 import { HUD } from "@/components/core/HUD";
 import { StarmapNavigator } from "@/components/hud/starbelt/starmap-navigator/StarmapNavigator";
-import { usePersistentStore } from "@game/stores/PersistentStore";
+import { usePersistentStore } from "@primodiumxyz/game/src/stores/PersistentStore";
 import { memo } from "react";
 import { useShallow } from "zustand/react/shallow";
 import { AsteroidMenuPopup } from "@/components/hud/starbelt/markers/AsteroidMenuPopup";
-import { Keys, Mode } from "@/util/constants";
-import { components } from "@/network/components";
 import { LoadingOverlay } from "@/components/shared/LoadingOverlay";
+import { useCore } from "@primodiumxyz/core/react";
+import { Mode, Keys } from "@primodiumxyz/core";
 
 export const StarbeltHUD = memo(() => {
+  const { tables } = useCore();
   const uiScale = usePersistentStore(useShallow((state) => state.uiScale));
-  const isStarbeltOpen = components.SelectedMode.use()?.value === Mode.Starmap;
+  const isStarbeltOpen = tables.SelectedMode.use()?.value === Mode.Starmap;
 
   if (!isStarbeltOpen) return null;
 

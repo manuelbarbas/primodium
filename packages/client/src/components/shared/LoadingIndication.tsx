@@ -1,9 +1,10 @@
+import { useCore } from "@primodiumxyz/core/react";
 import { Loader } from "../core/Loader";
-import { components } from "src/network/components";
 import { FaDatabase } from "react-icons/fa";
 
 export const LoadingIndication = () => {
-  const queueSize = components.TransactionQueue.useSize();
+  const { tables } = useCore();
+  const queueSize = tables.TransactionQueue.useSize();
 
   if (!queueSize) return <></>;
 

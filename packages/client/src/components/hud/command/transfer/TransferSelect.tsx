@@ -1,56 +1,50 @@
-import { useEntityQuery } from "@latticexyz/react";
-import { Entity, Has, HasValue } from "@latticexyz/recs";
 import { InterfaceIcons } from "@primodiumxyz/assets";
-import { Button } from "src/components/core/Button";
-import { useMud } from "src/hooks";
-import { components } from "src/network/components";
-import { entityToFleetName, entityToRockName } from "@/util/name";
-import { getAsteroidImage } from "@/util/asteroid";
+import { Button } from "@/components/core/Button";
 import { useTransfer } from "@/hooks/providers/TransferProvider";
 import { cn } from "@/util/client";
 import { Card } from "@/components/core/Card";
 import { useEffect } from "react";
-import { getPlayerOwner } from "@/hooks/usePlayerOwner";
-import { useGame } from "@/hooks/useGame";
-import { EntityType } from "@/util/constants";
-import { useFullResourceCount } from "@/hooks/useFullResourceCount";
-import { singletonEntity } from "@latticexyz/store-sync/recs";
+import { useAccountClient, useCore, usePlayerOwner, useResourceCount } from "@primodiumxyz/core/react";
+import { entityToFleetName, entityToRockName, EntityType } from "@primodiumxyz/core";
+import { defaultEntity, Entity, useQuery } from "@primodiumxyz/reactive-tables";
+import { useAsteroidImage } from "@/hooks/image/useAsteroidImage";
 
 export const TransferSelect = ({ side }: { side: "left" | "right" }) => {
   const { left, right, setLeft, setRight } = useTransfer();
+  const { tables, utils } = useCore();
 
   const opposingSide = side === "left" ? right : left;
-  const opposingSideOwner = opposingSide
-    ? opposingSide === "newFleet"
-      ? undefined
-      : getPlayerOwner(opposingSide)
-    : undefined;
-  const playerEntity = useMud().playerAccount.entity;
-  const asteroid = components.SelectedRock.use()?.value;
-  const playerOwnsRock = components.OwnedBy.use(asteroid)?.value === playerEntity;
+  const opposingSideOwner = usePlayerOwner(!opposingSide || opposingSide === "newFleet" ? undefined : opposingSide);
+  const playerEntity = useAccountClient().playerAccount.entity;
+  const asteroid = tables.SelectedRock.use()?.value ?? tables.SelectedRock.get()?.value;
+  const playerOwnsRock = tables.OwnedBy.use(asteroid)?.value === playerEntity;
 
   // only show new fleet if you own the selected asteroid and there are new fleet slots available
   const showNewFleet = side === "right" && asteroid && playerOwnsRock;
-  const canBuildFleet = useFullResourceCount(EntityType.FleetCount, asteroid ?? singletonEntity).resourceCount > 0n;
+  const canBuildFleet = useResourceCount(EntityType.FleetCount, asteroid ?? defaultEntity).resourceCount > 0n;
 
   const activeEntities = [left, right];
   const hideNotOwned = activeEntities.some((entity) => {
     if (!entity) return false;
     if (entity === "newFleet") return true;
-    if (getPlayerOwner(entity) !== playerEntity) return true;
+    if (utils.getPlayerOwner(entity) !== playerEntity) return true;
     return false;
   });
 
   if (!asteroid) throw new Error("No selected asteroid");
-  const query = [Has(components.IsFleet), HasValue(components.FleetMovement, { destination: asteroid })];
-  const time = components.Time.use()?.value ?? 0n;
-  const fleetsOnRock = [...useEntityQuery(query)].filter((entity) => {
-    const arrivalTime = components.FleetMovement.get(entity)?.arrivalTime ?? 0n;
+
+  const allFleetsOnRock = useQuery({
+    with: [tables.IsFleet],
+    withProperties: [{ table: tables.FleetMovement, properties: { destination: asteroid } }],
+  });
+  const time = tables.Time.use()?.value ?? 0n;
+  const fleetsOnRock = allFleetsOnRock.filter((entity) => {
+    const arrivalTime = tables.FleetMovement.get(entity)?.arrivalTime ?? 0n;
     if (arrivalTime > time) return false;
     if (!hideNotOwned) return true;
 
-    const fleetOwnerRock = components.OwnedBy.get(entity)?.value as Entity | undefined;
-    const fleetOwnerPlayer = components.OwnedBy.get(fleetOwnerRock)?.value;
+    const fleetOwnerRock = tables.OwnedBy.get(entity)?.value as Entity | undefined;
+    const fleetOwnerPlayer = tables.OwnedBy.get(fleetOwnerRock)?.value;
     return fleetOwnerPlayer == playerEntity;
   });
 
@@ -118,26 +112,23 @@ const SelectOption = ({
   selected?: boolean;
   disabled?: boolean;
 }) => {
-  const primodium = useGame();
-  const player = useMud().playerAccount.entity;
-  const isFleet = components.IsFleet.has(entity);
+  const player = useAccountClient().playerAccount.entity;
+  const { tables } = useCore();
+  const isFleet = tables.IsFleet.has(entity);
   const content = isFleet ? entityToFleetName(entity) : entityToRockName(entity);
-  const playerIsOwner = getPlayerOwner(entity) === player;
+  const playerIsOwner = usePlayerOwner(entity) === player;
 
-  const imgSrc = isFleet
-    ? playerIsOwner
-      ? InterfaceIcons.Fleet
-      : InterfaceIcons.EnemyFleet
-    : getAsteroidImage(primodium, entity);
-  useEffect(() => () => components.HoverEntity.remove(), []);
+  const asteroidImage = useAsteroidImage(entity);
+  const imgSrc = isFleet ? (playerIsOwner ? InterfaceIcons.Fleet : InterfaceIcons.EnemyFleet) : asteroidImage;
+  useEffect(() => () => tables.HoverEntity.remove(), []);
   return (
     <Button
       disabled={disabled}
       variant="neutral"
       size="content"
       onClick={onSelect}
-      onMouseEnter={() => components.HoverEntity.set({ value: entity })}
-      onMouseLeave={() => components.HoverEntity.remove()}
+      onMouseEnter={() => tables.HoverEntity.set({ value: entity })}
+      onMouseLeave={() => tables.HoverEntity.remove()}
       className={cn(`flex w-full aspect-square flex-col gap-2 items-center`, !playerIsOwner ? "border-error/50" : "")}
     >
       <img src={imgSrc} className="w-8" />

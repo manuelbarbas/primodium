@@ -7,11 +7,12 @@ import { Intro } from "@/components/hud/global/modals/Intro";
 import { FavoriteAsteroids } from "@/components/hud/global/FavoriteAsteroids";
 import { WarshipPopulation } from "@/components/hud/global/WarshipPopulation";
 import { BrandingLabel } from "@/components/shared/BrandingLabel";
-import { usePersistentStore } from "@game/stores/PersistentStore";
+import { usePersistentStore } from "@primodiumxyz/game/src/stores/PersistentStore";
 import { memo } from "react";
 import { useShallow } from "zustand/react/shallow";
 import { HoverInfo } from "@/components/hud/global/hover/HoverInfo";
 import { FollowSocials } from "@/components/shared/FollowSocials";
+import { AudioPlayer } from "@/components/hud/global/MusicPlayer";
 import { Coordinates } from "@/components/shared/Coordinates";
 
 export const GlobalHUD = memo(() => {
@@ -21,7 +22,6 @@ export const GlobalHUD = memo(() => {
     <HUD scale={uiScale}>
       <div className="absolute top-0 left-0 h-32 w-screen bg-gradient-to-b from-black to-transparent" />
       <Intro />
-      <Coordinates />
 
       <HUD.TopLeft>
         <WarshipPopulation />
@@ -41,9 +41,13 @@ export const GlobalHUD = memo(() => {
       <HUD.CursorFollower>
         <HoverInfo />
       </HUD.CursorFollower>
-      <HUD.BottomLeft>
-        <FollowSocials />
+      <HUD.BottomLeft className="space-y-4 p-2">
+        <AudioPlayer />
+        <Coordinates />
       </HUD.BottomLeft>
+      <HUD.BottomRight>
+        <FollowSocials />
+      </HUD.BottomRight>
       <HUD.BottomRight>
         <BrandingLabel />
       </HUD.BottomRight>

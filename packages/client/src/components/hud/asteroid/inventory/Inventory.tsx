@@ -2,8 +2,8 @@ import { Card, GlassCard } from "@/components/core/Card";
 import { IconLabel } from "@/components/core/IconLabel";
 import { Tabs } from "@/components/core/Tabs";
 import { InventoryPane } from "@/components/hud/asteroid/inventory/InventoryPane";
-import { EntityType } from "@/util/constants";
-import { EntityToResourceImage } from "@/util/mappings";
+import { EntityToResourceImage } from "@/util/image";
+import { EntityType } from "@primodiumxyz/core";
 import { memo } from "react";
 
 export const Inventory = memo(() => {
@@ -18,7 +18,14 @@ export const Inventory = memo(() => {
           writingMode: "vertical-rl",
         }}
       >
-        <IconLabel text="Inventory" imageUri={EntityToResourceImage[EntityType.Iridium]} className="gap-2 py-4" />
+        <IconLabel
+          text="Inventory"
+          imageUri={EntityToResourceImage[EntityType.Iridium]}
+          className="gap-2 py-4"
+          style={{
+            writingMode: "vertical-lr",
+          }}
+        />
       </Tabs.Button>
 
       <Tabs.Pane index={0} fragment className="pointer-events-auto">

@@ -2,24 +2,21 @@ import { Badge } from "@/components/core/Badge";
 import { Button } from "@/components/core/Button";
 import { Card } from "@/components/core/Card";
 import { DeferredAsteroidsRenderContainer } from "@/game/lib/objects/Asteroid/DeferredAsteroidsRenderContainer";
-import { useMud } from "@/hooks";
 import { useGame } from "@/hooks/useGame";
-import { components } from "@/network/components";
-import { EntityType } from "@/util/constants";
-import { entityToFleetName, entityToRockName } from "@/util/name";
-import { formatTime } from "@/util/number";
-import { useEntityQuery } from "@latticexyz/react";
-import { Entity, Has } from "@latticexyz/recs";
 import { InterfaceIcons } from "@primodiumxyz/assets";
+import { entityToFleetName, entityToRockName, EntityType, formatTime } from "@primodiumxyz/core";
+import { useAccountClient, useCore } from "@primodiumxyz/core/react";
+import { Entity, useQuery } from "@primodiumxyz/reactive-tables";
 import { EFleetStance } from "contracts/config/enums";
 import { useMemo } from "react";
 
 export const OwnedFleet: React.FC<{ fleet: Entity; onClick?: () => void }> = ({ fleet, onClick }) => {
+  const { tables } = useCore();
   const fleetName = entityToFleetName(fleet);
-  const selected = components.SelectedFleet.use()?.value === fleet;
-  const movement = components.FleetMovement.use(fleet);
-  const time = components.Time.use()?.value ?? 0n;
-  const stance = components.FleetStance.use(fleet);
+  const selected = tables.SelectedFleet.use()?.value === fleet;
+  const movement = tables.FleetMovement.use(fleet);
+  const time = tables.Time.use()?.value ?? 0n;
+  const stance = tables.FleetStance.use(fleet);
 
   const fleetStateText = useMemo(() => {
     const arrivalTime = movement?.arrivalTime ?? 0n;
@@ -48,25 +45,25 @@ export const OwnedFleet: React.FC<{ fleet: Entity; onClick?: () => void }> = ({ 
 };
 
 export const OwnedFleets: React.FC<{ className?: string }> = ({ className }) => {
+  const { tables } = useCore();
   const {
     playerAccount: { entity: playerEntity },
-  } = useMud();
+  } = useAccountClient();
   const game = useGame();
 
-  const query = [Has(components.IsFleet)];
-  const fleets = useEntityQuery(query).filter((entity) => {
-    const rock = components.OwnedBy.get(entity)?.value as Entity;
+  const fleets = useQuery({ with: [tables.IsFleet] }).filter((entity) => {
+    const rock = tables.OwnedBy.get(entity)?.value as Entity;
     if (!rock) return false;
-    const player = components.OwnedBy.get(rock)?.value;
+    const player = tables.OwnedBy.get(rock)?.value;
     return player == playerEntity;
   });
 
   const handleSelect = (entity: Entity) => {
     const { pan, zoomTo } = game.STARMAP.camera;
-    const arrivalTime = components.FleetMovement.get(entity)?.arrivalTime ?? 0n;
-    const time = components.Time.get()?.value ?? 0n;
+    const arrivalTime = tables.FleetMovement.get(entity)?.arrivalTime ?? 0n;
+    const time = tables.Time.get()?.value ?? 0n;
 
-    if (arrivalTime < time) components.SelectedFleet.set({ value: entity });
+    if (arrivalTime < time) tables.SelectedFleet.set({ value: entity });
 
     const objects = game.STARMAP.objects;
     const fleet = objects.fleet.get(entity);
@@ -92,7 +89,7 @@ export const OwnedFleets: React.FC<{ className?: string }> = ({ className }) => 
   };
 
   return (
-    <Card className={`relative ${className}`}>
+    <Card noDecor className={`relative ${className}`}>
       {fleets.length === 0 && (
         <p className="w-full h-full text-xs grid place-items-center opacity-50 uppercase">you control no fleets</p>
       )}

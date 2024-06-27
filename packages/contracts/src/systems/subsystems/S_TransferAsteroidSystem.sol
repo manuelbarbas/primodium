@@ -3,7 +3,7 @@ pragma solidity >=0.8.24;
 
 import { PrimodiumSystem } from "systems/internal/PrimodiumSystem.sol";
 
-import { OwnedBy, LastConquered, ColonyShipsInTraining, UnitCount, Home } from "src/codegen/index.sol";
+import { OwnedBy, LastConquered, ColonyShipsInTraining, UnitCount, Home, Spawned } from "src/codegen/index.sol";
 import { LibFleetStance } from "libraries/fleet/LibFleetStance.sol";
 import { LibFleetClear } from "libraries/fleet/LibFleetClear.sol";
 import { LibUnit } from "libraries/LibUnit.sol";
@@ -33,6 +33,7 @@ contract S_TransferAsteroidSystem is PrimodiumSystem {
           Home.set(lastOwnerEntity, ownedAsteroids[0]);
         } else {
           Home.deleteRecord(lastOwnerEntity);
+          Spawned.set(lastOwnerEntity, false);
         }
       }
     }

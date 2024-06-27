@@ -12,19 +12,18 @@ import { ConfigWithPrototypes } from "./ts/prototypes/types";
 export const worldInput = {
   namespace: "Pri_11",
   systems: {
-    // these systems are closed access by default
-    S_ProductionRateSystem: {},
-    S_SpendResourcesSystem: {},
-    S_RewardsSystem: {},
-    S_StorageSystem: {},
-    S_BattleApplyDamageSystem: {},
-    S_BattleRaidResolveSystem: {},
-    S_BattleEncryptionResolveSystem: {},
-    S_FleetClearSystem: {},
-    S_InitAsteroidOwnerSystem: {},
-    S_TransferAsteroidSystem: {},
-    S_CreateSecondaryAsteroidSystem: {},
-    S_BuildRaidableAsteroidSystem: {},
+    S_ProductionRateSystem: { openAccess: false },
+    S_SpendResourcesSystem: { openAccess: false },
+    S_RewardsSystem: { openAccess: false },
+    S_StorageSystem: { openAccess: false },
+    S_BattleApplyDamageSystem: { openAccess: false },
+    S_BattleRaidResolveSystem: { openAccess: false },
+    S_BattleEncryptionResolveSystem: { openAccess: false },
+    S_FleetClearSystem: { openAccess: false },
+    S_InitAsteroidOwnerSystem: { openAccess: false },
+    S_TransferAsteroidSystem: { openAccess: false },
+    S_CreateSecondaryAsteroidSystem: { openAccess: false },
+    S_BuildRaidableAsteroidSystem: { openAccess: false },
   },
 
   // using as any here for now because of a type issue and also because the enums are not being recognized in our codebase rn
@@ -758,18 +757,25 @@ export const worldInput = {
       key: ["entity", "key", "asteroidEntity"],
       schema: { entity: "bytes32", key: "bytes32", asteroidEntity: "bytes32", stored: "bool", index: "uint256" },
     },
+
+    /* ---------------------------- Player Entity Registry ---------------------- */
+    Keys_PlayerRegistry: {
+      key: [],
+      schema: { value: "bytes32[]" },
+    },
+    // Meta_PlayerSet: {},
+
+    Keys_AllianceRegistry: {
+      key: [],
+      schema: { value: "bytes32[]" },
+    },
+    // Meta_AllianceSet: {},
   },
 } as const;
 
-const getConfig = async () => {
-  let exclude: string[] = [];
-  if (typeof process != undefined && typeof process != "undefined") {
-    const dotenv = await import("dotenv");
-    dotenv.config({ path: "../../.env" });
-    if (process.env.PRI_DEV !== "true") exclude = ["DevSystem"];
-  }
-
-  const world = defineWorld({
+// Get the world definition with optional excluded systems
+const getWorld = (exclude?: string[]) =>
+  defineWorld({
     ...worldInput,
     modules: [
       {
@@ -778,13 +784,24 @@ const getConfig = async () => {
         args: [],
       },
     ],
-    excludeSystems: exclude,
+    excludeSystems: exclude ?? [],
   });
 
-  return world;
+// Get the config during build by directly retrieving `PRI_DEV`
+// This will prevent the need for dotenv and top-level await, which break the build
+const getConfigBuild = () => getWorld(process.env.PRI_DEV !== "true" ? ["DevSystem"] : []);
+// Get the config at runtime using environment variables
+const getConfig = async () => {
+  if (typeof process != undefined && typeof process != "undefined") {
+    const dotenv = await import("dotenv");
+    dotenv.config({ path: "../../.env" });
+    if (process.env.PRI_DEV !== "true") return getWorld(["DevSystem"]);
+  }
+
+  return getWorld([]);
 };
 
-const config = await getConfig();
+const config = process.env.NODE_ENV === "production" ? getConfigBuild() : await getConfig();
 export default config;
 
 export const configInputs: ConfigWithPrototypes<typeof worldInput, (typeof worldInput)["tables"]> = {

@@ -1,10 +1,10 @@
 import { Join } from "@/components/core/Join";
-import { Button } from "src/components/core/Button";
-import { SecondaryCard } from "src/components/core/Card";
-import { Navigator } from "src/components/core/Navigator";
-import { Range } from "src/components/core/Range";
-import { Toggle } from "src/components/core/Toggle";
-import { usePersistentStore } from "src/game/stores/PersistentStore";
+import { Button } from "@/components/core/Button";
+import { SecondaryCard } from "@/components/core/Card";
+import { Navigator } from "@/components/core/Navigator";
+import { Range } from "@/components/core/Range";
+import { Toggle } from "@/components/core/Toggle";
+import { usePersistentStore } from "@primodiumxyz/game/src/stores/PersistentStore";
 
 export const GeneralSettings = () => {
   const [uiScale, setUiScale, hideHotkeys, setHideHotkeys] = usePersistentStore((state) => [

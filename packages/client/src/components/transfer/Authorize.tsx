@@ -1,23 +1,23 @@
 import { findEntriesWithPrefix } from "@/util/localStorage";
-import { singletonEntity } from "@latticexyz/store-sync/recs";
 import { useEffect, useState } from "react";
 import { FaClipboard, FaExclamationCircle, FaEye, FaEyeSlash, FaInfoCircle, FaTimes, FaUnlink } from "react-icons/fa";
-import { useMud } from "src/hooks";
-import { grantAccessWithSignature, revokeAccess } from "src/network/setup/contractCalls/access";
-import { copyToClipboard } from "src/util/clipboard";
-import { STORAGE_PREFIX } from "src/util/constants";
+import { copyToClipboard } from "@/util/clipboard";
 import { Address, Hex } from "viem";
 import { generatePrivateKey, privateKeyToAccount } from "viem/accounts";
 import { Button } from "../core/Button";
 import { SecondaryCard } from "../core/Card";
 import { TransactionQueueMask } from "../shared/TransactionQueueMask";
+import { useContractCalls } from "@/hooks/useContractCalls";
+import { useAccountClient } from "@primodiumxyz/core/react";
+import { STORAGE_PREFIX } from "@primodiumxyz/core";
+import { defaultEntity } from "@primodiumxyz/reactive-tables";
 
 const sessionWalletTooltip =
   "Bypass annoying confirmation popups by authorizing a session account. This allows you to securely perform certain actions without external confirmation.";
 
 export function Authorize() {
-  const mud = useMud();
-  const { sessionAccount } = mud;
+  const { sessionAccount } = useAccountClient();
+  const { grantAccessWithSignature, revokeAccess } = useContractCalls();
   const [showDetails, setShowDetails] = useState(false);
   const [showHelp, setShowHelp] = useState(!localStorage.getItem("hideHelp"));
 
@@ -36,7 +36,7 @@ export function Authorize() {
     const account = privateKeyToAccount(privateKey as Hex);
 
     if (sessionAddress && sessionAddress === account.address) return;
-    else await grantAccessWithSignature(mud, privateKey, { id: singletonEntity });
+    else await grantAccessWithSignature(privateKey, { id: defaultEntity });
   };
 
   const handleRandomPress = () => {
@@ -50,7 +50,7 @@ export function Authorize() {
   };
 
   const removeSessionKey = async (publicKey: Address) => {
-    await revokeAccess(mud, publicKey);
+    await revokeAccess(publicKey);
     localStorage.removeItem(STORAGE_PREFIX + publicKey);
   };
 
@@ -71,7 +71,7 @@ export function Authorize() {
         </SecondaryCard>
       )}
 
-      <TransactionQueueMask queueItemId={singletonEntity}>
+      <TransactionQueueMask queueItemId={defaultEntity}>
         {sessionAddress ? (
           <div className="w-full flex flex-col">
             <div className="w-full flex items-center justify-center p-4">
@@ -80,7 +80,7 @@ export function Authorize() {
                 <Button
                   onClick={async () => {
                     setShowDetails(false);
-                    revokeAccess(mud, sessionAddress);
+                    revokeAccess(sessionAddress);
                     removeSessionKey(sessionAddress);
                   }}
                   tooltip="stop authorizing"

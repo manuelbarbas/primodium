@@ -2,19 +2,18 @@ import { Badge } from "@/components/core/Badge";
 import { Button } from "@/components/core/Button";
 import { GlassCard } from "@/components/core/Card";
 import { IconLabel } from "@/components/core/IconLabel";
-import { useMud } from "@/hooks";
 import { cn } from "@/util/client";
 
-import { Mode } from "@/util/constants";
-import { Entity } from "@latticexyz/recs";
-import { singletonEntity } from "@latticexyz/store-sync/recs";
+import { Entity } from "@primodiumxyz/reactive-tables";
 import { InterfaceIcons } from "@primodiumxyz/assets";
 import { useCallback } from "react";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
+import { useCore } from "@primodiumxyz/core/react";
+import { Mode } from "@primodiumxyz/core";
 
 export const ModeButton = (props: { mode: Entity; image: string }) => {
-  const { components } = useMud();
-  const currentMode = components.SelectedMode.use()?.value;
+  const { tables } = useCore();
+  const currentMode = tables.SelectedMode.use()?.value;
 
   return (
     <Button
@@ -23,7 +22,7 @@ export const ModeButton = (props: { mode: Entity; image: string }) => {
       variant="ghost"
       className={cn(currentMode === props.mode && "scale-125 pixel-border p-3", "hover:bg-transparent")}
       onClick={() => {
-        components.SelectedMode.set({
+        tables.SelectedMode.set({
           value: props.mode,
         });
       }}
@@ -55,27 +54,27 @@ const selectableModes = [
 ];
 
 export const ModeSelector = () => {
-  const { components } = useMud();
-  const currentMode = components.SelectedMode.use()?.value;
+  const { tables } = useCore();
+  const currentMode = tables.SelectedMode.use()?.value;
   const spectating = currentMode === Mode.Spectate;
 
   const handlePrev = useCallback(() => {
     const currentIndex = selectableModes.findIndex((mode) => mode.type === currentMode);
     const nextIndex = (currentIndex - 1 + selectableModes.length) % selectableModes.length;
 
-    components.SelectedMode.set({
+    tables.SelectedMode.set({
       value: selectableModes[nextIndex].type,
     });
-  }, [currentMode, components.SelectedMode]);
+  }, [currentMode, tables.SelectedMode]);
 
   const handleNext = useCallback(() => {
     const currentIndex = selectableModes.findIndex((mode) => mode.type === currentMode);
     const nextIndex = (currentIndex + 1) % selectableModes.length;
 
-    components.SelectedMode.set({
+    tables.SelectedMode.set({
       value: selectableModes[nextIndex].type,
     });
-  }, [currentMode, components.SelectedMode]);
+  }, [currentMode, tables.SelectedMode]);
 
   return (
     <div className="flex flex-col items-center pointer-events-auto">
@@ -103,13 +102,16 @@ export const ModeSelector = () => {
                 size="sm"
                 className=" drop-shadow-hard hover:bg-transparent"
                 onClick={() => {
-                  components.SelectedMode.set({
+                  tables.SelectedMode.set({
                     value: Mode.CommandCenter,
                   });
 
-                  components.ActiveRock.set({
-                    value: components.BuildRock.get()?.value ?? singletonEntity,
-                  });
+                  const buildRock = tables.BuildRock.get()?.value;
+                  if (buildRock) {
+                    tables.ActiveRock.set({
+                      value: buildRock,
+                    });
+                  } else tables.ActiveRock.remove();
                 }}
               >
                 <IconLabel imageUri={InterfaceIcons.Return} className="text-2xl" />

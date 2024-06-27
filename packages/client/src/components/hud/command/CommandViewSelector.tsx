@@ -1,21 +1,20 @@
 import { InterfaceIcons } from "@primodiumxyz/assets";
-import { components } from "@/network/components";
-import { Mode } from "@/util/constants";
 import { Tabs } from "@/components/core/Tabs";
 import { Join } from "@/components/core/Join";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
-import { useMud } from "@/hooks";
-import { Entity, Has, HasValue } from "@latticexyz/recs";
-import { useEntityQuery } from "@latticexyz/react";
+import { useAccountClient, useCore } from "@primodiumxyz/core/react";
+import { Entity, useQuery } from "@primodiumxyz/reactive-tables";
+import { Mode } from "@primodiumxyz/core";
 
 const btnClass = "group  bg-transparent";
 
 export const CommandViewSelector = ({ setInitialRight }: { setInitialRight?: () => void }) => {
-  const playerEntity = components.Account.use()?.value;
-  const selectedRock = components.SelectedRock.use()?.value;
-  const owner = components.OwnedBy.use(selectedRock)?.value;
+  const { tables } = useCore();
+  const playerEntity = tables.Account.use()?.value;
+  const selectedRock = tables.SelectedRock.use()?.value;
+  const owner = tables.OwnedBy.use(selectedRock)?.value;
   const ownedByPlayer = owner === playerEntity;
-  const commandOpen = components.SelectedMode.use()?.value === Mode.CommandCenter;
+  const commandOpen = tables.SelectedMode.use()?.value === Mode.CommandCenter;
 
   if (!commandOpen) return null;
 
@@ -54,18 +53,22 @@ export const CommandViewSelector = ({ setInitialRight }: { setInitialRight?: () 
 };
 
 const TransferInventoryButton = ({ setInitialRight }: { setInitialRight?: () => void }) => {
-  const selectedRock = components.SelectedRock.use()?.value;
-  const playerEntity = useMud().playerAccount.entity;
-  const playerOwnsRock = components.OwnedBy.get(selectedRock)?.value === playerEntity;
-  const time = components.Time.use()?.value ?? 0n;
+  const { tables } = useCore();
+  const selectedRock = tables.SelectedRock.use()?.value;
+  const playerEntity = useAccountClient().playerAccount.entity;
+  const playerOwnsRock = tables.OwnedBy.get(selectedRock)?.value === playerEntity;
+  const time = tables.Time.use()?.value ?? 0n;
 
-  const query = [Has(components.IsFleet), HasValue(components.FleetMovement, { destination: selectedRock })];
-  const playerHasFleetOnRock = [...useEntityQuery(query)].some((entity) => {
-    const arrivalTime = components.FleetMovement.get(entity)?.arrivalTime ?? 0n;
+  const fleetsOnRock = useQuery({
+    with: [tables.IsFleet],
+    withProperties: [{ table: tables.FleetMovement, properties: { destination: selectedRock } }],
+  });
+  const playerHasFleetOnRock = fleetsOnRock.some((entity) => {
+    const arrivalTime = tables.FleetMovement.get(entity)?.arrivalTime ?? 0n;
     if (arrivalTime > time) return false;
 
-    const fleetOwnerRock = components.OwnedBy.get(entity)?.value as Entity | undefined;
-    const fleetOwnerPlayer = components.OwnedBy.get(fleetOwnerRock)?.value;
+    const fleetOwnerRock = tables.OwnedBy.get(entity)?.value as Entity;
+    const fleetOwnerPlayer = tables.OwnedBy.get(fleetOwnerRock)?.value;
     return fleetOwnerPlayer == playerEntity;
   });
 

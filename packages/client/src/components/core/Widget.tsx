@@ -1,15 +1,15 @@
 import { Card } from "@/components/core/Card";
 import { useWidgets } from "@/hooks/providers/WidgetProvider";
 import { useGame } from "@/hooks/useGame";
-import { SceneKeys } from "@game/lib/constants/common";
-import { KeybindActionKeys } from "@game/lib/constants/keybinds";
-import { usePersistentStore } from "@game/stores/PersistentStore";
-import { Coord } from "engine/types";
+import { KeybindActionKeys } from "@primodiumxyz/game/src/lib/constants/keybinds";
+import { SceneKeys } from "@primodiumxyz/game/src/lib/constants/common";
+import { usePersistentStore } from "@primodiumxyz/game/src/stores/PersistentStore";
+import { useCore } from "@primodiumxyz/core/react";
+import { Coord } from "@primodiumxyz/engine/types";
 import { ReactNode, memo, useCallback, useEffect, useMemo, useState } from "react";
 import ReactDOM from "react-dom";
 import { FaMinus, FaRegWindowMaximize, FaRegWindowRestore } from "react-icons/fa";
 import { RiPushpinFill, RiUnpinFill } from "react-icons/ri";
-import { components } from "@/network/components";
 
 type WidgetProps = {
   title: string;
@@ -244,6 +244,7 @@ export const Widget: React.FC<WidgetProps> = memo(
     noBorder = false,
     topBar = false,
   }) => {
+    const { tables } = useCore();
     const game = useGame();
     const [paneInfo, setPane, removePane] = usePersistentStore((state) => [
       state.panes,
@@ -437,7 +438,7 @@ export const Widget: React.FC<WidgetProps> = memo(
       if (!container) return;
 
       // remove any hovered entity as Phaser will have failed to detect the pointer leaving
-      components.HoverEntity.remove();
+      tables.HoverEntity.remove();
 
       if (pinned) {
         container.setAlpha(1);

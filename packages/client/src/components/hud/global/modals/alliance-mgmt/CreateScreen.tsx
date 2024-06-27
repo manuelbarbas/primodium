@@ -4,11 +4,8 @@ import { Navigator } from "@/components/core/Navigator";
 import { RadioGroup } from "@/components/core/Radio";
 import { TextInput } from "@/components/core/TextInput";
 import { TransactionQueueMask } from "@/components/shared/TransactionQueueMask";
-import { useMud } from "@/hooks";
-import { createAlliance } from "@/network/setup/contractCalls/alliance";
-import { TransactionQueueType } from "@/util/constants";
-import { hashEntities } from "@/util/encode";
-import { isProfane } from "@/util/profanity";
+import { useContractCalls } from "@/hooks/useContractCalls";
+import { useAccountClient } from "@primodiumxyz/core/react";
 import { useState } from "react";
 import { FaPlus } from "react-icons/fa";
 
@@ -16,9 +13,10 @@ export const ALLIANCE_TAG_SIZE = 6;
 
 // This screen is only accessible to players who are not in an alliance
 export const CreateScreen = () => {
-  const mud = useMud();
   const [inviteOnly, setInviteOnly] = useState(true);
   const [allianceTag, setAllianceTag] = useState("");
+  const { createAlliance } = useContractCalls();
+  const { playerAccount } = useAccountClient();
 
   // TODO: implement description when implemented in backend
   return (
@@ -46,10 +44,10 @@ export const CreateScreen = () => {
 
       <div className="flex mt-auto self-center gap-8">
         <Navigator.BackButton />
-        <TransactionQueueMask queueItemId={hashEntities(TransactionQueueType.CreateAlliance, mud.playerAccount.entity)}>
+        <TransactionQueueMask queueItemId={`create-${playerAccount.entity}`}>
           <Button
-            disabled={!allianceTag || isProfane(allianceTag)}
-            onClick={() => createAlliance(mud, allianceTag, inviteOnly)}
+            disabled={!allianceTag}
+            onClick={() => createAlliance(allianceTag, inviteOnly)}
             variant="primary"
             className="btn-sm border-2 border-secondary flex gap-2"
           >

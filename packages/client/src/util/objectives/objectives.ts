@@ -1,8 +1,8 @@
-import { Entity } from "@latticexyz/recs";
+import { Entity } from "@primodiumxyz/reactive-tables";
 import { InterfaceIcons } from "@primodiumxyz/assets";
 import { EObjectives } from "contracts/config/enums";
-import { EntityType, ObjectiveEnumLookup } from "../constants";
 import { Objective } from "./types";
+import { EntityType, ObjectiveEnumLookup } from "@primodiumxyz/core";
 
 export const getObjective = (objectiveEntity: Entity) => {
   const objectiveEnum = ObjectiveEnumLookup[objectiveEntity];
@@ -22,7 +22,7 @@ export const Objectives = new Map<EObjectives, Objective>([
       category: "Social",
       type: "Claim",
       description:
-        "Join the Primodium Discord by clicking on the button in the lower left. This is the most important decision you will ever make.",
+        "Join the Primodium Discord by clicking on the button in the lower right. This is the most important decision you will ever make.",
       tooltip: "Joined Primodium on Discord",
       icon: InterfaceIcons.Discord,
     },
@@ -33,7 +33,7 @@ export const Objectives = new Map<EObjectives, Objective>([
       category: "Social",
       type: "Claim",
       description:
-        "Follow the Primodium Twitter and Retweet the Pinned Post by clicking on the button in the lower left. This is tied for the most important decision you will ever make.",
+        "Follow the Primodium Twitter and Retweet the Pinned Post by clicking on the button in the lower right. This is tied for the most important decision you will ever make.",
       icon: InterfaceIcons.Twitter,
       tooltip: "Followed Primodium on Twitter",
     },
@@ -399,7 +399,7 @@ export const Objectives = new Map<EObjectives, Objective>([
     {
       category: "Conquest",
       type: "Build",
-      requiredMainBase: 8n,
+      requiredMainBase: 7n,
       buildingType: EntityType.Shipyard,
       description:
         "Shipyards constuct Colony Ships, which colonize asteroids. To build a shipyard, go to the Blueprints menu and select military. Place a Shipyard on any open tile.",
@@ -422,12 +422,12 @@ export const Objectives = new Map<EObjectives, Objective>([
     {
       category: "Conquest",
       type: "Train",
-      requiredMainBase: 8n,
+      requiredMainBase: 7n,
       requiredObjectives: [EObjectives.BuildShipyard],
       unitType: EntityType.ColonyShip,
       unitCount: 1n,
       description:
-        "To train a colony ship, click on Shipyard and select Commission. Unlock a Colony Ship slot by paying required resources and then commmission a ship. Fleets containing colony ships conquer asteroids.",
+        "To train a colony ship, click on Shipyard and select Commission. Unlock a Colony Ship slot by paying required resources and then commission a ship. Fleets containing colony ships conquer asteroids.",
     },
   ],
   [
@@ -596,7 +596,7 @@ export const Objectives = new Map<EObjectives, Objective>([
     },
   ],
   [
-    EObjectives.LandFleet,
+    EObjectives.SetHomebase,
     {
       category: "Fleet",
       type: "Claim",
@@ -627,7 +627,7 @@ export const Objectives = new Map<EObjectives, Objective>([
     {
       category: "Unit Production",
       type: "Train",
-      requiredMainBase: 8n,
+      requiredMainBase: 5n,
       requiredObjectives: [EObjectives.TrainMinutemanMarine],
       unitType: EntityType.TridentMarine,
       unitCount: 32n,
@@ -772,7 +772,7 @@ export const Objectives = new Map<EObjectives, Objective>([
     {
       category: "Defense",
       type: "Build",
-      requiredMainBase: 7n,
+      requiredMainBase: 8n,
       buildingType: EntityType.ShieldGenerator,
       description:
         "Shield Generators boost defense provided by fleets and SAM launchers, and improve asteroid defense recovery. They are very power hungry. To build, select the Shield Generator from the Blueprints menu and place it on an empty tile.",
@@ -818,7 +818,7 @@ export const Objectives = new Map<EObjectives, Objective>([
     {
       category: "Defense",
       type: "Build",
-      requiredMainBase: 6n,
+      requiredMainBase: 4n,
       buildingType: EntityType.SAMLauncher,
       description:
         "SAM launchers give your asteroid native defense and additional health, protecting you from enemy attacks. You need electricity to power them. To build, select the SAM Launcher from the Blueprints menu and place it on an empty tile.",
@@ -968,7 +968,7 @@ export const Objectives = new Map<EObjectives, Objective>([
     {
       category: "Market",
       type: "Build",
-      requiredMainBase: 6n,
+      requiredMainBase: 5n,
       buildingType: EntityType.Market,
       description:
         "Markets grant access to the global resource marketplace. It's perfect for moments when you are missing a rare resource! To build, select the Solar Panel from the Blueprints menu and place it on any empty tile.",
