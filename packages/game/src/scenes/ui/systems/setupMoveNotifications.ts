@@ -1,12 +1,13 @@
+import { PrimodiumScene } from "@game/types";
 import { Core } from "@primodiumxyz/core";
 import { namespaceWorld, Entity } from "@primodiumxyz/reactive-tables";
 
-export function setupMoveNotifications(core: Core) {
+export function setupMoveNotifications(scene: PrimodiumScene, core: Core) {
   const {
     tables,
     network: { world },
   } = core;
-  const systemWorld = namespaceWorld(world, "clientSystems");
+  const systemWorld = namespaceWorld(world, "systems");
   const fleetTransitQueue = new Map<Entity, bigint>();
 
   tables.FleetMovement.watch({
@@ -26,13 +27,12 @@ export function setupMoveNotifications(core: Core) {
       if (arrival.sendTime + 30n < now || arrival.arrivalTime - 5n) {
         return;
       }
-      // const minutes = (arrival.arrivalTime - now) / 60n;
-      // const seconds = (arrival.arrivalTime - now) % 60n;
-      // const output = minutes > 0 ? `${minutes} minute(s)` : `${seconds} seconds`;
+      const minutes = (arrival.arrivalTime - now) / 60n;
+      const seconds = (arrival.arrivalTime - now) % 60n;
+      const output = minutes > 0 ? `${minutes} minute(s)` : `${seconds} seconds`;
 
       if (arrival.arrivalTime > now) {
-        //TODO
-        // scene.notify("info", `Your fleet is en route and will arrive in ${output}.`);
+        scene.notify("info", `Your fleet is en route and will arrive in ${output}.`);
       }
 
       fleetTransitQueue.set(entity, arrival.arrivalTime);
@@ -49,10 +49,9 @@ export function setupMoveNotifications(core: Core) {
 
         if (!arrival || now == 0n) return;
 
-        // const destination = tables.Position.get(arrival.destination as Entity);
+        const destination = tables.Position.get(arrival.destination as Entity);
         if (now > arrivalTime) {
-          //TODO
-          // scene.notify("info", `Your fleet has arrived at [${destination?.x ?? 0}, ${destination?.y ?? 0}].`);
+          scene.notify("info", `Your fleet has arrived at [${destination?.x ?? 0}, ${destination?.y ?? 0}].`);
 
           fleetTransitQueue.delete(entityId);
         }

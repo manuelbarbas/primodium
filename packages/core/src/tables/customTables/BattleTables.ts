@@ -85,6 +85,7 @@ export const createBattleTables = ({ world, tables }: CreateNetworkResult) => {
 
   const get = (battleEntity: Entity) => {
     const battle = RawBattle.get(battleEntity);
+
     const participants = RawBattleParticipants.get(battleEntity)?.value ?? [];
     if (!battle) return undefined;
     const battleParticipants = participants.reduce((acc, participant) => {
