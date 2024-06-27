@@ -13,7 +13,9 @@ export default defineConfig([
     tsconfig: "./tsconfig.json",
     define: {
       "process.env.PRI_DEV": JSON.stringify(process.env.PRI_DEV || "false"),
+      "process.env.NODE_ENV": '"production"',
     },
+    external: ["dotenv"],
   },
   {
     entry: ["src/react/index.ts"], // Entry point for the React-specific build
@@ -26,5 +28,6 @@ export default defineConfig([
     minify: true,
     tsconfig: "./tsconfig.json",
     clean: true, // Don't clean the dist folder when building the React file
+    external: ["dotenv"],
   },
 ]);
