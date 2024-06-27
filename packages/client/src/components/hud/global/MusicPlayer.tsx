@@ -85,7 +85,7 @@ export const AudioPlayer = () => {
   };
 
   return (
-    <SecondaryCard className={cn("w-48 h-10 text-sm m-2 group bg-secondary/15")}>
+    <SecondaryCard className={cn("w-48 h-10 text-sm group bg-secondary/15")}>
       <div className={cn("flex gap-2 items-center group-hover:opacity-15 transition-all", !isPlaying && "opacity-15")}>
         <FaMusic className={cn("min-w-6", isPlaying && "animate-pulse")} />
         <div className="relative marquee grow flex">
