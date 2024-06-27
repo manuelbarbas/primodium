@@ -774,18 +774,9 @@ export const worldInput = {
   },
 } as const;
 
-const getConfig = async () => {
-  let exclude: string[] = [];
-  // directly retrieve the PRI_DEV env variable during build, as using dotenv would break it
-  if (process.env.PRI_DEV) {
-    if (process.env.PRI_DEV !== "true") exclude = ["DevSystem"];
-  } else if (typeof process != undefined && typeof process != "undefined") {
-    const dotenv = await import("dotenv");
-    dotenv.config({ path: "../../.env" });
-    if (process.env.PRI_DEV !== "true") exclude = ["DevSystem"];
-  }
-
-  const world = defineWorld({
+// Get the world definition with optional excluded systems
+const getWorld = (exclude?: string[]) =>
+  defineWorld({
     ...worldInput,
     modules: [
       {
@@ -794,13 +785,24 @@ const getConfig = async () => {
         args: [],
       },
     ],
-    excludeSystems: exclude,
+    excludeSystems: exclude ?? [],
   });
 
-  return world;
+// Get the config during build by directly retrieving `PRI_DEV`
+// This will prevent the need for dotenv and top-level await, which break the build
+const getConfigBuild = () => getWorld(process.env.PRI_DEV !== "true" ? ["DevSystem"] : []);
+// Get the config at runtime using environment variables
+const getConfig = async () => {
+  if (typeof process != undefined && typeof process != "undefined") {
+    const dotenv = await import("dotenv");
+    dotenv.config({ path: "../../.env" });
+    if (process.env.PRI_DEV !== "true") return getWorld(["DevSystem"]);
+  }
+
+  return getWorld([]);
 };
 
-const config = await getConfig();
+const config = process.env.NODE_ENV === "production" ? getConfigBuild() : await getConfig();
 export default config;
 
 export const configInputs: ConfigWithPrototypes<typeof worldInput, (typeof worldInput)["tables"]> = {
