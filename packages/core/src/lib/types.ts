@@ -14,8 +14,8 @@ import { ContractWrite } from "@latticexyz/common";
 import { ReplaySubject, Subject } from "rxjs";
 import { AllTableDefs, ContractTables, Entity, World, WrapperResult } from "@primodiumxyz/reactive-tables";
 
-import CallWithSignatureAbi from "@latticexyz/world-modules/out/Unstable_CallWithSignatureSystem.sol/Unstable_CallWithSignatureSystem.abi.json";
-import IWorldAbi from "contracts/out/IWorld.sol/IWorld.abi.json";
+import type CallWithSignatureAbi from "@latticexyz/world-modules/out/Unstable_CallWithSignatureSystem.sol/Unstable_CallWithSignatureSystem.abi.json.d.ts";
+import type IWorldAbi from "contracts/out/IWorld.sol/IWorld.abi.json.d.ts";
 import setupCoreTables from "@/tables/coreTables";
 import { SyncTables } from "@/tables/syncTables";
 import { ChainConfig } from "@/network/config/chainConfigs";
@@ -123,7 +123,7 @@ export type Clock = {
  * World Abi. Combination of IWorld abi and CallWithSignature abi.
  */
 
-export type WorldAbiType = typeof IWorldAbi & typeof CallWithSignatureAbi;
+export type WorldAbiType = typeof IWorldAbi | typeof CallWithSignatureAbi;
 
 type _Account<
   IsLocalAccount extends boolean = false,

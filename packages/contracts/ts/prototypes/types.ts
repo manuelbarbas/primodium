@@ -1,6 +1,7 @@
 import { StaticAbiType } from "@latticexyz/schema-type/internal";
 import { SchemaInput } from "@latticexyz/store/config/v2";
 import { ConfigFieldTypeToPrimitiveType as FieldToPrimitive } from "@latticexyz/store/internal";
+// @ts-expect-error TODO: remove when MUD type declarations/exports are fixed
 import { WorldInput } from "@latticexyz/world/ts/config/v2/input";
 
 type OmitSchemaKeys<Schema, Keys extends readonly string[]> = Omit<Schema, Keys[number]>;
