@@ -9,11 +9,12 @@
     "resolveJsonModule": true,
     "baseUrl": ".",
     "paths": {
-      "@/*": ["./src/*"]
+      "@/*": ["./src/*"],
+      "contracts/*": ["../contracts/*"]
     },
     "typeRoots": ["./types", "./global.d.ts"],
     "jsx": "react-jsx",
     "jsxImportSource": "react"
   },
-  "include": ["./src/**/*"],
+  "include": ["./src/**/*", "./__tests__/**/*"]
 }

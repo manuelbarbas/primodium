@@ -24,7 +24,7 @@ export function setupMoveNotifications(scene: PrimodiumScene, core: Core) {
       if (!ownerRockOwner || ownerRockOwner !== player) return;
 
       //it has arrived
-      if (arrival.sendTime + 30n < now || arrival.arrivalTime - 5n) {
+      if (arrival.sendTime + 30n < now) {
         return;
       }
       const minutes = (arrival.arrivalTime - now) / 60n;

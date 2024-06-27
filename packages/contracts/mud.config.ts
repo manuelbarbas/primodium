@@ -776,7 +776,10 @@ export const worldInput = {
 
 const getConfig = async () => {
   let exclude: string[] = [];
-  if (typeof process != undefined && typeof process != "undefined") {
+  // directly retrieve the PRI_DEV env variable during build, as using dotenv would break it
+  if (process.env.PRI_DEV) {
+    if (process.env.PRI_DEV !== "true") exclude = ["DevSystem"];
+  } else if (typeof process != undefined && typeof process != "undefined") {
     const dotenv = await import("dotenv");
     dotenv.config({ path: "../../.env" });
     if (process.env.PRI_DEV !== "true") exclude = ["DevSystem"];

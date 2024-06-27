@@ -2,7 +2,7 @@ import { Entity } from "@primodiumxyz/reactive-tables";
 import { encodeEntity } from "@primodiumxyz/reactive-tables/utils";
 import { resourceToHex } from "@latticexyz/common";
 import { Coord } from "@/lib/types";
-import { Hex, encodeAbiParameters, isHex, keccak256, size, sliceHex, toHex } from "viem";
+import { Hex, encodeAbiParameters, isHex, keccak256, padHex, size, sliceHex, toHex } from "viem";
 
 /**
  * Generates a system ID based on name and namespace.
@@ -29,6 +29,8 @@ export const addressToEntity = (address: Hex): Entity => {
  * @returns The 32-byte hex string.
  */
 export const toHex32 = (input: string | number | bigint | boolean): Hex => {
+  if (isHex(input)) return padHex(input, { size: 32 });
+
   return toHex(input, { size: 32 });
 };
 
