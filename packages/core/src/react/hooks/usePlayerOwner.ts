@@ -9,11 +9,11 @@ import { useCore } from "@/react/hooks/useCore";
  * @returns The owner of the entity, or undefined if there is no owner.
  */
 export const usePlayerOwner = (entity?: Entity) => {
-  if (!entity) return undefined;
   const { tables } = useCore();
 
   const isFleet = tables.IsFleet.use(entity)?.value;
   const owner = tables.OwnedBy.use(entity)?.value;
   const rockEntity = isFleet ? owner : entity;
+  if (!entity) return undefined;
   return tables.OwnedBy.use(rockEntity as Entity)?.value as Entity | undefined;
 };
