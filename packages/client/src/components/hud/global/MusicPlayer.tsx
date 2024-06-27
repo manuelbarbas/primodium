@@ -12,13 +12,14 @@ export const AudioPlayer = () => {
   const [isPlaying, setIsPlaying] = useState(false);
   const muted = usePersistentStore((state) => state.musicMuted);
   const volume = usePersistentStore((state) => state.volume["music"]);
+  const masterVolume = usePersistentStore((state) => state.volume["master"]);
   const [userInteracted, setUserInteracted] = useState(false);
 
   useEffect(() => {
     if (audioRef.current) {
-      audioRef.current.volume = volume;
+      audioRef.current.volume = masterVolume * volume;
     }
-  }, [audioRef, volume]);
+  }, [audioRef, volume, masterVolume]);
 
   useEffect(() => {
     const handleUserInteraction = () => {
