@@ -26,7 +26,7 @@ export const Coordinates = () => {
   return (
     <SecondaryCard
       className={cn(
-        "flex m-2 flex-col gap-1 min-h-9 justify-center text-xs bg-secondary/15 p-0",
+        "flex flex-col gap-1 min-h-9 justify-center text-xs bg-secondary/15 p-0",
         DEV ? "pointer-events-auto" : "bottom-2 pointer-events-none",
         uiScale < 0.7 && "text-[10px]"
       )}
