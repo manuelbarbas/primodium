@@ -60,6 +60,7 @@ export const runInitialSync = async (core: Core) => {
 
   const onError = async (err: unknown) => {
     console.warn("Failed to fetch from indexer, hydrating from RPC");
+    tables.SyncSource.set({ value: SyncSourceType.RPC });
     const toBlock = await publicClient.getBlockNumber();
     const processPendingLogs = subscribeToRPC();
 

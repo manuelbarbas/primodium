@@ -1,8 +1,8 @@
 import { query } from "@primodiumxyz/reactive-tables";
 import { getPrivateKey } from "@/util/localStorage";
 import { Address } from "viem";
-import { useAccountClient, useCore } from "@primodiumxyz/core/react";
-import { entityToAddress } from "@primodiumxyz/core";
+import { useAccountClient, useCore, useSyncStatus } from "@primodiumxyz/core/react";
+import { entityToAddress, Keys } from "@primodiumxyz/core";
 import { useEffect } from "react";
 import { decodeEntity } from "@primodiumxyz/reactive-tables/utils";
 
@@ -18,10 +18,12 @@ export const useUpdateSessionAccount = () => {
     playerAccount: { address },
   } = useAccountClient();
 
+  // wait until sync is complete
+  const { loading } = useSyncStatus(Keys.SECONDARY);
   useEffect(() => {
     world.dispose("session");
+    if (loading) return;
     // const authorizedWorld = namespaceWorld(world, "session");
-
     const potentialAuthorizeds = query({ with: [tables.UserDelegationControl] }).reduce((prev, entity) => {
       const key = decodeEntity(tables.UserDelegationControl.metadata.abiKeySchema, entity) as {
         delegator: Address;
@@ -55,5 +57,5 @@ export const useUpdateSessionAccount = () => {
       },
       { runOnInit: false }
     );
-  }, [address, world, tables.UserDelegationControl, setSessionAccount, removeSessionAccount]);
+  }, [address, world, tables.UserDelegationControl, setSessionAccount, removeSessionAccount, loading]);
 };

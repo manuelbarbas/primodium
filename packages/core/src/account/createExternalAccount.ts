@@ -57,8 +57,6 @@ export function createExternalAccount(coreConfig: CoreConfig, address: Address):
     },
   });
 
-  worldContract.write.Pri_11__toggleBuilding(["0x0"]);
-
   return {
     worldContract,
     account: walletClient.account,

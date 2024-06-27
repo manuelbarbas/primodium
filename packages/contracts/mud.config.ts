@@ -12,19 +12,18 @@ import { ConfigWithPrototypes } from "./ts/prototypes/types";
 export const worldInput = {
   namespace: "Pri_11",
   systems: {
-    // these systems are closed access by default
-    S_ProductionRateSystem: {},
-    S_SpendResourcesSystem: {},
-    S_RewardsSystem: {},
-    S_StorageSystem: {},
-    S_BattleApplyDamageSystem: {},
-    S_BattleRaidResolveSystem: {},
-    S_BattleEncryptionResolveSystem: {},
-    S_FleetClearSystem: {},
-    S_InitAsteroidOwnerSystem: {},
-    S_TransferAsteroidSystem: {},
-    S_CreateSecondaryAsteroidSystem: {},
-    S_BuildRaidableAsteroidSystem: {},
+    S_ProductionRateSystem: { openAccess: false },
+    S_SpendResourcesSystem: { openAccess: false },
+    S_RewardsSystem: { openAccess: false },
+    S_StorageSystem: { openAccess: false },
+    S_BattleApplyDamageSystem: { openAccess: false },
+    S_BattleRaidResolveSystem: { openAccess: false },
+    S_BattleEncryptionResolveSystem: { openAccess: false },
+    S_FleetClearSystem: { openAccess: false },
+    S_InitAsteroidOwnerSystem: { openAccess: false },
+    S_TransferAsteroidSystem: { openAccess: false },
+    S_CreateSecondaryAsteroidSystem: { openAccess: false },
+    S_BuildRaidableAsteroidSystem: { openAccess: false },
   },
 
   // using as any here for now because of a type issue and also because the enums are not being recognized in our codebase rn

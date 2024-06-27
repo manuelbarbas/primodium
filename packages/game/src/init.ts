@@ -22,7 +22,7 @@ async function init(core: Core, calls: ContractCalls): InitResult {
     // run straight away when the Game component is mounted, meaning right after initial queries were fetched,
     // which is strictly data required to render the home asteroid
     ROOT: await initRootScene(globalApi, core),
-    UI: await initUIScene(globalApi),
+    UI: await initUIScene(globalApi, core),
     ASTEROID: await initAsteroidScene(globalApi, core, calls),
     GLOBAL: globalApi,
     // secondary scenes

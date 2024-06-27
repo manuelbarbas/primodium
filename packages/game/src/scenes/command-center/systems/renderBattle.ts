@@ -3,6 +3,7 @@ import { Entity, namespaceWorld, defaultEntity } from "@primodiumxyz/reactive-ta
 import { Core, Mode } from "@primodiumxyz/core";
 
 import { PrimodiumScene } from "@game/types";
+import { battleNotification } from "@game/scenes/ui/systems/setupBattleNotifications";
 
 const OFFSET = 1000;
 export const renderBattle = (scene: PrimodiumScene, core: Core) => {
@@ -92,8 +93,7 @@ export const renderBattle = (scene: PrimodiumScene, core: Core) => {
               tables.IsFleetEmpty.resumeUpdates(defender);
             }
 
-            //TODO: battle notification
-            // battleNotification(entity);
+            battleNotification(scene, core, entity);
           },
         },
       ])

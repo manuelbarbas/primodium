@@ -12,13 +12,14 @@ export const AudioPlayer = () => {
   const [isPlaying, setIsPlaying] = useState(false);
   const muted = usePersistentStore((state) => state.musicMuted);
   const volume = usePersistentStore((state) => state.volume["music"]);
+  const masterVolume = usePersistentStore((state) => state.volume["master"]);
   const [userInteracted, setUserInteracted] = useState(false);
 
   useEffect(() => {
     if (audioRef.current) {
-      audioRef.current.volume = volume;
+      audioRef.current.volume = masterVolume * volume;
     }
-  }, [audioRef, volume]);
+  }, [audioRef, volume, masterVolume]);
 
   useEffect(() => {
     const handleUserInteraction = () => {
@@ -84,7 +85,7 @@ export const AudioPlayer = () => {
   };
 
   return (
-    <SecondaryCard className={cn("w-48 h-10 text-sm m-2 group bg-secondary/15")}>
+    <SecondaryCard className={cn("w-48 h-10 text-sm group bg-secondary/15")}>
       <div className={cn("flex gap-2 items-center group-hover:opacity-15 transition-all", !isPlaying && "opacity-15")}>
         <FaMusic className={cn("min-w-6", isPlaying && "animate-pulse")} />
         <div className="relative marquee grow flex">

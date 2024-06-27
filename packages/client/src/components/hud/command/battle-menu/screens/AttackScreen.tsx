@@ -75,7 +75,7 @@ export const Fleet: React.FC<{ fleetEntity: Entity; target: Entity; willFriendly
           </TransactionQueueMask>
         )}
         {!inCooldown && !isFleetEmpty && !stance?.stance && (
-          <TransactionQueueMask queueItemId={`attack-${fleetEntity}`}>
+          <TransactionQueueMask queueItemId={`attack-${fleetEntity}-${target}`}>
             <Button
               size="sm"
               variant="error"

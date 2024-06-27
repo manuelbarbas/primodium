@@ -74,7 +74,7 @@ export const Intro = () => {
 
   return (
     <Modal
-      title="Battle of the Shards"
+      title="Battle of the Droids"
       startOpen={showIntro}
       onClose={() => setShowIntro(false)}
       blockClose={secondsElapsed < finalSeconds}

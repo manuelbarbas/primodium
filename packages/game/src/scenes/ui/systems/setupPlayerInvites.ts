@@ -1,13 +1,15 @@
-import { Core } from "@primodiumxyz/core";
+import { PrimodiumScene } from "@game/types";
+import { Core, entityToPlayerName } from "@primodiumxyz/core";
 import { Entity, namespaceWorld } from "@primodiumxyz/reactive-tables";
 import { decodeEntity } from "@primodiumxyz/reactive-tables/utils";
 import { EAllianceRole } from "contracts/config/enums";
-import { Hex, padHex, zeroAddress } from "viem";
+import { Hex, hexToString, padHex, zeroAddress } from "viem";
 
-export function setupInvitations(core: Core): void {
+export function setupPlayerInvites(scene: PrimodiumScene, core: Core): void {
   const {
     network: { world },
     tables,
+    utils,
   } = core;
 
   const systemWorld = namespaceWorld(world, "clientSystems");
@@ -45,13 +47,13 @@ export function setupInvitations(core: Core): void {
         if (player !== playerEntity) return;
 
         // Notify the player about the outcome
-        // const allianceName = utils.getAllianceName(alliance as Entity);
+        const allianceName = utils.getAllianceName(alliance as Entity);
         if (tables.PlayerAlliance.get(playerEntity)?.alliance === alliance) {
           //TODO
-          // scene.notify("success", `You have been accepted into [${allianceName}]!`);
+          scene.notify("success", `You have been accepted into [${allianceName}]!`);
         } else {
           //TODO
-          // scene.notify("info", `Your request to join [${allianceName}] was declined`);
+          scene.notify("info", `Your request to join [${allianceName}] was declined`);
         }
 
         return;
@@ -71,9 +73,9 @@ export function setupInvitations(core: Core): void {
         alliance,
       }).filter((p) => tables.PlayerAlliance.get(p)?.role !== EAllianceRole.Member);
       if (playerEntity && officers.includes(playerEntity)) {
-        // const playerName = entityToPlayerName(player as Entity);
+        const playerName = entityToPlayerName(player as Entity);
         //TODO
-        // scene.notify("info", `${playerName} has requested to join the alliance`);
+        scene.notify("info", `${playerName} has requested to join the alliance`);
       }
     },
   });
@@ -96,10 +98,10 @@ export function setupInvitations(core: Core): void {
 
       if (!inviteAlliance || invite?.target !== playerEntity) return;
 
-      // const allianceName = hexToString(inviteAlliance, { size: 32 });
+      const allianceName = hexToString(inviteAlliance, { size: 32 });
 
       //TODO
-      // scene.notify("info", `You have been invited to join [${allianceName}]`);
+      scene.notify("info", `You have been invited to join [${allianceName}]`);
     },
   });
 }
