@@ -41,11 +41,9 @@ export const GlobalHUD = memo(() => {
       <HUD.CursorFollower>
         <HoverInfo />
       </HUD.CursorFollower>
-      <HUD.BottomLeft>
-        <div className="flex flex-col gap-2 p-2">
-          <AudioPlayer />
-          <Coordinates />
-        </div>
+      <HUD.BottomLeft className="space-y-2 p-2">
+        <AudioPlayer />
+        <Coordinates />
       </HUD.BottomLeft>
       <HUD.BottomRight>
         <FollowSocials />
