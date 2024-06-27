@@ -43,7 +43,7 @@ const calderaSepolia: ChainConfig = {
     },
   },
   faucetUrl: "https://caldera-sepolia-faucet.primodium.ai/trpc",
-  indexerUrl: "https://indexer-v11.primodium.ai",
+  indexerUrl: "https://indexer-v0-11-1.primodium.ai",
   blockExplorers: {
     default: {
       name: "Blockscout",
