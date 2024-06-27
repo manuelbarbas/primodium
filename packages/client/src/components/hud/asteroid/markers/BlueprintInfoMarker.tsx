@@ -2,17 +2,17 @@ import { Card } from "@/components/core/Card";
 import { Marker } from "@/components/core/Marker";
 import { BlueprintInfo } from "@/components/hud/asteroid/blueprints/BlueprintInfo";
 import { useGame } from "@/hooks/useGame";
-import { components } from "@/network/components";
-import { getBuildingDimensions } from "@/util/building";
-import { singletonEntity } from "@latticexyz/store-sync/recs";
+import { useCore } from "@primodiumxyz/core/react";
 import { useMemo } from "react";
+import { defaultEntity } from "@primodiumxyz/reactive-tables";
 
 export const BlueprintInfoMarker = () => {
+  const { tables, utils } = useCore();
   const game = useGame();
-  const building = components.SelectedBuilding.use()?.value;
-  const hoverCoord = components.HoverTile.use();
-  const buildingType = components.BuildingType.use(building)?.value;
-  const dimensions = useMemo(() => getBuildingDimensions(building ?? singletonEntity), [building]);
+  const building = tables.SelectedBuilding.use()?.value;
+  const hoverCoord = tables.HoverTile.use();
+  const buildingType = tables.BuildingType.use(building)?.value;
+  const dimensions = useMemo(() => utils.getBuildingDimensions(building ?? defaultEntity), [building]);
 
   const coord = useMemo(() => {
     const { utils } = game.ASTEROID;

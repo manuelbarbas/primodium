@@ -1,11 +1,11 @@
-import { Entity } from "@latticexyz/recs";
+import { Entity } from "@primodiumxyz/reactive-tables";
 import { InterfaceIcons } from "@primodiumxyz/assets";
-import { components } from "src/network/components";
 import { ObjectiveReq } from "./types";
+import { Core } from "@primodiumxyz/core";
 
-export function getInAlliance(asteroidEntity: Entity): ObjectiveReq {
-  const playerEntity = components.OwnedBy.get(asteroidEntity)?.value as Entity | undefined;
-  const inAlliance = components.PlayerAlliance.has(playerEntity);
+export function getInAlliance({ tables }: Core, asteroidEntity: Entity): ObjectiveReq {
+  const playerEntity = tables.OwnedBy.get(asteroidEntity)?.value as Entity | undefined;
+  const inAlliance = tables.PlayerAlliance.has(playerEntity);
 
   return {
     tooltipText: `Joined alliance`,

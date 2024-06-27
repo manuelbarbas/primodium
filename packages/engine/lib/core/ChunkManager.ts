@@ -36,10 +36,6 @@ export class ChunkManager {
     return this.visibleChunks.has(this.encodeKeyForChunk(chunkCoord));
   }
 
-  resetKnownChunk(chunkCoord: Coord): void {
-    this.knownChunks.delete(this.encodeKeyForChunk(chunkCoord));
-  }
-
   isKnownChunk(chunkCoord: Coord): boolean {
     return this.knownChunks.has(this.encodeKeyForChunk(chunkCoord));
   }

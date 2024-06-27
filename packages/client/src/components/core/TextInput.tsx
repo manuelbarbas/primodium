@@ -1,6 +1,6 @@
 import { cn } from "@/util/client";
 import { useEffect, useRef } from "react";
-import { useGame } from "src/hooks/useGame";
+import { useGame } from "@/hooks/useGame";
 
 export const TextInput: React.FC<{
   topLeftLabel?: string;

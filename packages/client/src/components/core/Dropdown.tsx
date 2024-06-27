@@ -1,7 +1,7 @@
 import { Button } from "@/components/core/Button";
 import { SecondaryCard } from "@/components/core/Card";
 import { cn } from "@/util/client";
-import { Entity } from "@latticexyz/recs";
+import { Entity } from "@primodiumxyz/reactive-tables";
 import { VariantProps, cva } from "class-variance-authority";
 import { ReactNode, useEffect, useRef } from "react";
 import { FaAngleDown } from "react-icons/fa";

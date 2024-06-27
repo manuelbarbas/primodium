@@ -1,5 +1,5 @@
-import { Entity } from "@latticexyz/recs";
-import { EntityType } from "../constants";
+import { EntityType } from "@primodiumxyz/core";
+import { Entity } from "@primodiumxyz/reactive-tables";
 
 type TesterPackFleet = {
   units: Map<Entity, number>;

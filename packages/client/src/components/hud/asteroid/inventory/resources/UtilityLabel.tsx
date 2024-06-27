@@ -2,12 +2,11 @@ import { Badge } from "@/components/core/Badge";
 import { CapacityBar } from "@/components/core/CapacityBar";
 import { IconLabel } from "@/components/core/IconLabel";
 import { Tooltip } from "@/components/core/Tooltip";
-import { useFullResourceCount } from "@/hooks/useFullResourceCount";
-import { EntityType } from "@/util/constants";
-import { EntityToResourceImage } from "@/util/mappings";
-import { formatResourceCount } from "@/util/number";
-import { Entity } from "@latticexyz/recs";
+import { Entity } from "@primodiumxyz/reactive-tables";
 import { useCallback } from "react";
+import { useResourceCount } from "@primodiumxyz/core/react";
+import { formatResourceCount, EntityType } from "@primodiumxyz/core";
+import { EntityToResourceImage } from "@/util/image";
 
 export const UtilityLabel = ({
   name,
@@ -20,7 +19,7 @@ export const UtilityLabel = ({
   asteroid: Entity;
   showCount?: boolean;
 }) => {
-  const { resourceCount, resourceStorage } = useFullResourceCount(resourceId, asteroid);
+  const { resourceCount, resourceStorage } = useResourceCount(resourceId, asteroid);
 
   const used = resourceStorage - resourceCount;
 
@@ -45,7 +44,7 @@ export const VaultUtilityLabel = ({
   resourceId: Entity;
   asteroid: Entity;
 }) => {
-  const { resourceStorage } = useFullResourceCount(resourceId, asteroid);
+  const { resourceStorage } = useResourceCount(resourceId, asteroid);
 
   return (
     <Badge
@@ -67,7 +66,7 @@ export const BarLayoutUtilityLabel = ({
   resourceId: Entity;
   asteroid: Entity;
 }) => {
-  const { resourceCount, resourceStorage } = useFullResourceCount(resourceId, asteroid);
+  const { resourceCount, resourceStorage } = useResourceCount(resourceId, asteroid);
 
   const used = resourceStorage - resourceCount;
   const maxStorage = resourceStorage;

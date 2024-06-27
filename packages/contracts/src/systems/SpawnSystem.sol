@@ -9,10 +9,12 @@ import { EPointType } from "src/Types.sol";
 import { LibColony } from "libraries/LibColony.sol";
 import { AsteroidSet } from "libraries/AsteroidSet.sol";
 import { AsteroidOwnedByKey } from "src/Keys.sol";
+import { LibPlayerRegistry } from "libraries/LibPlayerRegistry.sol";
 
 /// @title Spawn System for Primodium Game
 /// @notice Handles player spawning in the game world
 /// @notice Inherits from PrimodiumSystem
+
 contract SpawnSystem is PrimodiumSystem {
   modifier onlySpawnAllowed() {
     require(SpawnAllowed.get(), "[SpawnSystem] Spawning is not allowed");
@@ -36,6 +38,7 @@ contract SpawnSystem is PrimodiumSystem {
 
     bytes32 asteroidEntity = LibAsteroid.createPrimaryAsteroid(playerEntity);
     Spawned.set(playerEntity, true);
+    LibPlayerRegistry.add(playerEntity);
     IWorld(_world()).Pri_11__initAsteroidOwner(asteroidEntity, playerEntity);
     Home.set(playerEntity, asteroidEntity);
     for (uint8 i = 1; i < uint8(EPointType.LENGTH); i++) {

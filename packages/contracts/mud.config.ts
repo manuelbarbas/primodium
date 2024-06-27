@@ -758,6 +758,19 @@ export const worldInput = {
       key: ["entity", "key", "asteroidEntity"],
       schema: { entity: "bytes32", key: "bytes32", asteroidEntity: "bytes32", stored: "bool", index: "uint256" },
     },
+
+    /* ---------------------------- Player Entity Registry ---------------------- */
+    Keys_PlayerRegistry: {
+      key: [],
+      schema: { value: "bytes32[]" },
+    },
+    // Meta_PlayerSet: {},
+
+    Keys_AllianceRegistry: {
+      key: [],
+      schema: { value: "bytes32[]" },
+    },
+    // Meta_AllianceSet: {},
   },
 } as const;
 

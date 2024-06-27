@@ -1,19 +1,19 @@
 import { useMemo } from "react";
 import { Widget } from "@/components/core/Widget";
 import { useGame } from "@/hooks/useGame";
-import { components } from "@/network/components";
 import { GlassCard } from "@/components/core/Card";
 import { InterfaceIcons } from "@primodiumxyz/assets";
 
 import { AsteroidMenu } from "@/components/hud/starbelt/asteroid-menu/AsteroidMenu";
-import { entityToRockName } from "@/util/name";
-import { Mode } from "@/util/constants";
+import { useCore } from "@primodiumxyz/core/react";
+import { entityToRockName, Mode } from "@primodiumxyz/core";
 
 export const AsteroidMenuPopup = () => {
   const game = useGame();
-  const selectedAsteroid = components.SelectedRock.use()?.value;
-  const position = components.Position.use(selectedAsteroid);
-  const mapOpen = components.SelectedMode.use()?.value === Mode.Starmap;
+  const { tables } = useCore();
+  const selectedAsteroid = tables.SelectedRock.use()?.value;
+  const position = tables.Position.use(selectedAsteroid);
+  const mapOpen = tables.SelectedMode.use()?.value === Mode.Starmap;
 
   const coord = useMemo(() => {
     const { utils } = game.STARMAP;
@@ -29,7 +29,7 @@ export const AsteroidMenuPopup = () => {
 
   return (
     <Widget
-      title={`${entityToRockName(selectedAsteroid)}`}
+      title={entityToRockName(selectedAsteroid)}
       id="asteroid-target"
       scene={"STARMAP"}
       defaultCoord={coord}

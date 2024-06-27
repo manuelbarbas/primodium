@@ -1138,6 +1138,24 @@
   },
   {
     "type": "function",
+    "name": "Pri_11__resolveConquerColonyShip",
+    "inputs": [
+      {
+        "name": "asteroidTargetEntity",
+        "type": "bytes32",
+        "internalType": "bytes32"
+      },
+      {
+        "name": "aggressorEntity",
+        "type": "bytes32",
+        "internalType": "bytes32"
+      }
+    ],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
     "name": "Pri_11__revokeInvite",
     "inputs": [
       {

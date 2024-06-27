@@ -1,13 +1,26 @@
 import { Button } from "@/components/core/Button";
 import { UnitStatus } from "@/components/hud/global/modals/battle-reports/UnitStatus";
-import { Entity } from "@latticexyz/recs";
+import { Entity } from "@primodiumxyz/reactive-tables";
 import { InterfaceIcons } from "@primodiumxyz/assets";
 import { useMemo, useState } from "react";
-import { components } from "src/network/components";
-import { entityToFleetName, entityToRockName } from "src/util/name";
+import { useCore } from "@primodiumxyz/core/react";
+import { entityToFleetName, entityToRockName } from "@primodiumxyz/core";
+import { Hex } from "viem";
 
-type BattleData = Exclude<ReturnType<typeof components.Battle.getParticipant>, undefined>;
-export const BattleAllies = ({ allies }: { allies: (BattleData | undefined)[] }) => {
+type Participant = {
+  entity: Hex;
+
+  units: Record<
+    string,
+    {
+      level: bigint;
+      unitsAtStart: bigint;
+      casualties: bigint;
+    }
+  >;
+};
+
+export const BattleAllies = ({ allies }: { allies: (Participant | undefined)[] }) => {
   const [openAlly, setOpenAlly] = useState<Entity | null>(null);
 
   const openAllyData = useMemo(() => {
@@ -40,7 +53,8 @@ export const BattleAllies = ({ allies }: { allies: (BattleData | undefined)[] })
 };
 
 const Ally = ({ selected, entity, onClick }: { selected: boolean; entity: Entity; onClick?: () => void }) => {
-  const isFleet = components.IsFleet.use(entity)?.value;
+  const { tables } = useCore();
+  const isFleet = tables.IsFleet.use(entity)?.value;
   return (
     <Button
       onClick={onClick}

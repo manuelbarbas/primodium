@@ -1,11 +1,10 @@
-import { EntityToUnitImage } from "@/util/mappings";
-import { Entity } from "@latticexyz/recs";
-import { components } from "src/network/components";
-import { getEntityTypeName } from "../common";
+import { Entity } from "@primodiumxyz/reactive-tables";
 import { ObjectiveReq, TrainUnitObjective } from "./types";
+import { Core, getEntityTypeName } from "@primodiumxyz/core";
+import { EntityToUnitImage } from "@/util/image";
 
-export function getHasRequiredUnit(asteroid: Entity, objective: TrainUnitObjective): ObjectiveReq {
-  const hangar = components.Hangar.get(asteroid);
+export function getHasRequiredUnit({ tables }: Core, asteroid: Entity, objective: TrainUnitObjective): ObjectiveReq {
+  const hangar = tables.Hangar.get(asteroid);
   const currentValue =
     hangar?.units.reduce((acc, unit, i) => {
       if (unit !== objective.unitType) return acc;
