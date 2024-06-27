@@ -25,6 +25,7 @@ export const getInitialQuery = ({
       { tableId: tables.GracePeriod.tableId },
       { tableId: tables.Reserves.tableId },
       { tableId: tables.VictoryStatus.tableId },
+      { tableId: tables.UserDelegationControl.tableId },
       // main base starting coord
       { tableId: tables.Position.tableId, where: { column: "entity", operation: "eq", value: EntityType.MainBase } },
     ],
