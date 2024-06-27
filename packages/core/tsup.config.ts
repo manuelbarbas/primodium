@@ -11,6 +11,9 @@ export default defineConfig([
     clean: true,
     minify: true,
     tsconfig: "./tsconfig.json",
+    define: {
+      "process.env.PRI_DEV": JSON.stringify(process.env.PRI_DEV || "false"),
+    },
   },
   {
     entry: ["src/react/index.ts"], // Entry point for the React-specific build
