@@ -6,14 +6,12 @@ import { Game } from "./screens/Game";
 import { Increment } from "./screens/Increment";
 import { Sandbox } from "./screens/Sandbox";
 import { Statistics } from "./screens/Statistics";
-import { useUpdateSessionAccount } from "@/hooks/useUpdateSessionAccount";
 import { useEffect, useMemo } from "react";
 import { useAccountClient, useSyncStatus } from "@primodiumxyz/core/react";
 import { minEth } from "@primodiumxyz/core";
 import { useDripAccount } from "@/hooks/useDripAccount";
 
 export default function AppLoadingState() {
-  useUpdateSessionAccount();
   const { playerBalanceData, sessionBalanceData, requestDrip } = useDripAccount();
   const { sessionAccount, playerAccount } = useAccountClient();
 

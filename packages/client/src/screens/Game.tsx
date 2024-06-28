@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { memo, useEffect, useRef, useState } from "react";
 
 import { YouDied } from "@/screens/YouDied";
 import { initGame, PrimodiumGame } from "@primodiumxyz/game";
@@ -14,7 +14,7 @@ import { useContractCalls } from "@/hooks/useContractCalls";
 
 const params = new URLSearchParams(window.location.search);
 
-export const Game = () => {
+export const Game = memo(() => {
   const core = useCore();
   const calls = useContractCalls();
   const {
@@ -22,12 +22,14 @@ export const Game = () => {
   } = useAccountClient();
   const [game, setGame] = useState<PrimodiumGame | null>(null);
   const { loading: loadingSecondaryData } = useSyncStatus(Keys.SECONDARY);
+  const gameRef = useRef<PrimodiumGame | null>(null);
 
   const destroy = async () => {
-    if (game === null) return;
+    if (gameRef.current === null) return;
+    gameRef.current.destroy();
+    gameRef.current = null;
     setGame(null);
     await new Promise((resolve) => setTimeout(resolve, 100));
-    game?.destroy();
     const phaserContainer = document.getElementById("phaser-container");
     for (const child of Array.from(phaserContainer?.children ?? [])) {
       phaserContainer?.removeChild(child);
@@ -36,8 +38,9 @@ export const Game = () => {
 
   const init = async () => {
     try {
-      await destroy();
+      destroy();
       const pri = await initGame(core, calls, params.get("version") ? params.get("version")! : "🔥");
+      gameRef.current = pri;
       setGame(pri);
     } catch (e) {
       console.log(e);
@@ -60,7 +63,7 @@ export const Game = () => {
     init();
 
     return () => {
-      destroy();
+      gameRef.current?.destroy();
     };
   }, []);
 
@@ -96,4 +99,4 @@ export const Game = () => {
       </div>
     </div>
   );
-};
+});
