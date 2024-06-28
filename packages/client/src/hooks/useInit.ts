@@ -20,11 +20,8 @@ export const useInit = () => {
   const [ready, setReady] = useState(false);
 
   useEffect(() => {
-    if (!initialized) return;
-    tables.Account.set({ value: entity });
-
     if (loading || !address || !entity) return;
-
+    tables.Account.set({ value: entity });
     setupSessionAccount(core, account);
 
     setReady(true);
@@ -33,7 +30,7 @@ export const useInit = () => {
       world.dispose("clientSystems");
       setReady(false);
     };
-  }, [loading, address, entity, initialized]);
+  }, [loading, address, entity]);
 
   // The network object and user wallet will have been loaded by the time the loading state is ready
   // So we can use the user wallet to identify the user
@@ -41,5 +38,5 @@ export const useInit = () => {
     ampli.identify(address, {});
   }, [address]);
 
-  return ready;
+  return ready && initialized;
 };
