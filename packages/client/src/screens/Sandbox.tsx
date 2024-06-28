@@ -5,14 +5,11 @@ import { PrimodiumGame, initGame } from "@primodiumxyz/game";
 import { Progress } from "@/components/core/Progress";
 import { _Sandbox } from "../components/_Sandbox";
 import { useCore } from "@primodiumxyz/core/react";
-import { useUpdateSessionAccount } from "@/hooks/useUpdateSessionAccount";
 
 const params = new URLSearchParams(window.location.search);
 
 export const Sandbox = () => {
   const mud = useCore();
-
-  useUpdateSessionAccount();
 
   const [game, setGame] = useState<PrimodiumGame | null>(null);
 
