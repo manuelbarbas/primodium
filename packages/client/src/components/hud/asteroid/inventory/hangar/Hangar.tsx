@@ -1,12 +1,13 @@
+import { useMemo } from "react";
+import { Hex } from "viem";
+
+import { EntityType, formatResourceCount, getEntityTypeName, toRomanNumeral } from "@primodiumxyz/core";
+import { useAccountClient, useCore } from "@primodiumxyz/core/react";
+import { Entity } from "@primodiumxyz/reactive-tables";
 import { Card, SecondaryCard } from "@/components/core/Card";
 import { Tooltip } from "@/components/core/Tooltip";
 import { useBuildingTypeImage } from "@/hooks/image/useBuildingTypeImage";
 import { EntityToUnitImage } from "@/util/image";
-import { EntityType, formatResourceCount, getEntityTypeName, toRomanNumeral } from "@primodiumxyz/core";
-import { useAccountClient, useCore } from "@primodiumxyz/core/react";
-import { Entity } from "@primodiumxyz/reactive-tables";
-import { useMemo } from "react";
-import { Hex } from "viem";
 
 export const Hangar = ({ className = "" }: { className?: string }) => {
   const { tables } = useCore();
@@ -24,7 +25,7 @@ export const Hangar = ({ className = "" }: { className?: string }) => {
         const count = hangar.counts[index];
         return { total: acc.total + count, unitCounts: { ...acc.unitCounts, [unit]: hangar.counts[index] } };
       },
-      { total: 0n, unitCounts: {} } as { total: bigint; unitCounts: Record<Entity, bigint> }
+      { total: 0n, unitCounts: {} } as { total: bigint; unitCounts: Record<Entity, bigint> },
     );
   };
 
@@ -46,7 +47,7 @@ export const Hangar = ({ className = "" }: { className?: string }) => {
         EntityType.LightningCraft,
         EntityType.Droid,
       ]),
-    [hangar]
+    [hangar],
   );
 
   const workshopImage = useBuildingTypeImage(EntityType.Workshop);

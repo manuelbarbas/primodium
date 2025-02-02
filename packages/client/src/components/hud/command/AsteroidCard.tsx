@@ -1,14 +1,15 @@
+import { InterfaceIcons } from "@primodiumxyz/assets";
+import { entityToRockName, formatTimeShort, hashEntities, Keys } from "@primodiumxyz/core";
+import { useAccountClient, useCore, useInGracePeriod, useSyncStatus } from "@primodiumxyz/core/react";
 import { Entity } from "@primodiumxyz/reactive-tables";
+import { SecondaryCard } from "@/components/core/Card";
 import { IconLabel } from "@/components/core/IconLabel";
 import { Loader } from "@/components/core/Loader";
-import { AccountDisplay } from "@/components/shared/AccountDisplay";
-import { InterfaceIcons } from "@primodiumxyz/assets";
-import { SecondaryCard } from "@/components/core/Card";
 import { AsteroidStats } from "@/components/hud/command/overview/AsteroidStatsAndActions";
-import { useSyncStatus, useInGracePeriod, useCore, useAccountClient } from "@primodiumxyz/core/react";
+import { AccountDisplay } from "@/components/shared/AccountDisplay";
 import { useAsteroidEmblem } from "@/hooks/image/useAsteroidEmblem";
-import { entityToRockName, formatTimeShort, hashEntities, Keys } from "@primodiumxyz/core";
 import { useAsteroidImage } from "@/hooks/image/useAsteroidImage";
+
 const filter =
   "drop-shadow(1px 0px 0px #FF3232) drop-shadow(-1px  0px 0px #FF3232) drop-shadow( 0px  1px 0px #FF3232) drop-shadow( 0px -1px 0px #FF3232)";
 

@@ -1,6 +1,7 @@
-import { useCore } from "@primodiumxyz/core/react";
-import { Loader } from "../core/Loader";
 import { FaDatabase } from "react-icons/fa";
+
+import { useCore } from "@primodiumxyz/core/react";
+import { Loader } from "@/components/core/Loader";
 
 export const LoadingIndication = () => {
   const { tables } = useCore();

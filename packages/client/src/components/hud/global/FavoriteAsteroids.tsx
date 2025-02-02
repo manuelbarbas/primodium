@@ -1,6 +1,5 @@
-import { CapacityBar } from "@/components/core/CapacityBar";
-import { Dropdown } from "@/components/core/Dropdown";
-import { EntityToResourceImage } from "@/util/image";
+import { useState } from "react";
+
 import { entityToRockName, EntityType, formatResourceCount } from "@primodiumxyz/core";
 import {
   useAccountClient,
@@ -10,7 +9,9 @@ import {
   useResourceCount,
 } from "@primodiumxyz/core/react";
 import { Entity } from "@primodiumxyz/reactive-tables";
-import { useState } from "react";
+import { CapacityBar } from "@/components/core/CapacityBar";
+import { Dropdown } from "@/components/core/Dropdown";
+import { EntityToResourceImage } from "@/util/image";
 
 export const FavoriteAsteroids = () => {
   const playerEntity = useAccountClient().playerAccount.entity;
@@ -42,7 +43,7 @@ export const FavoriteAsteroids = () => {
 const SelectedFavoriteAsteroid = ({ asteroid }: { asteroid: Entity }) => {
   const { resourceCount: encryption, resourceStorage: maxEncryption } = useResourceCount(
     EntityType.Encryption,
-    asteroid
+    asteroid,
   );
   const { strength, maxStrength } = useAsteroidStrength(asteroid);
   const encryptionImg = EntityToResourceImage[EntityType.Encryption] ?? "";

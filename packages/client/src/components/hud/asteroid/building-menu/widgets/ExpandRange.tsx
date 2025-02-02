@@ -1,14 +1,14 @@
-import { Button } from "@/components/core/Button";
-import { Entity } from "@primodiumxyz/reactive-tables";
 import { InterfaceIcons } from "@primodiumxyz/assets";
+import { EntityType, getEntityTypeName } from "@primodiumxyz/core";
+import { useAccountClient, useCore, useHasEnoughResources } from "@primodiumxyz/core/react";
+import { Entity } from "@primodiumxyz/reactive-tables";
 import { Badge } from "@/components/core/Badge";
+import { Button } from "@/components/core/Button";
 import { SecondaryCard } from "@/components/core/Card";
 import { ResourceIconTooltip } from "@/components/shared/ResourceIconTooltip";
 import { TransactionQueueMask } from "@/components/shared/TransactionQueueMask";
-import { useCore, useAccountClient, useHasEnoughResources } from "@primodiumxyz/core/react";
-import { EntityType, getEntityTypeName } from "@primodiumxyz/core";
-import { EntityToResourceImage } from "@/util/image";
 import { useContractCalls } from "@/hooks/useContractCalls";
+import { EntityToResourceImage } from "@/util/image";
 
 export const ExpandRange: React.FC<{ asteroid: Entity }> = ({ asteroid }) => {
   const { tables, utils } = useCore();
@@ -21,7 +21,7 @@ export const ExpandRange: React.FC<{ asteroid: Entity }> = ({ asteroid }) => {
   }).value;
   const { level, maxLevel, mainBaseLvlReq, recipe, isResearched } = utils.getUpgradeInfo(
     EntityType.Expansion,
-    asteroid
+    asteroid,
   );
   const hasEnough = useHasEnoughResources(recipe, asteroid);
   const canUpgrade = hasEnough && mainBaseLevel >= mainBaseLvlReq && !isResearched;

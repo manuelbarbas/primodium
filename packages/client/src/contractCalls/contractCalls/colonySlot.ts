@@ -1,7 +1,8 @@
 import { EResource } from "contracts/config/enums";
-import { ampli } from "@/ampli";
-import { Core, ExecuteFunctions, ResourceEntityLookup, bigintToNumber } from "@primodiumxyz/core";
+
+import { bigintToNumber, Core, ExecuteFunctions, ResourceEntityLookup } from "@primodiumxyz/core";
 import { Entity } from "@primodiumxyz/reactive-tables";
+import { ampli } from "@/ampli";
 import { parseReceipt } from "@/contractCalls/parseReceipt";
 
 export const createColonySlotsCalls =

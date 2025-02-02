@@ -1,16 +1,18 @@
+import { EAllianceRole } from "contracts/config/enums";
+import { FaAngleDoubleDown, FaAngleDoubleUp, FaDoorOpen, FaInfoCircle } from "react-icons/fa";
+import { GiRank1, GiRank2, GiRank3 } from "react-icons/gi";
+
+import { entityToPlayerName } from "@primodiumxyz/core";
+import { useAccountClient, useAllianceName, useCore } from "@primodiumxyz/core/react";
+import { Entity } from "@primodiumxyz/reactive-tables";
 import { Join } from "@/components/core/Join";
 import { Navigator } from "@/components/core/Navigator";
 import { Tabs } from "@/components/core/Tabs";
 import { AllianceJoinRequests } from "@/components/hud/global/modals/alliance-mgmt/manage/AllianceJoinRequests";
 import { AllianceSettings } from "@/components/hud/global/modals/alliance-mgmt/manage/AllianceSettings";
 import { Invite } from "@/components/hud/global/modals/alliance-mgmt/manage/Invite";
-import { Entity } from "@primodiumxyz/reactive-tables";
-import { EAllianceRole } from "contracts/config/enums";
-import { FaAngleDoubleDown, FaAngleDoubleUp, FaDoorOpen, FaInfoCircle } from "react-icons/fa";
-import { GiRank1, GiRank2, GiRank3 } from "react-icons/gi";
+
 import { MemberItems } from "./MemberItems";
-import { useAccountClient, useAllianceName, useCore } from "@primodiumxyz/core/react";
-import { entityToPlayerName } from "@primodiumxyz/core";
 
 export const ManageScreen: React.FC = () => {
   /* ---------------------------------- STATE --------------------------------- */

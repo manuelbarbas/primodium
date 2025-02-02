@@ -1,6 +1,7 @@
-import { Coord } from "@primodiumxyz/engine/types";
-import { TWO_PI, getPositionByVector, solSinDegrees } from "@primodiumxyz/core";
 import { expect, test } from "vitest";
+
+import { getPositionByVector, solSinDegrees, TWO_PI } from "@primodiumxyz/core";
+import { Coord } from "@primodiumxyz/engine/types";
 
 const moveResults = [
   { direction: 0, x: 100, y: 0, parentEntity: 0 },

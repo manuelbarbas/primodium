@@ -1,13 +1,13 @@
-import { Badge } from "@/components/core/Badge";
-import { Card } from "@/components/core/Card";
-import { IconLabel } from "@/components/core/IconLabel";
-import { useAsteroidImage } from "@/hooks/image/useAsteroidImage";
-import { useGame } from "@/hooks/useGame";
 import { ResourceImages } from "@primodiumxyz/assets";
 import { entityToRockName, EntityType, formatResourceCount, formatTimeShort } from "@primodiumxyz/core";
 import { useAccountClient, useCore, useShardAsteroid } from "@primodiumxyz/core/react";
 import { Entity, useQuery } from "@primodiumxyz/reactive-tables";
+import { Badge } from "@/components/core/Badge";
 import { Button } from "@/components/core/Button";
+import { Card } from "@/components/core/Card";
+import { IconLabel } from "@/components/core/IconLabel";
+import { useAsteroidImage } from "@/hooks/image/useAsteroidImage";
+import { useGame } from "@/hooks/useGame";
 
 export const Shards = ({ className = "" }: { className?: string }) => {
   const {

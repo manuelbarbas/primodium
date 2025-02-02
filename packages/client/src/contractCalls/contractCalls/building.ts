@@ -1,22 +1,23 @@
 import { EBuilding } from "contracts/config/enums";
-import { ampli } from "@/ampli";
+
 import {
-  Core,
+  bigintToNumber,
   BuildingEntityLookup,
+  Coord,
+  Core,
+  ExecuteFunctions,
   getEntityTypeName,
   TxQueueOptions,
-  bigintToNumber,
-  ExecuteFunctions,
-  Coord,
 } from "@primodiumxyz/core";
 import { Entity } from "@primodiumxyz/reactive-tables";
+import { ampli } from "@/ampli";
 import { parseReceipt } from "@/contractCalls/parseReceipt";
 
 export const createBuildingCalls = ({ utils, tables }: Core, { execute }: ExecuteFunctions) => {
   const buildBuilding = async (
     building: EBuilding,
     coord: Coord & { parentEntity?: Entity },
-    options?: Partial<TxQueueOptions>
+    options?: Partial<TxQueueOptions>,
   ) => {
     const activeAsteroid = tables.ActiveRock.get()?.value;
     if (!activeAsteroid) return;

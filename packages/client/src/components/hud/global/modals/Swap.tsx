@@ -1,9 +1,7 @@
 // SwapPane.tsx
-import { SecondaryCard } from "@/components/core/Card";
-import { Dropdown } from "@/components/core/Dropdown";
-import { IconLabel } from "@/components/core/IconLabel";
-import { useContractCalls } from "@/hooks/useContractCalls";
-import { EntityToResourceImage } from "@/util/image";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
+import { FaExchangeAlt } from "react-icons/fa";
+
 import {
   EntityType,
   formatResourceCount,
@@ -14,10 +12,13 @@ import {
 } from "@primodiumxyz/core";
 import { useAccountClient, useCore, useResourceCount } from "@primodiumxyz/core/react";
 import { defaultEntity, Entity } from "@primodiumxyz/reactive-tables";
-import React, { useCallback, useEffect, useMemo, useState } from "react";
-import { FaExchangeAlt } from "react-icons/fa";
 import { Button } from "@/components/core/Button";
+import { SecondaryCard } from "@/components/core/Card";
+import { Dropdown } from "@/components/core/Dropdown";
+import { IconLabel } from "@/components/core/IconLabel";
 import { TransactionQueueMask } from "@/components/shared/TransactionQueueMask";
+import { useContractCalls } from "@/hooks/useContractCalls";
+import { EntityToResourceImage } from "@/util/image";
 
 export const Swap = ({ marketEntity }: { marketEntity: Entity }) => {
   const { tables, utils } = useCore();
@@ -51,7 +52,7 @@ export const Swap = ({ marketEntity }: { marketEntity: Entity }) => {
       setOutAmountMinRendered(outAmountMinString);
       return outAmountMin;
     },
-    [toResource]
+    [toResource],
   );
 
   const changeInAmount = useCallback(
@@ -74,7 +75,7 @@ export const Swap = ({ marketEntity }: { marketEntity: Entity }) => {
 
       changeOutAmountMin(outString, slippageRendered);
     },
-    [getPath, changeOutAmountMin, slippageRendered]
+    [getPath, changeOutAmountMin, slippageRendered],
   );
 
   const swapUpdate = tables.Swap.use(playerAccount.entity);
@@ -103,7 +104,7 @@ export const Swap = ({ marketEntity }: { marketEntity: Entity }) => {
 
       changeOutAmountMin(outAmountRendered, slippageRendered);
     },
-    [fromResource, toResource, getPath, changeOutAmountMin, slippageRendered]
+    [fromResource, toResource, getPath, changeOutAmountMin, slippageRendered],
   );
 
   const changeSlippage = useCallback(
@@ -121,7 +122,7 @@ export const Swap = ({ marketEntity }: { marketEntity: Entity }) => {
       setSlippageRendered(slippage);
       changeOutAmountMin(outAmountRendered, slippage);
     },
-    [changeOutAmountMin, outAmountRendered]
+    [changeOutAmountMin, outAmountRendered],
   );
 
   const switchResources = useCallback(() => {
@@ -137,7 +138,7 @@ export const Swap = ({ marketEntity }: { marketEntity: Entity }) => {
   const { resourceCount: fromResourceCount } = useResourceCount(fromResource, selectedRock);
   const { resourceCount: toResourceCount, resourceStorage: toResourceStorage } = useResourceCount(
     toResource,
-    selectedRock
+    selectedRock,
   );
 
   const { disabled, message: swapButtonMsg } = useMemo(() => {

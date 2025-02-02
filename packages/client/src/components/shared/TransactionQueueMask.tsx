@@ -1,5 +1,5 @@
-import { Loader } from "../core/Loader";
 import { useCore } from "@primodiumxyz/core/react";
+import { Loader } from "@/components/core/Loader";
 
 export const TransactionQueueMask: React.FC<{
   children: React.ReactNode;

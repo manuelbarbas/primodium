@@ -1,6 +1,7 @@
-import { cn } from "@/util/client";
 import { useEffect, useRef } from "react";
+
 import { useGame } from "@/hooks/useGame";
+import { cn } from "@/util/client";
 
 export const TextInput: React.FC<{
   topLeftLabel?: string;
@@ -56,7 +57,7 @@ export const TextInput: React.FC<{
       className={cn(
         "form-control w-full max-w-xs pointer-events-auto",
         // if className includes a custom width, extract it and pass it to the form-control
-        className && className.includes("w-") && className.split(" ").find((c) => c.includes("w-"))
+        className && className.includes("w-") && className.split(" ").find((c) => c.includes("w-")),
       )}
     >
       {topLeftLabel || topRightLabel ? (

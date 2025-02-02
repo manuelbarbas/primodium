@@ -1,6 +1,7 @@
-import React, { ReactNode, createContext, useCallback, useContext, useEffect, useState } from "react";
-import { Entity } from "@primodiumxyz/reactive-tables";
 import { bigIntMax } from "@latticexyz/common/utils";
+import React, { createContext, ReactNode, useCallback, useContext, useEffect, useState } from "react";
+
+import { Entity } from "@primodiumxyz/reactive-tables";
 
 interface TransferContextType {
   left: Entity | undefined;

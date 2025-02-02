@@ -1,9 +1,10 @@
-import { Entity } from "@primodiumxyz/reactive-tables";
-import { Navigator } from "@/components/core/Navigator";
-import { Card, GlassCard } from "@/components/core/Card";
-import { InitialScreen } from "@/components/hud/command/battle-menu/screens/InitialScreen";
 import { memo } from "react";
+
+import { Entity } from "@primodiumxyz/reactive-tables";
+import { Card, GlassCard } from "@/components/core/Card";
+import { Navigator } from "@/components/core/Navigator";
 import { AttackScreen } from "@/components/hud/command/battle-menu/screens/AttackScreen";
+import { InitialScreen } from "@/components/hud/command/battle-menu/screens/InitialScreen";
 
 export const BattleMenu: React.FC<{ target: Entity; selectedRock: Entity }> = memo(({ target, selectedRock }) => {
   return (

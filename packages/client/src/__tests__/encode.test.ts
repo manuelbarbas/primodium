@@ -1,6 +1,7 @@
-import { Entity } from "@primodiumxyz/reactive-tables";
 import { expect, test } from "vitest";
+
 import { hashKeyEntity, toHex32 } from "@primodiumxyz/core";
+import { Entity } from "@primodiumxyz/reactive-tables";
 
 // Outputs of LibEncode.sol's hashKeyEntity function
 const hashKeyEntityOutputs = {

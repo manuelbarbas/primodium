@@ -1,16 +1,17 @@
-import { makeObjectiveClaimable } from "@/util/objectives/makeObjectiveClaimable";
 import { EObjectives } from "contracts/config/enums";
-import { ampli } from "@/ampli";
+
 import {
   AccountClient,
   Core,
+  ExecuteFunctions,
+  formatResourceCount,
   getEntityTypeName,
   ResourceEnumLookup,
-  formatResourceCount,
-  ExecuteFunctions,
 } from "@primodiumxyz/core";
-import { Entity, defaultEntity } from "@primodiumxyz/reactive-tables";
+import { defaultEntity, Entity } from "@primodiumxyz/reactive-tables";
+import { ampli } from "@/ampli";
 import { parseReceipt } from "@/contractCalls/parseReceipt";
+import { makeObjectiveClaimable } from "@/util/objectives/makeObjectiveClaimable";
 
 export const createSwapCalls =
   (core: Core, { playerAccount }: AccountClient, { execute }: ExecuteFunctions) =>

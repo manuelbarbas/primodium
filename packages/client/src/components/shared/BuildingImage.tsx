@@ -1,5 +1,6 @@
-import { Entity } from "@primodiumxyz/reactive-tables";
 import { useMemo } from "react";
+
+import { Entity } from "@primodiumxyz/reactive-tables";
 import { useGame } from "@/hooks/useGame";
 
 export const BuildingImageFromType: React.FC<{ buildingType: Entity; blurred?: boolean; isBlueprint?: boolean }> = ({

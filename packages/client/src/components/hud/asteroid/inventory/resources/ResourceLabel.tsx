@@ -1,10 +1,11 @@
-import { Entity } from "@primodiumxyz/reactive-tables";
 import { useMemo } from "react";
-import { Badge } from "@/components/core/Badge";
-import { ResourceIconTooltip } from "@/components/shared/ResourceIconTooltip";
-import { Tooltip } from "@/components/core/Tooltip";
+
 import { formatResourceCount, SPEED_SCALE } from "@primodiumxyz/core";
 import { useCore, useResourceCount } from "@primodiumxyz/core/react";
+import { Entity } from "@primodiumxyz/reactive-tables";
+import { Badge } from "@/components/core/Badge";
+import { Tooltip } from "@/components/core/Tooltip";
+import { ResourceIconTooltip } from "@/components/shared/ResourceIconTooltip";
 import { EntityToResourceImage } from "@/util/image";
 
 export const ResourceLabel = ({ name, resource }: { name: string; resource: Entity }) => {

@@ -1,11 +1,11 @@
-import { useBuildingInfo } from "@primodiumxyz/core/react";
 import { EntityType, formatNumber, formatResourceCount, getEntityTypeName } from "@primodiumxyz/core";
-import { EntityToResourceImage } from "@/util/image";
+import { useBuildingInfo } from "@primodiumxyz/core/react";
+import { Entity } from "@primodiumxyz/reactive-tables";
 import { Badge } from "@/components/core/Badge";
 import { SecondaryCard } from "@/components/core/Card";
 import { Navigator } from "@/components/core/Navigator";
 import { ResourceIconTooltip } from "@/components/shared/ResourceIconTooltip";
-import { Entity } from "@primodiumxyz/reactive-tables";
+import { EntityToResourceImage } from "@/util/image";
 
 const DataLabel: React.FC<{ label: string; children: React.ReactNode }> = ({ label, children }) => {
   return (

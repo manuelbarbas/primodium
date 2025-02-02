@@ -1,19 +1,19 @@
+import { memo } from "react";
+import { useShallow } from "zustand/react/shallow";
+
+import { usePersistentStore } from "@primodiumxyz/game/src/stores/PersistentStore";
 import { HUD } from "@/components/core/HUD";
 import { AvailableObjectives } from "@/components/hud/global/AvailableObjectives";
 import { Dock } from "@/components/hud/global/Dock";
-import { ModeSelector } from "@/components/hud/global/ModeSelector";
-// import { ModeSelector } from "@/components/hud/global/_ModeSelector";
-import { Intro } from "@/components/hud/global/modals/Intro";
 import { FavoriteAsteroids } from "@/components/hud/global/FavoriteAsteroids";
+import { HoverInfo } from "@/components/hud/global/hover/HoverInfo";
+import { Intro } from "@/components/hud/global/modals/Intro";
+import { ModeSelector } from "@/components/hud/global/ModeSelector";
+import { AudioPlayer } from "@/components/hud/global/MusicPlayer";
 import { WarshipPopulation } from "@/components/hud/global/WarshipPopulation";
 import { BrandingLabel } from "@/components/shared/BrandingLabel";
-import { usePersistentStore } from "@primodiumxyz/game/src/stores/PersistentStore";
-import { memo } from "react";
-import { useShallow } from "zustand/react/shallow";
-import { HoverInfo } from "@/components/hud/global/hover/HoverInfo";
-import { FollowSocials } from "@/components/shared/FollowSocials";
-import { AudioPlayer } from "@/components/hud/global/MusicPlayer";
 import { Coordinates } from "@/components/shared/Coordinates";
+import { FollowSocials } from "@/components/shared/FollowSocials";
 
 export const GlobalHUD = memo(() => {
   const uiScale = usePersistentStore(useShallow((state) => state.uiScale));

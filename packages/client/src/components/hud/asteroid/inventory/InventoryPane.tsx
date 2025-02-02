@@ -1,15 +1,16 @@
-import { Button } from "@/components/core/Button";
-import { Card } from "@/components/core/Card";
-import { AllResourceLabels } from "@/components/hud/asteroid/inventory/resources/AllResourceLabels";
-import { AllUtilityLabels } from "@/components/hud/asteroid/inventory/resources/AllUtilityLabels";
-import { usePersistentStore } from "@primodiumxyz/game/src/stores/PersistentStore";
-import { useGame } from "@/hooks/useGame";
 import { useEffect, useRef, useState } from "react";
 import { useShallow } from "zustand/react/shallow";
-import { Hangar } from "@/components/hud/asteroid/inventory/hangar/Hangar";
-import { EntityToResourceImage, EntityToUnitImage } from "@/util/image";
+
 import { EntityType } from "@primodiumxyz/core";
+import { usePersistentStore } from "@primodiumxyz/game/src/stores/PersistentStore";
+import { Button } from "@/components/core/Button";
+import { Card } from "@/components/core/Card";
 import { IconLabel } from "@/components/core/IconLabel";
+import { Hangar } from "@/components/hud/asteroid/inventory/hangar/Hangar";
+import { AllResourceLabels } from "@/components/hud/asteroid/inventory/resources/AllResourceLabels";
+import { AllUtilityLabels } from "@/components/hud/asteroid/inventory/resources/AllUtilityLabels";
+import { useGame } from "@/hooks/useGame";
+import { EntityToResourceImage, EntityToUnitImage } from "@/util/image";
 
 export const InventoryPane = () => {
   const [visibleDiv, setVisibleDiv] = useState(0);
@@ -106,7 +107,7 @@ export const InventoryPane = () => {
                 <div key={index} className={`flex bg-neutral border border-secondary gap-1`}>
                   <Content index={index} />
                 </div>
-              )
+              ),
           )}
         </div>
 

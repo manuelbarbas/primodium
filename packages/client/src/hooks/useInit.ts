@@ -1,7 +1,8 @@
-import { useAccountClient, useCore, useSyncStatus } from "@primodiumxyz/core/react";
 import { useEffect, useState } from "react";
-import { ampli } from "@/ampli";
+
 import { Keys } from "@primodiumxyz/core";
+import { useAccountClient, useCore, useSyncStatus } from "@primodiumxyz/core/react";
+import { ampli } from "@/ampli";
 import { setupSessionAccount } from "@/systems/setupSessionAccount";
 
 export const useInit = () => {

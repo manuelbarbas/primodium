@@ -1,6 +1,7 @@
-import { cn } from "@/util/client";
 import { useEffect, useRef } from "react";
+
 import { useGame } from "@/hooks/useGame";
+import { cn } from "@/util/client";
 
 export const TextArea: React.FC<{
   placeholder?: string;

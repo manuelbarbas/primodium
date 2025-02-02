@@ -1,15 +1,7 @@
-import { Button } from "@/components/core/Button";
-import { Entity } from "@primodiumxyz/reactive-tables";
 import { EPointType } from "contracts/config/enums";
 import { useState } from "react";
-import { SecondaryCard } from "@/components/core/Card";
-import { Navigator } from "@/components/core/Navigator";
-import { NumberInput } from "@/components/core/NumberInput";
-import { TransactionQueueMask } from "@/components/shared/TransactionQueueMask";
 import { Hex } from "viem";
-import { ExpandRange } from "../widgets/ExpandRange";
-import { Upgrade } from "../widgets/Upgrade";
-import { useAccountClient, useCore, useResourceCount, useWormholeBaseCooldown } from "@primodiumxyz/core/react";
+
 import {
   EntityType,
   formatResourceCount,
@@ -18,8 +10,17 @@ import {
   parseResourceCount,
   ResourceEnumLookup,
 } from "@primodiumxyz/core";
-import { EntityToResourceImage } from "@/util/image";
+import { useAccountClient, useCore, useResourceCount, useWormholeBaseCooldown } from "@primodiumxyz/core/react";
+import { Entity } from "@primodiumxyz/reactive-tables";
+import { Button } from "@/components/core/Button";
+import { SecondaryCard } from "@/components/core/Card";
+import { Navigator } from "@/components/core/Navigator";
+import { NumberInput } from "@/components/core/NumberInput";
+import { ExpandRange } from "@/components/hud/asteroid/building-menu/widgets/ExpandRange";
+import { Upgrade } from "@/components/hud/asteroid/building-menu/widgets/Upgrade";
+import { TransactionQueueMask } from "@/components/shared/TransactionQueueMask";
 import { useContractCalls } from "@/hooks/useContractCalls";
+import { EntityToResourceImage } from "@/util/image";
 
 export const WormholeBase: React.FC<{ building: Entity }> = ({ building }) => {
   const { tables } = useCore();
@@ -69,7 +70,7 @@ const WormholeDeposit: React.FC<{ building: Entity; asteroid: Entity }> = ({ bui
           className="w-8 h-8"
         />
         <p>
-          {(isGameOver ? 0n : multiplier ?? 1n).toString()} pt{multiplier != 1n ? "s" : ""} /{" "}
+          {(isGameOver ? 0n : (multiplier ?? 1n)).toString()} pt{multiplier != 1n ? "s" : ""} /{" "}
           {getEntityTypeName(wormholeResource)}
         </p>
       </div>

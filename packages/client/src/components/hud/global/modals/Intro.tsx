@@ -1,9 +1,10 @@
-import { SecondaryCard } from "@/components/core/Card";
-import { Modal } from "@/components/core/Modal";
-import { usePersistentStore } from "@primodiumxyz/game/src/stores/PersistentStore";
-import { InterfaceIcons } from "@primodiumxyz/assets";
 import { useEffect, useState } from "react";
 import { useShallow } from "zustand/react/shallow";
+
+import { InterfaceIcons } from "@primodiumxyz/assets";
+import { usePersistentStore } from "@primodiumxyz/game/src/stores/PersistentStore";
+import { SecondaryCard } from "@/components/core/Card";
+import { Modal } from "@/components/core/Modal";
 
 const intervals = {
   sentence1: 1,
@@ -33,7 +34,7 @@ function convertToThresholds(intervals: Record<string, number>): Record<string, 
 const thresholds = convertToThresholds(intervals) as typeof intervals;
 export const Intro = () => {
   const { showIntro, setShowIntro } = usePersistentStore(
-    useShallow((state) => ({ setShowIntro: state.setShowIntro, showIntro: state.showIntro }))
+    useShallow((state) => ({ setShowIntro: state.setShowIntro, showIntro: state.showIntro })),
   );
   const [secondsElapsed, setSecondsElapsed] = useState(0);
 

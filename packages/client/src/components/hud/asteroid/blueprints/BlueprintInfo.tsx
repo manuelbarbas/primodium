@@ -1,12 +1,13 @@
-import { defaultEntity, Entity } from "@primodiumxyz/reactive-tables";
 import React, { memo, useMemo } from "react";
-import { Badge } from "@/components/core/Badge";
-import { IconLabel } from "@/components/core/IconLabel";
-import { SecondaryCard } from "@/components/core/Card";
-import { ResourceIconTooltip } from "@/components/shared/ResourceIconTooltip";
-import { useCore, useHasEnoughResources } from "@primodiumxyz/core/react";
-import { EntityToResourceImage, EntityToUnitImage } from "@/util/image";
+
 import { getEntityTypeName, ResourceType } from "@primodiumxyz/core";
+import { useCore, useHasEnoughResources } from "@primodiumxyz/core/react";
+import { defaultEntity, Entity } from "@primodiumxyz/reactive-tables";
+import { Badge } from "@/components/core/Badge";
+import { SecondaryCard } from "@/components/core/Card";
+import { IconLabel } from "@/components/core/IconLabel";
+import { ResourceIconTooltip } from "@/components/shared/ResourceIconTooltip";
+import { EntityToResourceImage, EntityToUnitImage } from "@/util/image";
 
 export const RecipeDisplay: React.FC<{
   building: Entity;
@@ -53,7 +54,7 @@ export const BlueprintInfo: React.FC<{
 }> = memo(({ building }) => {
   const { tables, utils } = useCore();
   const spaceRock = tables.ActiveRock.use(undefined, {
-    value: tables.ActiveRock.get()?.value,
+    value: tables.ActiveRock.get()?.value ?? defaultEntity,
   })?.value;
   if (!spaceRock) throw new Error("No space rock found");
   const rawProduction = tables.P_Production.useWithKeys({ prototype: building, level: 1n });
@@ -62,7 +63,7 @@ export const BlueprintInfo: React.FC<{
   const unitProduction = tables.P_UnitProdTypes.useWithKeys({ prototype: building, level: 1n });
   const storageUpgrades = useMemo(
     () => (building ? utils.getBuildingLevelStorageUpgrades(building, 1n) : undefined),
-    [building]
+    [building],
   );
 
   const buildingName = useMemo(() => getEntityTypeName(building), [building]);

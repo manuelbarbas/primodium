@@ -1,14 +1,15 @@
-import { Button } from "@/components/core/Button";
-import { alert } from "@/util/alert";
-import { CapacityBar } from "@/components/core/CapacityBar";
-import { Tabs } from "@/components/core/Tabs";
-import { Entity } from "@primodiumxyz/reactive-tables";
 import { useEffect, useState } from "react";
 import { FaInfoCircle } from "react-icons/fa";
-import { useAccountClient, useAsteroidStrength, useCore, useResourceCount } from "@primodiumxyz/core/react";
-import { EntityToResourceImage } from "@/util/image";
+
 import { EntityType, formatResourceCount } from "@primodiumxyz/core";
+import { useAccountClient, useAsteroidStrength, useCore, useResourceCount } from "@primodiumxyz/core/react";
+import { Entity } from "@primodiumxyz/reactive-tables";
+import { Button } from "@/components/core/Button";
+import { CapacityBar } from "@/components/core/CapacityBar";
+import { Tabs } from "@/components/core/Tabs";
 import { useContractCalls } from "@/hooks/useContractCalls";
+import { alert } from "@/util/alert";
+import { EntityToResourceImage } from "@/util/image";
 
 export const AsteroidStats = ({
   asteroid,
@@ -21,7 +22,7 @@ export const AsteroidStats = ({
 }) => {
   const { resourceCount: encryption, resourceStorage: maxEncryption } = useResourceCount(
     EntityType.Encryption,
-    asteroid
+    asteroid,
   );
   const { strength, maxStrength } = useAsteroidStrength(asteroid);
   const encryptionImg = EntityToResourceImage[EntityType.Encryption] ?? "";

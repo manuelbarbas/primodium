@@ -1,13 +1,15 @@
-import { cn } from "@/util/client";
-import { Coord } from "@primodiumxyz/engine/types";
 import { ReactNode, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import ReactDOM from "react-dom";
 import { FaChevronRight } from "react-icons/fa";
-import { useGame } from "@/hooks/useGame";
+
 import { calculateAngleBetweenPoints } from "@primodiumxyz/core";
+import { Coord } from "@primodiumxyz/engine/types";
+import { DepthLayers, SceneKeys } from "@primodiumxyz/game";
+import { useGame } from "@/hooks/useGame";
+import { cn } from "@/util/client";
+
 import { Button } from "./Button";
 import { IconLabel } from "./IconLabel";
-import { DepthLayers, SceneKeys } from "@primodiumxyz/game";
 
 const BoundedMarker: React.FC<{ scene: SceneKeys; coord: Coord; iconUri: string; degrees: number }> = ({
   coord,
@@ -117,7 +119,7 @@ export const Marker: React.FC<{
       setContainer(container);
       return { container, obj };
     },
-    [camera, depth]
+    [camera, depth],
   );
 
   //setup container on correct scene
@@ -151,7 +153,7 @@ export const Marker: React.FC<{
 
           const { radian, degree } = calculateAngleBetweenPoints(
             { x: view.centerX, y: view.centerY },
-            { x: coord.x, y: coord.y }
+            { x: coord.x, y: coord.y },
           );
 
           //convert to ellipse coordinates
@@ -188,7 +190,7 @@ export const Marker: React.FC<{
       )}
       {(visible || !offScreenIconUri) && children}
     </div>,
-    container
+    container,
   );
 };
 

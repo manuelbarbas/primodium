@@ -1,14 +1,15 @@
+import { useEffect, useState } from "react";
+
+import { InterfaceIcons } from "@primodiumxyz/assets";
+import { useAccountClient, useCore } from "@primodiumxyz/core/react";
+import { defaultEntity, Entity } from "@primodiumxyz/reactive-tables";
 import { Button } from "@/components/core/Button";
 import { Card, SecondaryCard } from "@/components/core/Card";
+import { Navigator } from "@/components/core/Navigator";
 import { BattleDetails } from "@/components/hud/global/modals/battle-reports/BattleDetails";
 import { BattleButton, ErrorScreen, LoadingScreen } from "@/components/hud/global/modals/battle-reports/BattleReports";
 import { TransactionQueueMask } from "@/components/shared/TransactionQueueMask";
 import { useContractCalls } from "@/hooks/useContractCalls";
-import { InterfaceIcons } from "@primodiumxyz/assets";
-import { useEffect, useState } from "react";
-import { Navigator } from "@/components/core/Navigator";
-import { useCore, useAccountClient } from "@primodiumxyz/core/react";
-import { defaultEntity, Entity } from "@primodiumxyz/reactive-tables";
 
 export const YouDied = () => {
   const { tables, sync } = useCore();
@@ -17,7 +18,7 @@ export const YouDied = () => {
     playerAccount: { entity: playerEntity },
   } = useAccountClient();
   const battles = tables.Battle.useAllPlayerBattles(playerEntity).sort((a, b) =>
-    Number(tables.Battle.get(b)?.timestamp! - tables.Battle.get(a)?.timestamp!)
+    Number(tables.Battle.get(b)?.timestamp! - tables.Battle.get(a)?.timestamp!),
   );
 
   useEffect(() => {

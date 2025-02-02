@@ -1,14 +1,16 @@
-import { AccountDisplay } from "@/components/shared/AccountDisplay";
-import { Entity } from "@primodiumxyz/reactive-tables";
-import { InterfaceIcons } from "@primodiumxyz/assets";
 import { useEffect, useMemo, useState } from "react";
 import { FaTimes } from "react-icons/fa";
+
+import { InterfaceIcons } from "@primodiumxyz/assets";
+import { entityToFleetName, entityToRockName, formatTimeAgo, hashEntities, Keys } from "@primodiumxyz/core";
+import { useAccountClient, useCore, useSyncStatus } from "@primodiumxyz/core/react";
+import { Entity } from "@primodiumxyz/reactive-tables";
 import { SecondaryCard } from "@/components/core/Card";
 import { Loader } from "@/components/core/Loader";
 import { Navigator } from "@/components/core/Navigator";
+import { AccountDisplay } from "@/components/shared/AccountDisplay";
+
 import { BattleDetails } from "./BattleDetails";
-import { useAccountClient, useCore, useSyncStatus } from "@primodiumxyz/core/react";
-import { entityToFleetName, entityToRockName, formatTimeAgo, hashEntities, Keys } from "@primodiumxyz/core";
 
 export const LoadingScreen = () => {
   return (
@@ -47,7 +49,7 @@ export const BattleReports = () => {
   const { loading, error } = useSyncStatus(hashEntities(Keys.BATTLE, playerEntity));
 
   const battles = tables.Battle.useAllPlayerBattles(playerEntity).sort((a, b) =>
-    Number(tables.Battle.get(b)?.timestamp! - tables.Battle.get(a)?.timestamp!)
+    Number(tables.Battle.get(b)?.timestamp! - tables.Battle.get(a)?.timestamp!),
   );
 
   useEffect(() => {

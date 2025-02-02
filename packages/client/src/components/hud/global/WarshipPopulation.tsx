@@ -1,10 +1,11 @@
-import { Tooltip } from "@/components/core/Tooltip";
-import { HealthBar } from "@/components/shared/HealthBar";
-import { AccountDisplay } from "@/components/shared/AccountDisplay";
-import { useMemo } from "react";
-import { useAccountClient, useCore } from "@primodiumxyz/core/react";
-import { formatNumber } from "@primodiumxyz/core";
 import { bigIntMin } from "@latticexyz/common/utils";
+import { useMemo } from "react";
+
+import { formatNumber } from "@primodiumxyz/core";
+import { useAccountClient, useCore } from "@primodiumxyz/core/react";
+import { Tooltip } from "@/components/core/Tooltip";
+import { AccountDisplay } from "@/components/shared/AccountDisplay";
+import { HealthBar } from "@/components/shared/HealthBar";
 
 export const WarshipPopulation = () => {
   const { tables } = useCore();

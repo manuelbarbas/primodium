@@ -1,7 +1,8 @@
 import { InterfaceIcons } from "@primodiumxyz/assets";
-import { BuildObjective, ObjectiveReq } from "./types";
-import { Entity, query } from "@primodiumxyz/reactive-tables";
 import { Core, getEntityTypeName } from "@primodiumxyz/core";
+import { Entity, query } from "@primodiumxyz/reactive-tables";
+
+import { BuildObjective, ObjectiveReq } from "./types";
 
 export function getHasRequiredBuilding({ tables }: Core, asteroid: Entity, objective: BuildObjective): ObjectiveReq {
   const buildings = query({

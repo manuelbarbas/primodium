@@ -1,4 +1,5 @@
 import { FaInfoCircle } from "react-icons/fa";
+
 import { SecondaryCard } from "@/components/core/Card";
 import { Navigator } from "@/components/core/Navigator";
 

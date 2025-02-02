@@ -1,9 +1,10 @@
 import { EObjectives } from "contracts/config/enums";
-import { makeObjectiveClaimable } from "@/util/objectives/makeObjectiveClaimable";
-import { ampli } from "@/ampli";
+
 import { AccountClient, Core, EntityType, ExecuteFunctions } from "@primodiumxyz/core";
 import { Entity } from "@primodiumxyz/reactive-tables";
+import { ampli } from "@/ampli";
 import { parseReceipt } from "@/contractCalls/parseReceipt";
+import { makeObjectiveClaimable } from "@/util/objectives/makeObjectiveClaimable";
 
 export const createAttack =
   (core: Core, { playerAccount }: AccountClient, { execute }: ExecuteFunctions) =>

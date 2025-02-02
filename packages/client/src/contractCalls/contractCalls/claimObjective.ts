@@ -1,9 +1,9 @@
 import {
   Core,
-  ObjectiveEnumLookup,
+  ExecuteFunctions,
   getEntityTypeName,
   ObjectiveEntityLookup,
-  ExecuteFunctions,
+  ObjectiveEnumLookup,
 } from "@primodiumxyz/core";
 import { Entity } from "@primodiumxyz/reactive-tables";
 import { ampli } from "@/ampli";

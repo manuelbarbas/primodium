@@ -1,19 +1,4 @@
-import { CapacityBar } from "@/components/core/CapacityBar";
-import { SecondaryCard } from "@/components/core/Card";
-import { cn } from "@/util/client";
-import { Entity } from "@primodiumxyz/reactive-tables";
 import { InterfaceIcons, ResourceImages } from "@primodiumxyz/assets";
-import { IconLabel } from "@/components/core/IconLabel";
-import { Loader } from "@/components/core/Loader";
-import {
-  useAsteroidStrength,
-  useClaimPrimodium,
-  useCore,
-  useInGracePeriod,
-  useResourceCount,
-  useResourceCounts,
-  useSyncStatus,
-} from "@primodiumxyz/core/react";
 import {
   entityToRockName,
   EntityType,
@@ -24,9 +9,24 @@ import {
   Keys,
   ResourceStorages,
 } from "@primodiumxyz/core";
-import { useAsteroidImage } from "@/hooks/image/useAsteroidImage";
-import { EntityToResourceImage, EntityToUnitImage } from "@/util/image";
+import {
+  useAsteroidStrength,
+  useClaimPrimodium,
+  useCore,
+  useInGracePeriod,
+  useResourceCount,
+  useResourceCounts,
+  useSyncStatus,
+} from "@primodiumxyz/core/react";
+import { Entity } from "@primodiumxyz/reactive-tables";
+import { CapacityBar } from "@/components/core/CapacityBar";
+import { SecondaryCard } from "@/components/core/Card";
+import { IconLabel } from "@/components/core/IconLabel";
+import { Loader } from "@/components/core/Loader";
 import { AccountDisplay } from "@/components/shared/AccountDisplay";
+import { useAsteroidImage } from "@/hooks/image/useAsteroidImage";
+import { cn } from "@/util/client";
+import { EntityToResourceImage, EntityToUnitImage } from "@/util/image";
 
 export const AsteroidHover: React.FC<{ entity: Entity; hideResources?: boolean }> = ({
   entity,
@@ -41,7 +41,7 @@ export const AsteroidHover: React.FC<{ entity: Entity; hideResources?: boolean }
   const { resourceCount: encryption, resourceStorage: maxEncryption } = useResourceCount(
     EntityType.Encryption,
     entity,
-    loading
+    loading,
   );
 
   const ownedBy = tables.OwnedBy.use(entity)?.value as Entity | undefined;
@@ -83,7 +83,7 @@ export const AsteroidHover: React.FC<{ entity: Entity; hideResources?: boolean }
             <p
               className={cn(
                 "px-1 ",
-                wormhole ? "rainbow-bg text-neutral" : "border border-y-0 border-x-1 border-x-white"
+                wormhole ? "rainbow-bg text-neutral" : "border border-y-0 border-x-1 border-x-white",
               )}
             >
               {desc.type}

@@ -1,11 +1,13 @@
 import { useState } from "react";
-import { Join } from "@/components/core/Join";
-import { Tabs } from "@/components/core/Tabs";
-import { Leaderboards } from "./Leaderboards";
-import { LoadingScreen } from "./LoadingScreen";
-import { ErrorScreen } from "./ErrorScreen";
+
 import { Keys } from "@primodiumxyz/core";
 import { useSyncStatus } from "@primodiumxyz/core/react";
+import { Join } from "@/components/core/Join";
+import { Tabs } from "@/components/core/Tabs";
+
+import { ErrorScreen } from "./ErrorScreen";
+import { Leaderboards } from "./Leaderboards";
+import { LoadingScreen } from "./LoadingScreen";
 
 export const LeaderboardScreen: React.FC = () => {
   const [activeTab, setActiveTab] = useState("Final");

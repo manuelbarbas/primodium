@@ -1,5 +1,8 @@
+import { encodeKey } from "@latticexyz/protocol-parser/internal";
+import { Hex } from "viem";
+
 import { ExecuteFunctions } from "@primodiumxyz/core";
-import { Entity, ContractTable, ContractTableDef, Properties } from "@primodiumxyz/reactive-tables";
+import { ContractTable, ContractTableDef, Entity, Properties } from "@primodiumxyz/reactive-tables";
 import {
   encodeField,
   entityToHexKeyTuple,
@@ -7,13 +10,11 @@ import {
   StaticAbiType,
   uuid,
 } from "@primodiumxyz/reactive-tables/utils";
-import { encodeKey } from "@latticexyz/protocol-parser/internal";
-import { Hex } from "viem";
 
 export function createDevCalls({ execute }: ExecuteFunctions) {
   async function removeTable<tableDef extends ContractTableDef = ContractTableDef>(
     table: ContractTable<tableDef>,
-    entity: Entity
+    entity: Entity,
   ) {
     const tableId = table.id as Hex;
     const key = entityToHexKeyTuple(entity);
@@ -31,7 +32,7 @@ export function createDevCalls({ execute }: ExecuteFunctions) {
   async function setTableValue<tableDef extends ContractTableDef = ContractTableDef>(
     table: ContractTable<tableDef>,
     keys: SchemaToPrimitives<ContractTable<tableDef>["metadata"]["abiKeySchema"]>,
-    newValues: Partial<Properties<ContractTable<tableDef>["propertiesSchema"]>>
+    newValues: Partial<Properties<ContractTable<tableDef>["propertiesSchema"]>>,
   ) {
     const tableId = table.id as Hex;
     const schema = Object.keys(table.metadata.abiPropertiesSchema);

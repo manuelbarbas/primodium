@@ -1,10 +1,11 @@
-import { InterfaceIcons } from "@primodiumxyz/assets";
-import { Tabs } from "@/components/core/Tabs";
-import { Join } from "@/components/core/Join";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
+
+import { InterfaceIcons } from "@primodiumxyz/assets";
+import { Mode } from "@primodiumxyz/core";
 import { useAccountClient, useCore } from "@primodiumxyz/core/react";
 import { Entity, useQuery } from "@primodiumxyz/reactive-tables";
-import { Mode } from "@primodiumxyz/core";
+import { Join } from "@/components/core/Join";
+import { Tabs } from "@/components/core/Tabs";
 
 const btnClass = "group  bg-transparent";
 

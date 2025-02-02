@@ -1,4 +1,5 @@
-import { FC, ReactNode, createContext, useCallback, useContext, useLayoutEffect, useState } from "react";
+import { createContext, FC, ReactNode, useCallback, useContext, useLayoutEffect, useState } from "react";
+
 import { Button } from "@/components/core/Button";
 import { SecondaryCard } from "@/components/core/Card";
 
@@ -40,7 +41,7 @@ export const Navigator: FC<{
         setHistory((prev) => [...prev, screenTitle]);
       }
     },
-    [history]
+    [history],
   );
 
   const goBack = useCallback(() => {

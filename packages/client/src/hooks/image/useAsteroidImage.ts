@@ -1,8 +1,8 @@
-import { useGame } from "@/hooks/useGame";
 import { InterfaceIcons } from "@primodiumxyz/assets";
 import { EntityType, MapEntityLookup } from "@primodiumxyz/core";
 import { useCore } from "@primodiumxyz/core/react";
 import { Entity } from "@primodiumxyz/reactive-tables";
+import { useGame } from "@/hooks/useGame";
 
 export const useAsteroidImage = (asteroid: Entity): string => {
   const { tables } = useCore();

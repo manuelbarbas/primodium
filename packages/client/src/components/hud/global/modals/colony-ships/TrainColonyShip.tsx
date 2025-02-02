@@ -1,3 +1,9 @@
+import React, { useCallback, useMemo } from "react";
+import { Hex } from "viem";
+
+import { EntityType, formatNumber, formatResourceCount, getEntityTypeName, UnitEnumLookup } from "@primodiumxyz/core";
+import { useCore } from "@primodiumxyz/core/react";
+import { Entity } from "@primodiumxyz/reactive-tables";
 import { Badge } from "@/components/core/Badge";
 import { Button } from "@/components/core/Button";
 import { SecondaryCard } from "@/components/core/Card";
@@ -5,11 +11,6 @@ import { ResourceIconTooltip } from "@/components/shared/ResourceIconTooltip";
 import { TransactionQueueMask } from "@/components/shared/TransactionQueueMask";
 import { useContractCalls } from "@/hooks/useContractCalls";
 import { EntityToResourceImage, EntityToUnitImage } from "@/util/image";
-import { EntityType, formatNumber, formatResourceCount, UnitEnumLookup, getEntityTypeName } from "@primodiumxyz/core";
-import { useCore } from "@primodiumxyz/core/react";
-import { Entity } from "@primodiumxyz/reactive-tables";
-import React, { useCallback, useMemo } from "react";
-import { Hex } from "viem";
 
 export const TrainColonyShip: React.FC<{ onCommission?: () => void; buildingEntity: Entity; className?: string }> = ({
   onCommission,

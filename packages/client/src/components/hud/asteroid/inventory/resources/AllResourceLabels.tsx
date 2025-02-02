@@ -1,8 +1,9 @@
+import { EntityType } from "@primodiumxyz/core";
+import { useCore } from "@primodiumxyz/core/react";
 import { SecondaryCard } from "@/components/core/Card";
+
 import { ResourceLabel } from "./ResourceLabel";
 import { VaultUtilityLabel } from "./UtilityLabel";
-import { useCore } from "@primodiumxyz/core/react";
-import { EntityType } from "@primodiumxyz/core";
 
 export const AllResourceLabels = () => {
   const { tables } = useCore();

@@ -1,12 +1,9 @@
 import { createBurnerAccount, transportObserver } from "@latticexyz/common";
-import { Coord } from "@primodiumxyz/engine/types";
-import { Entity } from "@primodiumxyz/reactive-tables";
 import { EAllianceInviteMode, EPointType, EResource } from "contracts/config/enums";
-import { Address, Hex, createWalletClient, fallback, getContract, http, webSocket } from "viem";
+import { Address, createWalletClient, fallback, getContract, Hex, http, webSocket } from "viem";
 import { generatePrivateKey } from "viem/accounts";
 import { waitForTransactionReceipt } from "viem/actions";
-import { TesterPack, testerPacks } from "./testerPacks";
-import { PrimodiumGame } from "@primodiumxyz/game/src/types";
+
 import {
   AccountClient,
   BuildingEnumLookup,
@@ -23,16 +20,21 @@ import {
   UtilityStorages,
   WorldAbi,
 } from "@primodiumxyz/core";
+import { Coord } from "@primodiumxyz/engine/types";
+import { PrimodiumGame } from "@primodiumxyz/game/src/types";
+import { Entity } from "@primodiumxyz/reactive-tables";
 import { encodeEntity } from "@primodiumxyz/reactive-tables/utils";
-import { ContractCalls } from "@/contractCalls/createContractCalls";
 import { Cheatcode, Cheatcodes } from "@/components/hud/global/modals/dev/types";
+import { ContractCalls } from "@/contractCalls/createContractCalls";
+
+import { TesterPack, testerPacks } from "./testerPacks";
 
 export const setupCheatcodes = (
   { tables, utils, config, network }: Core,
   { playerAccount, sessionAccount }: AccountClient,
   calls: ContractCalls,
   game: PrimodiumGame,
-  requestDrip?: (address: Address) => Promise<void>
+  requestDrip?: (address: Address) => Promise<void>,
 ): Cheatcodes => {
   const {
     UI: { notify },
@@ -122,8 +124,8 @@ export const setupCheatcodes = (
           { entity: spaceRock as Hex, resource: resourceIndex },
           {
             value: newResourceCount,
-          }
-        )
+          },
+        ),
       );
     }
     systemCalls.push(
@@ -132,13 +134,13 @@ export const setupCheatcodes = (
         { entity: spaceRock as Hex, resource: resourceIndex },
         {
           value: newResourceCount,
-        }
-      )
+        },
+      ),
     );
     await Promise.all(systemCalls);
     notify(
       "success",
-      `${formatResourceCount(resource, value)} ${getEntityTypeName(resource)} given to ${entityToRockName(spaceRock)}`
+      `${formatResourceCount(resource, value)} ${getEntityTypeName(resource)} given to ${entityToRockName(spaceRock)}`,
     );
   };
 
@@ -156,7 +158,7 @@ export const setupCheatcodes = (
         { entity: spaceRock as Hex, resource: ResourceEnumLookup[resource as Entity] },
         {
           value: resourceStorage + count,
-        }
+        },
       );
     });
     if (unit === EntityType.ColonyShip) {
@@ -164,7 +166,7 @@ export const setupCheatcodes = (
       await setTableValue(
         tables.MaxColonySlots,
         { playerEntity: playerAccount.entity as Hex },
-        { value: colonyShipCap + value }
+        { value: colonyShipCap + value },
       );
     }
     const prevUnitCount = tables.UnitCount.getWithKeys({ unit: unit as Hex, entity: spaceRock as Hex })?.value ?? 0n;
@@ -176,7 +178,7 @@ export const setupCheatcodes = (
       },
       {
         value: value + prevUnitCount,
-      }
+      },
     );
   };
 
@@ -190,7 +192,7 @@ export const setupCheatcodes = (
         { entity: mainBase as Hex },
         {
           value: requiredBaseLevel,
-        }
+        },
       );
       notify("success", `Main Base Level set to ${requiredBaseLevel}`);
     }
@@ -215,7 +217,7 @@ export const setupCheatcodes = (
 
   async function createFleet(
     units: { unit: Entity; count: number }[],
-    resources: { resource: Entity; count: number }[]
+    resources: { resource: Entity; count: number }[],
   ) {
     const asteroid = tables.ActiveRock.get()?.value;
     if (!asteroid) throw new Error("No asteroid found");
@@ -233,10 +235,10 @@ export const setupCheatcodes = (
       new Map([
         ...(units.map(({ unit, count }) => [unit, BigInt(count)]) as [Entity, bigint][]),
         ...resources.map(
-          ({ resource, count }) => [resource, parseResourceCount(resource, count.toString())] as [Entity, bigint]
+          ({ resource, count }) => [resource, parseResourceCount(resource, count.toString())] as [Entity, bigint],
         ),
       ]),
-      { force: true }
+      { force: true },
     );
   }
 
@@ -350,7 +352,7 @@ export const setupCheatcodes = (
                   {},
                   {
                     worldSpeed: BigInt(pack.worldSpeed),
-                  }
+                  },
                 ));
 
               // spawn players
@@ -380,7 +382,7 @@ export const setupCheatcodes = (
                     { entity: activeAsteroid as Hex, resource: ResourceEnumLookup[resource] },
                     {
                       value,
-                    }
+                    },
                   );
                   await waitUntilTxQueueEmpty();
                 }
@@ -413,7 +415,7 @@ export const setupCheatcodes = (
                   { entity: activeAsteroid as Hex },
                   {
                     value: BigInt(pack.expansion),
-                  }
+                  },
                 );
                 await waitUntilTxQueueEmpty();
                 notify("success", `${name}:Expansion set to ${pack.expansion}`);
@@ -440,7 +442,7 @@ export const setupCheatcodes = (
                 for (const fleet of pack.fleets) {
                   await createFleet(
                     [...fleet.units.entries()].map(([unit, count]) => ({ unit, count })),
-                    [...fleet.resources.entries()].map(([resource, count]) => ({ resource, count }))
+                    [...fleet.resources.entries()].map(([resource, count]) => ({ resource, count })),
                   );
                   await waitUntilTxQueueEmpty();
                 }
@@ -453,14 +455,14 @@ export const setupCheatcodes = (
             },
           },
         ];
-      })
+      }),
     );
   }
   function canPlaceBuildingTiles(
     asteroidEntity: Entity,
     buildingPrototype: Entity,
     position: Coord,
-    usedCoords?: Coord[]
+    usedCoords?: Coord[],
   ) {
     const blueprint = tables.P_Blueprint.get(buildingPrototype)?.value ?? [];
     const absoluteCoords = [];
@@ -521,7 +523,7 @@ export const setupCheatcodes = (
               {},
               {
                 worldSpeed: BigInt(value),
-              }
+              },
             );
           },
         },
@@ -534,7 +536,7 @@ export const setupCheatcodes = (
               {},
               {
                 unitDeathLimit: BigInt(value),
-              }
+              },
             );
           },
         },
@@ -583,7 +585,7 @@ export const setupCheatcodes = (
               { entity: selectedRock as Hex },
               {
                 value: BigInt(level),
-              }
+              },
             );
             notify("success", "Main Base Level set to " + level);
           },
@@ -643,7 +645,7 @@ export const setupCheatcodes = (
               { entity: selectedRock as Hex, resource: ResourceEnumLookup[resourceEntity] },
               {
                 value,
-              }
+              },
             );
             notify("success", `${count} ${resource} storage given to ${entityToRockName(selectedRock)}`);
           },
@@ -665,7 +667,7 @@ export const setupCheatcodes = (
               { entity: selectedRock as Hex, resource: ResourceEnumLookup[resourceEntity] },
               {
                 value,
-              }
+              },
             );
             notify("success", `${count} ${resource} set for ${entityToRockName(selectedRock)}`);
           },
@@ -680,7 +682,7 @@ export const setupCheatcodes = (
             await setTableValue(
               tables.MaxColonySlots,
               { playerEntity: player as Hex },
-              { value: colonyShipCap + BigInt(count) }
+              { value: colonyShipCap + BigInt(count) },
             );
             notify("success", `Colony Ship Capacity increased by ${count}`);
           },
@@ -741,7 +743,7 @@ export const setupCheatcodes = (
               { mapId, x, y },
               {
                 value: ResourceEnumLookup[resourceEntity],
-              }
+              },
             );
             notify("success", `Terrain set to ${resource} at [${x}, ${y}]. Reload to see change.`);
           },
@@ -794,7 +796,7 @@ export const setupCheatcodes = (
               { entity: selectedBuilding as Hex },
               {
                 value: time + 10n,
-              }
+              },
             );
           },
         },
@@ -831,7 +833,7 @@ export const setupCheatcodes = (
               { entity: selectedFleet as Hex, unit: unitEntity as Hex },
               {
                 value: BigInt(count),
-              }
+              },
             );
 
             await setTableValue(
@@ -839,7 +841,7 @@ export const setupCheatcodes = (
               { entity: selectedFleet as Hex },
               {
                 value: false,
-              }
+              },
             );
           },
         },
@@ -864,7 +866,7 @@ export const setupCheatcodes = (
               { entity: selectedFleet as Hex, resource: ResourceEnumLookup[resourceEntity] },
               {
                 value,
-              }
+              },
             );
           },
         },
@@ -882,7 +884,7 @@ export const setupCheatcodes = (
               { entity: selectedFleet as Hex },
               {
                 value: BigInt(timestamp),
-              }
+              },
             );
           },
         },
@@ -899,7 +901,7 @@ export const setupCheatcodes = (
               {},
               {
                 maxAllianceMembers: BigInt(value),
-              }
+              },
             );
           },
         },

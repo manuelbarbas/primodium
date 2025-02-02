@@ -1,7 +1,7 @@
-import { LoadingOverlay } from "@/components/shared/LoadingOverlay";
 import { hashEntities, Keys } from "@primodiumxyz/core";
 import { useCore } from "@primodiumxyz/core/react";
 import { defaultEntity } from "@primodiumxyz/reactive-tables";
+import { LoadingOverlay } from "@/components/shared/LoadingOverlay";
 
 export const AsteroidLoading = () => {
   const { tables } = useCore();

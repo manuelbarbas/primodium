@@ -1,15 +1,16 @@
-import { Button } from "@/components/core/Button";
-import { BuildingImageFromType } from "@/components/shared/BuildingImage";
-import { Action, EntityType } from "@primodiumxyz/core";
-import { useCore, useHasEnoughResources } from "@primodiumxyz/core/react";
-import { Entity, useQuery } from "@primodiumxyz/reactive-tables";
 import { EMap } from "contracts/config/enums";
 import { useEffect, useMemo } from "react";
 import { FaLock } from "react-icons/fa";
-import { useGame } from "@/hooks/useGame";
 import { useShallow } from "zustand/react/shallow";
+
+import { Action, EntityType } from "@primodiumxyz/core";
+import { useCore, useHasEnoughResources } from "@primodiumxyz/core/react";
 import { KeybindActionKeys, KeyNames } from "@primodiumxyz/game";
 import { usePersistentStore } from "@primodiumxyz/game/src/stores/PersistentStore";
+import { defaultEntity, Entity, useQuery } from "@primodiumxyz/reactive-tables";
+import { Button } from "@/components/core/Button";
+import { BuildingImageFromType } from "@/components/shared/BuildingImage";
+import { useGame } from "@/hooks/useGame";
 
 const BlueprintButton: React.FC<{
   selectedRock: Entity;
@@ -28,7 +29,7 @@ const BlueprintButton: React.FC<{
   const [hideHotkeys] = usePersistentStore(useShallow((state) => [state.hideHotkeys]));
   const keybinds = useKeybinds();
   const selectedRockEntity = tables.ActiveRock.use(undefined, {
-    value: tables.ActiveRock.get()?.value,
+    value: tables.ActiveRock.get()?.value ?? defaultEntity,
   })?.value;
 
   if (!selectedRockEntity) throw new Error("No active rock entity found");
@@ -162,7 +163,7 @@ export const BuildingBlueprints: React.FC<BuildingBlueprintsProps> = ({
       EntityType.NULL,
       EntityType.NULL,
     ],
-    []
+    [],
   );
 
   const militaryBuildings = useMemo(
@@ -174,12 +175,12 @@ export const BuildingBlueprints: React.FC<BuildingBlueprintsProps> = ({
       EntityType.ShieldGenerator,
       EntityType.Shipyard,
     ],
-    []
+    [],
   );
 
   const infrastructureBuildings = useMemo(
     () => [EntityType.StarmapperStation, EntityType.Market, EntityType.NULL, EntityType.NULL, EntityType.NULL],
-    []
+    [],
   );
 
   const keybinds: KeybindActionKeys[] = [
@@ -218,7 +219,7 @@ export const BuildingBlueprints: React.FC<BuildingBlueprintsProps> = ({
           dimensions,
         };
       }),
-    [buildingsToShow]
+    [buildingsToShow],
   );
 
   return (

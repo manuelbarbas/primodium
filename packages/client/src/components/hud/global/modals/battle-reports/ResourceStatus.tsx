@@ -1,7 +1,8 @@
-import { EntityToResourceImage } from "@/util/image";
+import React from "react";
+
 import { formatResourceCount } from "@primodiumxyz/core";
 import { Entity } from "@primodiumxyz/reactive-tables";
-import React from "react";
+import { EntityToResourceImage } from "@/util/image";
 
 export const ResourceStatus: React.FC<{
   resources: Record<Entity, { resourcesAtStart: bigint; resourcesAtEnd: bigint }>;

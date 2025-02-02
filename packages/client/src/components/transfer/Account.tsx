@@ -1,19 +1,21 @@
 import { useState } from "react";
 import { FaClipboard, FaExclamationCircle, FaExclamationTriangle } from "react-icons/fa";
 import { toast } from "react-toastify";
-import { usePersistentStore } from "@primodiumxyz/game/src/stores/PersistentStore";
-import { copyToClipboard } from "@/util/clipboard";
 import { useDisconnect } from "wagmi";
 import { useShallow } from "zustand/react/shallow";
-import { Button } from "../core/Button";
-import { AccountDisplay } from "../shared/AccountDisplay";
-import { Authorize } from "./Authorize";
+
 import { useAccountClient } from "@primodiumxyz/core/react";
+import { usePersistentStore } from "@primodiumxyz/game/src/stores/PersistentStore";
+import { Button } from "@/components/core/Button";
+import { AccountDisplay } from "@/components/shared/AccountDisplay";
+import { copyToClipboard } from "@/util/clipboard";
+
+import { Authorize } from "./Authorize";
 
 export function Account() {
   const { playerAccount } = useAccountClient();
   const { removeNoExternalAccount } = usePersistentStore(
-    useShallow((state) => ({ removeNoExternalAccount: state.removeNoExternalAccount }))
+    useShallow((state) => ({ removeNoExternalAccount: state.removeNoExternalAccount })),
   );
   const [showingToast, setShowingToast] = useState(false);
   const { disconnect } = useDisconnect();
@@ -69,7 +71,7 @@ export function Account() {
         draggable: false,
         closeButton: false,
         hideProgressBar: true,
-      }
+      },
     );
   };
 

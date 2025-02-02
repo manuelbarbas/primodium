@@ -1,15 +1,16 @@
-import { BrowserRouter, Navigate, Route, Routes, useLocation } from "react-router-dom";
-import { Progress } from "./components/core/Progress";
-import { useInit } from "./hooks/useInit";
-import { Enter } from "./screens/Enter";
-import { Game } from "./screens/Game";
-import { Increment } from "./screens/Increment";
-import { Sandbox } from "./screens/Sandbox";
-import { Statistics } from "./screens/Statistics";
 import { useEffect, useMemo } from "react";
-import { useAccountClient, useSyncStatus } from "@primodiumxyz/core/react";
+import { BrowserRouter, Navigate, Route, Routes, useLocation } from "react-router-dom";
+
 import { minEth } from "@primodiumxyz/core";
+import { useAccountClient, useSyncStatus } from "@primodiumxyz/core/react";
+import { Progress } from "@/components/core/Progress";
 import { useDripAccount } from "@/hooks/useDripAccount";
+import { useInit } from "@/hooks/useInit";
+import { Enter } from "@/screens/Enter";
+import { Game } from "@/screens/Game";
+import { Increment } from "@/screens/Increment";
+import { Sandbox } from "@/screens/Sandbox";
+import { Statistics } from "@/screens/Statistics";
 
 export default function AppLoadingState() {
   const { playerBalanceData, sessionBalanceData, requestDrip } = useDripAccount();

@@ -1,12 +1,13 @@
 import { InterfaceIcons } from "@primodiumxyz/assets";
-import { ObjectiveReq, UpgradeObjective } from "./types";
-import { Entity, query } from "@primodiumxyz/reactive-tables";
 import { Core, getEntityTypeName } from "@primodiumxyz/core";
+import { Entity, query } from "@primodiumxyz/reactive-tables";
+
+import { ObjectiveReq, UpgradeObjective } from "./types";
 
 export function getHasRequiredBuildingUpgrade(
   { tables }: Core,
   asteroid: Entity,
-  objective: UpgradeObjective
+  objective: UpgradeObjective,
 ): ObjectiveReq {
   const buildings = query({
     withProperties: [

@@ -1,9 +1,10 @@
-import { FaChevronLeft, FaChevronRight, FaInfoCircle } from "react-icons/fa";
-import { UnitUpgrade } from "../widgets/UnitUpgrade";
 import { useMemo, useState } from "react";
+import { FaChevronLeft, FaChevronRight, FaInfoCircle } from "react-icons/fa";
+
+import { EntityType } from "@primodiumxyz/core";
 import { Button } from "@/components/core/Button";
 import { Card } from "@/components/core/Card";
-import { EntityType } from "@primodiumxyz/core";
+import { UnitUpgrade } from "@/components/hud/asteroid/building-menu/widgets/UnitUpgrade";
 
 export const UnitUpgrades: React.FC = () => {
   const [currentPage, setCurrentPage] = useState(0);

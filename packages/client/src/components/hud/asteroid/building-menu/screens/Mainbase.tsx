@@ -1,8 +1,8 @@
+import { useCore } from "@primodiumxyz/core/react";
 import { Entity } from "@primodiumxyz/reactive-tables";
 import { Navigator } from "@/components/core/Navigator";
-import { ExpandRange } from "../widgets/ExpandRange";
-import { Upgrade } from "../widgets/Upgrade";
-import { useCore } from "@primodiumxyz/core/react";
+import { ExpandRange } from "@/components/hud/asteroid/building-menu/widgets/ExpandRange";
+import { Upgrade } from "@/components/hud/asteroid/building-menu/widgets/Upgrade";
 
 export const MainBase: React.FC<{ building: Entity }> = ({ building }) => {
   const { tables } = useCore();

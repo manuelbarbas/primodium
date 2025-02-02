@@ -1,6 +1,6 @@
-import { AccountDisplay } from "@/components/shared/AccountDisplay";
 import { entityToAddress, isPlayer } from "@primodiumxyz/core";
 import { useCore } from "@primodiumxyz/core/react";
+import { AccountDisplay } from "@/components/shared/AccountDisplay";
 
 export const Statistics = () => {
   const { tables } = useCore();

@@ -1,12 +1,13 @@
+import { useState } from "react";
+import { isAddress } from "viem";
+
+import { toHex32 } from "@primodiumxyz/core";
+import { Entity } from "@primodiumxyz/reactive-tables";
 import { Button } from "@/components/core/Button";
 import { SecondaryCard } from "@/components/core/Card";
 import { TextInput } from "@/components/core/TextInput";
 import { TransactionQueueMask } from "@/components/shared/TransactionQueueMask";
 import { useContractCalls } from "@/hooks/useContractCalls";
-import { toHex32 } from "@primodiumxyz/core";
-import { Entity } from "@primodiumxyz/reactive-tables";
-import { useState } from "react";
-import { isAddress } from "viem";
 
 export const Invite = () => {
   const { invite } = useContractCalls();

@@ -1,12 +1,13 @@
-import { Tooltip } from "@/components/core/Tooltip";
-import { useGame } from "@/hooks/useGame";
-import { useEffect, forwardRef, useCallback } from "react";
+import { KeybindActionKeys } from "@game/lib/constants/keybinds";
+import { cva, type VariantProps } from "class-variance-authority";
+import { forwardRef, useCallback, useEffect } from "react";
+
 import { AudioKeys } from "@primodiumxyz/assets";
 import { getRandomRange } from "@primodiumxyz/core";
 import { useCore } from "@primodiumxyz/core/react";
-import { KeybindActionKeys } from "@game/lib/constants/keybinds";
+import { Tooltip } from "@/components/core/Tooltip";
+import { useGame } from "@/hooks/useGame";
 import { cn } from "@/util/client";
-import { cva, type VariantProps } from "class-variance-authority";
 
 const buttonVariants = cva(
   "btn join-item relative group pointer-events-auto min-h-fit flex items-center justify-center whitespace-nowrap ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 !p-0",
@@ -45,7 +46,7 @@ const buttonVariants = cva(
       size: "xs",
       shape: "default",
     },
-  }
+  },
 );
 
 const _innerVariants = cva(
@@ -65,7 +66,7 @@ const _innerVariants = cva(
     defaultVariants: {
       variant: "secondary",
     },
-  }
+  },
 );
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement>, VariantProps<typeof buttonVariants> {
@@ -94,7 +95,7 @@ export const PushButton = forwardRef<HTMLButtonElement, ButtonProps>(
       selected,
       ...props
     },
-    ref
+    ref,
   ) => {
     const game = useGame();
     const { tables } = useCore();
@@ -109,7 +110,7 @@ export const PushButton = forwardRef<HTMLButtonElement, ButtonProps>(
 
         props.onClick?.(e);
       },
-      [api.audio, clickSound, mute, props]
+      [api.audio, clickSound, mute, props],
     );
 
     const handleHoverEnter = useCallback(
@@ -123,7 +124,7 @@ export const PushButton = forwardRef<HTMLButtonElement, ButtonProps>(
         props.onPointerEnter?.(e);
         tables.HoverEntity.remove();
       },
-      [api.audio, mute, props]
+      [api.audio, mute, props],
     );
 
     useEffect(() => {
@@ -141,7 +142,7 @@ export const PushButton = forwardRef<HTMLButtonElement, ButtonProps>(
         <button
           className={cn(
             selected && "ring-1 ring-accent z-10",
-            buttonVariants({ variant, size, modifier, shape, className })
+            buttonVariants({ variant, size, modifier, shape, className }),
           )}
           ref={ref}
           {...props}
@@ -157,6 +158,6 @@ export const PushButton = forwardRef<HTMLButtonElement, ButtonProps>(
         </button>
       </Tooltip>
     );
-  }
+  },
 );
 PushButton.displayName = "PushButton";

@@ -1,10 +1,4 @@
-import { Entity } from "@primodiumxyz/reactive-tables";
 import { InterfaceIcons, ResourceImages } from "@primodiumxyz/assets";
-import { Loader } from "@/components/core/Loader";
-import { AccountDisplay } from "@/components/shared/AccountDisplay";
-import { CapacityBar } from "@/components/core/CapacityBar";
-import { IconLabel } from "@/components/core/IconLabel";
-import { useCore, useResourceCount, useShardAsteroid, useSyncStatus } from "@primodiumxyz/core/react";
 import {
   entityToRockName,
   EntityType,
@@ -13,6 +7,12 @@ import {
   hashEntities,
   Keys,
 } from "@primodiumxyz/core";
+import { useCore, useResourceCount, useShardAsteroid, useSyncStatus } from "@primodiumxyz/core/react";
+import { Entity } from "@primodiumxyz/reactive-tables";
+import { CapacityBar } from "@/components/core/CapacityBar";
+import { IconLabel } from "@/components/core/IconLabel";
+import { Loader } from "@/components/core/Loader";
+import { AccountDisplay } from "@/components/shared/AccountDisplay";
 import { EntityToResourceImage } from "@/util/image";
 
 export const ShardAsteroidHover: React.FC<{ entity: Entity }> = ({ entity }) => {
@@ -28,7 +28,7 @@ export const ShardAsteroidHover: React.FC<{ entity: Entity }> = ({ entity }) => 
   const { resourceCount: encryption, resourceStorage: maxEncryption } = useResourceCount(
     EntityType.Encryption,
     entity,
-    loading
+    loading,
   );
   if (loading)
     return (

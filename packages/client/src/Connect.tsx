@@ -3,8 +3,9 @@ import React, { useEffect, useState } from "react";
 import { FaExclamationTriangle } from "react-icons/fa";
 import { toast } from "react-toastify";
 import { useAccount, useConnect } from "wagmi";
+
 import { usePersistentStore } from "@primodiumxyz/game/src/stores/PersistentStore";
-import { Landing } from "./screens/Landing";
+import { Landing } from "@/screens/Landing";
 
 const connectorIcons: Record<string, string> = {
   ["MetaMask"]: "/img/icons/web3/metamask.svg",
@@ -64,7 +65,7 @@ export const Connect: React.FC = React.memo(() => {
         draggable: false,
         closeButton: false,
         hideProgressBar: true,
-      }
+      },
     );
   };
 
@@ -82,7 +83,7 @@ export const Connect: React.FC = React.memo(() => {
 
         {chunk(
           connectors.filter((x) => x.id !== connector?.id),
-          2
+          2,
         ).map((chunk, i) => (
           <div key={`chunk-${i}`} className="flex flex-row gap-2">
             {chunk.map((x) => (

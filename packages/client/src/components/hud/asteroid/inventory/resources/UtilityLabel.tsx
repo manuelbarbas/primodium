@@ -1,11 +1,12 @@
+import { useCallback } from "react";
+
+import { EntityType, formatResourceCount } from "@primodiumxyz/core";
+import { useResourceCount } from "@primodiumxyz/core/react";
+import { Entity } from "@primodiumxyz/reactive-tables";
 import { Badge } from "@/components/core/Badge";
 import { CapacityBar } from "@/components/core/CapacityBar";
 import { IconLabel } from "@/components/core/IconLabel";
 import { Tooltip } from "@/components/core/Tooltip";
-import { Entity } from "@primodiumxyz/reactive-tables";
-import { useCallback } from "react";
-import { useResourceCount } from "@primodiumxyz/core/react";
-import { formatResourceCount, EntityType } from "@primodiumxyz/core";
 import { EntityToResourceImage } from "@/util/image";
 
 export const UtilityLabel = ({

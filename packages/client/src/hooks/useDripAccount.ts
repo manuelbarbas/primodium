@@ -1,10 +1,11 @@
-import { useAccountClient, useCore } from "@primodiumxyz/core/react";
-import { useCallback, useEffect, useMemo, useState } from "react";
-import { createClient as createFaucetClient } from "@latticexyz/faucet";
-import { Hex, createWalletClient, fallback, formatEther, http } from "viem";
 import { createBurnerAccount as createMudBurnerAccount, transportObserver } from "@latticexyz/common";
-import { minEth } from "@primodiumxyz/core";
+import { createClient as createFaucetClient } from "@latticexyz/faucet";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { createWalletClient, fallback, formatEther, Hex, http } from "viem";
 import { useBalance, UseBalanceReturnType } from "wagmi";
+
+import { minEth } from "@primodiumxyz/core";
+import { useAccountClient, useCore } from "@primodiumxyz/core/react";
 
 export const DEV_CHAIN = import.meta.env.PRI_CHAIN_ID === "dev";
 
@@ -48,7 +49,7 @@ export const useDripAccount = (): DripAccountHook => {
         console.info(`[Dev Drip] Dripped ${formatEther(amountToDrip)} to ${address.slice(0, 7)}`);
       }
     },
-    [externalWalletClient, faucet, network?.publicClient]
+    [externalWalletClient, faucet, network?.publicClient],
   );
 
   const [playerBalance, setPlayerBalance] = useState<bigint | undefined>();
@@ -76,8 +77,8 @@ export const useDripAccount = (): DripAccountHook => {
       refetchInterval: !sessionAccount
         ? undefined
         : !sessionBalance || sessionBalance < minEth
-        ? fastInterval
-        : slowInterval,
+          ? fastInterval
+          : slowInterval,
     },
   });
 

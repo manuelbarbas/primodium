@@ -1,9 +1,10 @@
-import { Entity } from "@primodiumxyz/reactive-tables";
 import { EObjectives } from "contracts/config/enums";
-import { makeObjectiveClaimable } from "@/util/objectives/makeObjectiveClaimable";
+
+import { AccountClient, bigintToNumber, Core, ExecuteFunctions } from "@primodiumxyz/core";
+import { Entity } from "@primodiumxyz/reactive-tables";
 import { ampli } from "@/ampli";
-import { Core, AccountClient, bigintToNumber, ExecuteFunctions } from "@primodiumxyz/core";
 import { parseReceipt } from "@/contractCalls/parseReceipt";
+import { makeObjectiveClaimable } from "@/util/objectives/makeObjectiveClaimable";
 
 export const createTransferCalls = (core: Core, { playerAccount }: AccountClient, { execute }: ExecuteFunctions) => {
   const { tables, utils } = core;
@@ -42,7 +43,7 @@ export const createTransferCalls = (core: Core, { playerAccount }: AccountClient
     }: {
       unitCounts: bigint[];
       resourceCounts: bigint[];
-    }
+    },
   ) => {
     const activeAsteroid = tables.ActiveRock.get()?.value;
     const anyNegative = unitCounts?.some((count) => count < 0n) || resourceCounts?.some((count) => count < 0n);
@@ -64,8 +65,8 @@ export const createTransferCalls = (core: Core, { playerAccount }: AccountClient
       const functionName = fromIsAsteroid
         ? "Pri_11__transferUnitsFromAsteroidToFleet"
         : toIsAsteroid
-        ? "Pri_11__transferUnitsFromFleetToAsteroid"
-        : "Pri_11__transferUnitsFromFleetToFleet";
+          ? "Pri_11__transferUnitsFromFleetToAsteroid"
+          : "Pri_11__transferUnitsFromFleetToFleet";
       await execute({
         functionName,
 
@@ -95,8 +96,8 @@ export const createTransferCalls = (core: Core, { playerAccount }: AccountClient
       const functionName = fromIsAsteroid
         ? "Pri_11__transferResourcesFromAsteroidToFleet"
         : toIsAsteroid
-        ? "Pri_11__transferResourcesFromFleetToAsteroid"
-        : "Pri_11__transferResourcesFromFleetToFleet";
+          ? "Pri_11__transferResourcesFromFleetToAsteroid"
+          : "Pri_11__transferResourcesFromFleetToFleet";
       await execute({
         functionName,
 
@@ -126,8 +127,8 @@ export const createTransferCalls = (core: Core, { playerAccount }: AccountClient
       const functionName = fromIsAsteroid
         ? "Pri_11__transferUnitsAndResourcesFromAsteroidToFleet"
         : toIsAsteroid
-        ? "Pri_11__transferUnitsAndResourcesFromFleetToAsteroid"
-        : "Pri_11__transferUnitsAndResourcesFromFleetToFleet";
+          ? "Pri_11__transferUnitsAndResourcesFromFleetToAsteroid"
+          : "Pri_11__transferUnitsAndResourcesFromFleetToFleet";
       await execute({
         functionName,
 
@@ -165,7 +166,7 @@ export const createTransferCalls = (core: Core, { playerAccount }: AccountClient
     }: {
       unitCounts: bigint[];
       resourceCounts: bigint[];
-    }
+    },
   ) => {
     const noUnits = unitCounts.every((count) => count == 0n);
     const noResources = resourceCounts.every((count) => count == 0n);

@@ -1,26 +1,27 @@
+import { toast } from "react-toastify";
+import { Address, encodeFunctionData, Hex } from "viem";
+
 import {
-  createLocalAccount,
-  TxQueueOptions,
-  Core,
-  minEth,
-  UNLIMITED_DELEGATION,
-  AccountClient,
-  getSystemId,
-  WorldAbi,
-  signCall,
   _execute,
+  AccountClient,
+  Core,
+  createLocalAccount,
   ExecuteFunctions,
+  getSystemId,
+  minEth,
+  signCall,
+  TxQueueOptions,
+  UNLIMITED_DELEGATION,
+  WorldAbi,
 } from "@primodiumxyz/core";
 import { defaultEntity, query } from "@primodiumxyz/reactive-tables";
 import { decodeEntity } from "@primodiumxyz/reactive-tables/utils";
-import { toast } from "react-toastify";
-import { Address, encodeFunctionData, Hex } from "viem";
 
 export const createAccessCalls = (
   core: Core,
   accountClient: AccountClient,
   { execute, executeBatch }: ExecuteFunctions,
-  requestDrip?: (address: Address) => void
+  requestDrip?: (address: Address) => void,
 ) => {
   const { tables } = core;
   const grantAccessWithSignature = async (privateKey?: Hex, txQueueOptions?: TxQueueOptions) => {

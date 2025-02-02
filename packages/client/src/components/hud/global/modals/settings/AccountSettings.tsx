@@ -1,5 +1,5 @@
-import { Account } from "@/components/transfer/Account";
 import { Navigator } from "@/components/core/Navigator";
+import { Account } from "@/components/transfer/Account";
 
 export const AccountSettings = () => {
   return (

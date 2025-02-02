@@ -1,6 +1,6 @@
-import { ampli } from "@/ampli";
 import { Core, ExecuteFunctions } from "@primodiumxyz/core";
 import { Entity } from "@primodiumxyz/reactive-tables";
+import { ampli } from "@/ampli";
 import { parseReceipt } from "@/contractCalls/parseReceipt";
 
 export const createClaimUnits =

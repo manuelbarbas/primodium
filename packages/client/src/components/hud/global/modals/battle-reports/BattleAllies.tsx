@@ -1,11 +1,12 @@
+import { useMemo, useState } from "react";
+import { Hex } from "viem";
+
+import { InterfaceIcons } from "@primodiumxyz/assets";
+import { entityToFleetName, entityToRockName } from "@primodiumxyz/core";
+import { useCore } from "@primodiumxyz/core/react";
+import { Entity } from "@primodiumxyz/reactive-tables";
 import { Button } from "@/components/core/Button";
 import { UnitStatus } from "@/components/hud/global/modals/battle-reports/UnitStatus";
-import { Entity } from "@primodiumxyz/reactive-tables";
-import { InterfaceIcons } from "@primodiumxyz/assets";
-import { useMemo, useState } from "react";
-import { useCore } from "@primodiumxyz/core/react";
-import { entityToFleetName, entityToRockName } from "@primodiumxyz/core";
-import { Hex } from "viem";
 
 type Participant = {
   entity: Hex;
@@ -43,7 +44,7 @@ export const BattleAllies = ({ allies }: { allies: (Participant | undefined)[] }
                   selected={openAlly === ally.entity}
                   onClick={() => (openAlly === ally.entity ? setOpenAlly(null) : setOpenAlly(ally.entity as Entity))}
                 />
-              )
+              ),
           )}
         </div>
         {openAllyData && <UnitStatus data={openAllyData.units} />}

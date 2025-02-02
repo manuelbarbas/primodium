@@ -1,22 +1,21 @@
-import { Entity } from "@primodiumxyz/reactive-tables";
-
 import { useMemo } from "react";
-
 import { FaGift, FaMedal, FaSpinner } from "react-icons/fa";
+
+import { InterfaceIcons } from "@primodiumxyz/assets";
+import { formatNumber, getEntityTypeName, ResourceType } from "@primodiumxyz/core";
+import { useCore } from "@primodiumxyz/core/react";
+import { Entity } from "@primodiumxyz/reactive-tables";
 import { Badge } from "@/components/core/Badge";
 import { SecondaryCard } from "@/components/core/Card";
 import { IconLabel } from "@/components/core/IconLabel";
 import { ResourceIconTooltip } from "@/components/shared/ResourceIconTooltip";
-
-import { InterfaceIcons } from "@primodiumxyz/assets";
+import { EntityToResourceImage, EntityToUnitImage } from "@/util/image";
 import { getRewards } from "@/util/objectives/getHasRequiredRewards";
 import { objectiveCategoryColors } from "@/util/objectives/objectiveCategoryColors";
 import { getAllObjectiveRequirements } from "@/util/objectives/objectiveRequirements";
 import { getObjective } from "@/util/objectives/objectives";
+
 import { ClaimObjectiveButton } from "./ClaimObjectiveButton";
-import { useCore } from "@primodiumxyz/core/react";
-import { formatNumber, getEntityTypeName, ResourceType } from "@primodiumxyz/core";
-import { EntityToResourceImage, EntityToUnitImage } from "@/util/image";
 
 export const Objective: React.FC<{
   objectiveEntity: Entity;
@@ -36,7 +35,7 @@ export const Objective: React.FC<{
 
   const requirements = useMemo(
     () => (playerEntity ? getAllObjectiveRequirements(core, playerEntity, asteroidEntity, objectiveEntity) : []),
-    [asteroidEntity, time, playerEntity, objectiveEntity]
+    [asteroidEntity, time, playerEntity, objectiveEntity],
   );
 
   return (
@@ -114,7 +113,7 @@ export const Objective: React.FC<{
                 if (resource.type === ResourceType.Resource) {
                   const { resourceCount, resourceStorage: maxStorage } = utils.getResourceCount(
                     resource.id,
-                    asteroidEntity
+                    asteroidEntity,
                   );
                   canClaim = resourceCount + resource.amount <= maxStorage;
                 }

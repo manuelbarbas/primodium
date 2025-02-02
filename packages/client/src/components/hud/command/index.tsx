@@ -1,18 +1,19 @@
-import { HUD } from "@/components/core/HUD";
-import { usePersistentStore } from "@primodiumxyz/game/src/stores/PersistentStore";
 import { memo, useEffect, useState } from "react";
 import { useShallow } from "zustand/react/shallow";
-import { CommandViewSelector } from "@/components/hud/command/CommandViewSelector";
-import { Tabs } from "@/components/core/Tabs";
-import { Overview } from "@/components/hud/command/overview";
-import { BattleMenuPopup } from "@/components/hud/command/markers/BattleMenuPopup";
-import { LoadingOverlay } from "@/components/shared/LoadingOverlay";
-import Transfer from "@/components/hud/command/transfer/Transfer";
-import { TransferContextProvider } from "@/hooks/providers/TransferProvider";
-import { UnitUpgrades } from "@/components/hud/asteroid/building-menu/screens/UnitUpgrades";
-import { Entity } from "@primodiumxyz/reactive-tables";
-import { useAccountClient, useCore } from "@primodiumxyz/core/react";
+
 import { Keys, Mode } from "@primodiumxyz/core";
+import { useAccountClient, useCore } from "@primodiumxyz/core/react";
+import { usePersistentStore } from "@primodiumxyz/game/src/stores/PersistentStore";
+import { Entity } from "@primodiumxyz/reactive-tables";
+import { HUD } from "@/components/core/HUD";
+import { Tabs } from "@/components/core/Tabs";
+import { UnitUpgrades } from "@/components/hud/asteroid/building-menu/screens/UnitUpgrades";
+import { CommandViewSelector } from "@/components/hud/command/CommandViewSelector";
+import { BattleMenuPopup } from "@/components/hud/command/markers/BattleMenuPopup";
+import { Overview } from "@/components/hud/command/overview";
+import Transfer from "@/components/hud/command/transfer/Transfer";
+import { LoadingOverlay } from "@/components/shared/LoadingOverlay";
+import { TransferContextProvider } from "@/hooks/providers/TransferProvider";
 
 export const CommandCenterHUD = memo(() => {
   const { tables } = useCore();

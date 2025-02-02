@@ -1,8 +1,10 @@
-import { Entity } from "@primodiumxyz/reactive-tables";
 import { EObjectives } from "contracts/config/enums";
 import { toast } from "react-toastify";
-import { canShowObjective } from "./objectiveRequirements";
+
 import { Core, getEntityTypeName, ObjectiveEntityLookup } from "@primodiumxyz/core";
+import { Entity } from "@primodiumxyz/reactive-tables";
+
+import { canShowObjective } from "./objectiveRequirements";
 
 export function makeObjectiveClaimable(core: Core, playerEntity: Entity, objective: EObjectives) {
   const objectiveEntity = ObjectiveEntityLookup[objective];

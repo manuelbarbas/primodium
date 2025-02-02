@@ -1,7 +1,8 @@
-import { getCoreConfig } from "@/config/getCoreConfig";
 import { createClient } from "viem";
 import { createConfig, http } from "wagmi";
 import { coinbaseWallet, walletConnect } from "wagmi/connectors";
+
+import { getCoreConfig } from "@/config/getCoreConfig";
 
 const env = import.meta.env;
 const projectId = env.PRI_WALLETCONNECT_PROJECT_ID;

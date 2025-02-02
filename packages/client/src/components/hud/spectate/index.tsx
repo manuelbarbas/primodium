@@ -1,10 +1,11 @@
-import { HUD } from "@/components/core/HUD";
-import { Inventory } from "@/components/hud/asteroid/inventory/Inventory";
-import { usePersistentStore } from "@primodiumxyz/game/src/stores/PersistentStore";
-import { Mode } from "@primodiumxyz/core";
-import { useCore } from "@primodiumxyz/core/react";
 import { memo } from "react";
 import { useShallow } from "zustand/react/shallow";
+
+import { Mode } from "@primodiumxyz/core";
+import { useCore } from "@primodiumxyz/core/react";
+import { usePersistentStore } from "@primodiumxyz/game/src/stores/PersistentStore";
+import { HUD } from "@/components/core/HUD";
+import { Inventory } from "@/components/hud/asteroid/inventory/Inventory";
 
 export const SpectateHUD = memo(() => {
   const { tables } = useCore();

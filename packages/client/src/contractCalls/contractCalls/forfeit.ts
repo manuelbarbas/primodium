@@ -1,13 +1,14 @@
 import { Hex } from "viem";
-import { ampli } from "@/ampli";
+
 import { AccountClient, Core, ExecuteFunctions } from "@primodiumxyz/core";
 import { Entity, query } from "@primodiumxyz/reactive-tables";
+import { ampli } from "@/ampli";
 import { parseReceipt } from "@/contractCalls/parseReceipt";
 
 export const createForfeitCalls = (
   { tables }: Core,
   { playerAccount }: AccountClient,
-  { execute, executeBatch }: ExecuteFunctions
+  { execute, executeBatch }: ExecuteFunctions,
 ) => {
   const forfeit = async () => {
     const asteroids = query({

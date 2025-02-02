@@ -1,10 +1,12 @@
+import { memo } from "react";
+
+import { InterfaceIcons } from "@primodiumxyz/assets";
+import { useCore } from "@primodiumxyz/core/react";
 import { Card, GlassCard } from "@/components/core/Card";
 import { IconLabel } from "@/components/core/IconLabel";
 import { Tabs } from "@/components/core/Tabs";
-import { InterfaceIcons } from "@primodiumxyz/assets";
-import { memo } from "react";
+
 import { BlueprintPane } from "./BlueprintPane";
-import { useCore } from "@primodiumxyz/core/react";
 
 export const Blueprints = memo(() => {
   const { tables } = useCore();

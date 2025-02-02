@@ -1,7 +1,9 @@
-import { Entity } from "@primodiumxyz/reactive-tables";
 import { Hex } from "viem";
-import { getObjective } from "./objectives";
+
 import { Core, ObjectiveEntityLookup } from "@primodiumxyz/core";
+import { Entity } from "@primodiumxyz/reactive-tables";
+
+import { getObjective } from "./objectives";
 
 export function getHasRequiredObjectives({ tables }: Core, objectiveEntity: Entity): boolean {
   const requirement = getObjective(objectiveEntity)?.requiredObjectives;

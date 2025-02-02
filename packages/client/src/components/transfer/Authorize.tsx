@@ -1,16 +1,17 @@
-import { findEntriesWithPrefix } from "@/util/localStorage";
 import { useEffect, useState } from "react";
 import { FaClipboard, FaExclamationCircle, FaEye, FaEyeSlash, FaInfoCircle, FaTimes, FaUnlink } from "react-icons/fa";
-import { copyToClipboard } from "@/util/clipboard";
 import { Address, Hex } from "viem";
 import { generatePrivateKey, privateKeyToAccount } from "viem/accounts";
-import { Button } from "../core/Button";
-import { SecondaryCard } from "../core/Card";
-import { TransactionQueueMask } from "../shared/TransactionQueueMask";
-import { useContractCalls } from "@/hooks/useContractCalls";
-import { useAccountClient } from "@primodiumxyz/core/react";
+
 import { STORAGE_PREFIX } from "@primodiumxyz/core";
+import { useAccountClient } from "@primodiumxyz/core/react";
 import { defaultEntity } from "@primodiumxyz/reactive-tables";
+import { Button } from "@/components/core/Button";
+import { SecondaryCard } from "@/components/core/Card";
+import { TransactionQueueMask } from "@/components/shared/TransactionQueueMask";
+import { useContractCalls } from "@/hooks/useContractCalls";
+import { copyToClipboard } from "@/util/clipboard";
+import { findEntriesWithPrefix } from "@/util/localStorage";
 
 const sessionWalletTooltip =
   "Bypass annoying confirmation popups by authorizing a session account. This allows you to securely perform certain actions without external confirmation.";

@@ -1,8 +1,8 @@
-import { Upgrade } from "@/components/hud/asteroid/building-menu/widgets/Upgrade";
-import { EntityToUnitImage } from "@/util/image";
 import { EntityType } from "@primodiumxyz/core";
 import { Entity } from "@primodiumxyz/reactive-tables";
 import { Navigator } from "@/components/core/Navigator";
+import { Upgrade } from "@/components/hud/asteroid/building-menu/widgets/Upgrade";
+import { EntityToUnitImage } from "@/util/image";
 
 export const Shipyard: React.FC<{ building: Entity }> = ({ building }) => {
   return (

@@ -1,4 +1,5 @@
 import { FaTimes } from "react-icons/fa";
+
 import { SecondaryCard } from "@/components/core/Card";
 
 export const ErrorScreen = () => {

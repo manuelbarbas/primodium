@@ -1,16 +1,17 @@
+import { useEffect, useRef, useState } from "react";
+import { useShallow } from "zustand/react/shallow";
+
+import { InterfaceIcons } from "@primodiumxyz/assets";
+import { EntityType } from "@primodiumxyz/core";
+import { usePersistentStore } from "@primodiumxyz/game/src/stores/PersistentStore";
 import { Button } from "@/components/core/Button";
+import { IconLabel } from "@/components/core/IconLabel";
 import { OwnedAsteroids } from "@/components/hud/starbelt/starmap-navigator/OwnedAsteroids";
 import { OwnedColonyShips } from "@/components/hud/starbelt/starmap-navigator/OwnedColonyShips";
 import { OwnedFleets } from "@/components/hud/starbelt/starmap-navigator/OwnedFleets";
 import { Shards } from "@/components/hud/starbelt/starmap-navigator/Shards";
-import { usePersistentStore } from "@primodiumxyz/game/src/stores/PersistentStore";
 import { useGame } from "@/hooks/useGame";
 import { EntityToUnitImage } from "@/util/image";
-import { InterfaceIcons } from "@primodiumxyz/assets";
-import { EntityType } from "@primodiumxyz/core";
-import { useEffect, useRef, useState } from "react";
-import { useShallow } from "zustand/react/shallow";
-import { IconLabel } from "@/components/core/IconLabel";
 
 export const StarmapNavigatorPane = () => {
   const [visibleDiv, setVisibleDiv] = useState(0);
@@ -74,7 +75,7 @@ export const StarmapNavigatorPane = () => {
                 <div key={index} className={`flex bg-neutral border border-secondary gap-1`}>
                   <Content index={index} />
                 </div>
-              )
+              ),
           )}
         </div>
 
@@ -103,12 +104,12 @@ export const StarmapNavigatorPane = () => {
                   label === "Asteroids"
                     ? "text-yellow-500"
                     : label === "Fleets"
-                    ? "text-lime-600"
-                    : label === "Colony Ships"
-                    ? "text-violet-400"
-                    : label === "Volatile Shards"
-                    ? "text-sky-500"
-                    : ""
+                      ? "text-lime-600"
+                      : label === "Colony Ships"
+                        ? "text-violet-400"
+                        : label === "Volatile Shards"
+                          ? "text-sky-500"
+                          : ""
                 }`}
                 style={{
                   writingMode: "vertical-lr",

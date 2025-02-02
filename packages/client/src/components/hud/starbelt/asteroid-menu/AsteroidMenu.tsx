@@ -1,9 +1,10 @@
-import { Entity } from "@primodiumxyz/reactive-tables";
-import { Navigator } from "@/components/core/Navigator";
-import { Card } from "@/components/core/Card";
-import { InitialScreen } from "@/components/hud/starbelt/asteroid-menu/screens/InitialScreen";
-import { FleetTravelScreen } from "@/components/hud/starbelt/asteroid-menu/screens/FleetTravelScreen";
 import { memo } from "react";
+
+import { Entity } from "@primodiumxyz/reactive-tables";
+import { Card } from "@/components/core/Card";
+import { Navigator } from "@/components/core/Navigator";
+import { FleetTravelScreen } from "@/components/hud/starbelt/asteroid-menu/screens/FleetTravelScreen";
+import { InitialScreen } from "@/components/hud/starbelt/asteroid-menu/screens/InitialScreen";
 
 export const AsteroidMenu: React.FC<{ selectedRock: Entity }> = memo(({ selectedRock }) => {
   return (

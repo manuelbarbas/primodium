@@ -1,17 +1,18 @@
-import { Entity } from "@primodiumxyz/reactive-tables";
-import { InterfaceIcons } from "@primodiumxyz/assets";
 import { useEffect, useMemo, useState } from "react";
 import { FaInfoCircle } from "react-icons/fa";
+import { Hex } from "viem";
+
+import { InterfaceIcons } from "@primodiumxyz/assets";
+import { EntityType, formatNumber, formatResourceCount, getEntityTypeName, UnitEnumLookup } from "@primodiumxyz/core";
+import { useCore, useMaxCountOfRecipe } from "@primodiumxyz/core/react";
+import { Entity } from "@primodiumxyz/reactive-tables";
 import { Badge } from "@/components/core/Badge";
 import { SecondaryCard } from "@/components/core/Card";
 import { Navigator } from "@/components/core/Navigator";
 import { NumberInput } from "@/components/core/NumberInput";
-import { useCore, useMaxCountOfRecipe } from "@primodiumxyz/core/react";
-import { Hex } from "viem";
-import { EntityType, formatNumber, formatResourceCount, getEntityTypeName, UnitEnumLookup } from "@primodiumxyz/core";
-import { EntityToResourceImage, EntityToUnitImage } from "@/util/image";
-import { useContractCalls } from "@/hooks/useContractCalls";
 import { ResourceIconTooltip } from "@/components/shared/ResourceIconTooltip";
+import { useContractCalls } from "@/hooks/useContractCalls";
+import { EntityToResourceImage, EntityToUnitImage } from "@/util/image";
 
 export const BuildUnit: React.FC<{
   building: Entity;

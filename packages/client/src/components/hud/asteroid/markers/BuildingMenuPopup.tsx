@@ -1,11 +1,12 @@
+import { useMemo } from "react";
+
+import { InterfaceIcons } from "@primodiumxyz/assets";
+import { useCore } from "@primodiumxyz/core/react";
+import { defaultEntity, Entity } from "@primodiumxyz/reactive-tables";
 import { Card, GlassCard } from "@/components/core/Card";
 import { Widget } from "@/components/core/Widget";
 import { BuildingMenu } from "@/components/hud/asteroid/building-menu/BuildingMenu";
 import { useGame } from "@/hooks/useGame";
-import { defaultEntity, Entity } from "@primodiumxyz/reactive-tables";
-import { InterfaceIcons } from "@primodiumxyz/assets";
-import { useMemo } from "react";
-import { useCore } from "@primodiumxyz/core/react";
 
 export const BuildingMenuPopup = () => {
   const { tables, utils } = useCore();
@@ -19,7 +20,7 @@ export const BuildingMenuPopup = () => {
     const { utils } = game.ASTEROID;
 
     const pixelCoord = utils.tileCoordToPixelCoord(
-      utils.addCoords(position ?? { x: 0, y: 0 }, { x: dimensions.width + 0.5, y: 0 })
+      utils.addCoords(position ?? { x: 0, y: 0 }, { x: dimensions.width + 0.5, y: 0 }),
     );
 
     return { x: pixelCoord.x, y: -pixelCoord.y };

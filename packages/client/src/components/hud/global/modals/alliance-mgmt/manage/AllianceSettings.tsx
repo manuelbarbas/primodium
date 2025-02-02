@@ -1,3 +1,10 @@
+import { EAllianceInviteMode, EAllianceRole } from "contracts/config/enums";
+import { useState } from "react";
+import { FaCopy } from "react-icons/fa";
+
+import { entityToAddress } from "@primodiumxyz/core";
+import { useAllianceName, useCore } from "@primodiumxyz/core/react";
+import { Entity } from "@primodiumxyz/reactive-tables";
 import { Button } from "@/components/core/Button";
 import { SecondaryCard } from "@/components/core/Card";
 import { RadioGroup } from "@/components/core/Radio";
@@ -6,15 +13,9 @@ import { Tooltip } from "@/components/core/Tooltip";
 import { ALLIANCE_TAG_SIZE } from "@/components/hud/global/modals/alliance-mgmt/CreateScreen";
 import { TransactionQueueMask } from "@/components/shared/TransactionQueueMask";
 import { useContractCalls } from "@/hooks/useContractCalls";
-import { cn } from "@/util/client";
-import { entityToAddress } from "@primodiumxyz/core";
-import { useAllianceName, useCore } from "@primodiumxyz/core/react";
-import { Entity } from "@primodiumxyz/reactive-tables";
-import { EAllianceInviteMode, EAllianceRole } from "contracts/config/enums";
-import { useState } from "react";
-import { FaCopy } from "react-icons/fa";
-import { alert } from "@/util/alert";
 import { useGame } from "@/hooks/useGame";
+import { alert } from "@/util/alert";
+import { cn } from "@/util/client";
 
 export const AllianceSettings = ({
   allianceEntity,
@@ -40,7 +41,7 @@ export const AllianceSettings = ({
     <SecondaryCard
       className={cn(
         playerRole === EAllianceRole.Owner ? "justify-between" : "justify-center",
-        "flex flex-col h-full items-center gap-4"
+        "flex flex-col h-full items-center gap-4",
       )}
     >
       {playerRole === EAllianceRole.Owner && (
@@ -112,7 +113,7 @@ export const AllianceSettings = ({
                   ? alert(
                       "Are you sure you want to leave the alliance? Leadership will be transferred to the next highest ranking member.",
                       leaveAlliance,
-                      game
+                      game,
                     )
                   : leaveAlliance()
               }

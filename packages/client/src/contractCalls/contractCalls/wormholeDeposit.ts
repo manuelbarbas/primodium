@@ -1,9 +1,10 @@
-import { makeObjectiveClaimable } from "@/util/objectives/makeObjectiveClaimable";
 import { EObjectives } from "contracts/config/enums";
-import { ampli } from "@/ampli";
-import { Core, AccountClient, TxQueueOptions, ExecuteFunctions } from "@primodiumxyz/core";
+
+import { AccountClient, Core, ExecuteFunctions, TxQueueOptions } from "@primodiumxyz/core";
 import { Entity } from "@primodiumxyz/reactive-tables";
+import { ampli } from "@/ampli";
 import { parseReceipt } from "@/contractCalls/parseReceipt";
+import { makeObjectiveClaimable } from "@/util/objectives/makeObjectiveClaimable";
 
 export const createWormholeDeposit = (core: Core, { playerAccount }: AccountClient, { execute }: ExecuteFunctions) => {
   const wormholeDeposit = async (wormholeBase: Entity, count: bigint, options?: Partial<TxQueueOptions>) => {
