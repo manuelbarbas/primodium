@@ -23,10 +23,13 @@
     "zustand": "^4.4.7"
   },
   "devDependencies": {
+    "@ianvs/prettier-plugin-sort-imports": "^4.3.0",
     "@total-typescript/tsconfig": "^1.0.4",
     "@types/lodash": "^4.14.195",
     "@types/node": "^18.19.3",
     "@types/react": "^18.0.26",
+    "prettier": "^3.3.3",
+    "prettier-plugin-jsdoc": "^1.3.2",
     "simple-zustand-devtools": "^1.1.0",
     "ts-node": "^10.9.2",
     "tsup": "^8.1.0",
