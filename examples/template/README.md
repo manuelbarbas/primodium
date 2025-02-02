@@ -29,5 +29,5 @@ This is am empty template to help you quickly get started developing your own Wo
 ## World Details
 
 - WORLD_ADDRESS: `0x46c1e9dd144fcf5477a542d3152d28bc0cfba0b6`
-- MUD Version: `2.0.1`
+- MUD Version: `2.0.9`
 - Primodium Game Libraries: `packages/contracts/primodium`

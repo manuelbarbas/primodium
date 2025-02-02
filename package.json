@@ -1,6 +1,11 @@
 {
   "name": "primodium",
-  "private": true,
+  "description": "A fully onchain space-based resource management game.",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/primodiumxyz/primodium"
+  },
+  "license": "MIT",
   "scripts": {
     "build": "pnpm recursive run build",
     "build:contracts": "pnpm --filter 'contracts' build",
@@ -23,7 +28,7 @@
     "foundry:up": "curl -L https://foundry.paradigm.xyz | bash && bash $HOME/.foundry/bin/foundryup",
     "mud:up": "pnpm mud set-version --tag main && pnpm install",
     "prepare": "husky install && (forge --version || pnpm foundry:up)",
-    "sort-package-json": "npx sort-package-json package.json 'packages/*/package.json'",
+    "sort-package-json": "npx sort-package-json package.json 'packages/*/package.json examples/*/package.json'",
     "test": "pnpm recursive run test",
     "upgrade:mud": "pnpm mud set-version --tag=next"
   },
@@ -40,7 +45,6 @@
     "eslint": "8.29.0",
     "husky": ">=6",
     "lint-staged": ">=10",
-    "rimraf": "^3.0.2",
     "run-pty": "^5.0.0",
     "semantic-release": "^24.0.0",
     "semantic-release-monorepo": "^8.0.2",

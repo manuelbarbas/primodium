@@ -14,7 +14,7 @@ This demo finds an open resource tile on your main base, and calls the Primodium
 ### Actions
 
 - Change your active directory:
-  - `cd examples/WriteDemo/packages/contracts`
+  - `cd examples/write-demo/packages/contracts`
 - Install the necessary packages:
   - `pnpm i`
 - Build the project:
@@ -35,7 +35,7 @@ This demo finds an open resource tile on your main base, and calls the Primodium
 ## Getting Started (Walkthrough)
 
 - WORLD_ADDRESS: `0x46c1e9dd144fcf5477a542d3152d28bc0cfba0b6`
-- MUD Version: `2.0.1`
+- MUD Version: `2.0.9`
 - Primodium Game Source: `packages/contracts/primodium`
 
 ## Create the System
@@ -46,7 +46,7 @@ The code should compile with `pnpm build`.
 
 This system is quite a bit more involved.
 
-We start by finding out home asteroid, as seen in the ReadDemo.
+We start by finding out home asteroid, as seen in the read-demo.
 
 ### Enumerations
 
@@ -62,7 +62,7 @@ Finally, we step through each tile and check if it is the correct type. Next we 
 
 We want our expansion system to call a system on the Primodium world. If all of this is successful, we return the `buildingEntity`.
 
-Unlike the ReadDemo, the WriteDemo acts on behalf of the user. Our system needs to have permission to do so. This is allowed through a Delegation that needs to occur before the system it called. You can find documentation and example code for delegations at:
+Unlike the read-demo, the write-demo acts on behalf of the user. Our system needs to have permission to do so. This is allowed through a Delegation that needs to occur before the system it called. You can find documentation and example code for delegations at:
 
 - https://mud.dev/world/account-delegation
 - `WriteDemoSystem.t.sol:100`

@@ -29,9 +29,6 @@ importers:
       lint-staged:
         specifier: '>=10'
         version: 15.2.7
-      rimraf:
-        specifier: ^3.0.2
-        version: 3.0.2
       run-pty:
         specifier: ^5.0.0
         version: 5.0.0
