@@ -1,10 +1,10 @@
 import Phaser from "phaser";
-import { MaxLevelToTilemap } from "@game/lib/mappings";
 
-import { PrimodiumScene } from "@game/types";
-import { Bounds, Dimensions, ResourceTile } from "@game/lib/objects/asteroid-map/helpers";
+import { MaxLevelToTilemap } from "@game/lib/mappings";
 import { AsteroidBounds } from "@game/lib/objects/asteroid-map/AsteroidBounds";
 import { AsteroidResources } from "@game/lib/objects/asteroid-map/AsteroidResources";
+import { Bounds, Dimensions, ResourceTile } from "@game/lib/objects/asteroid-map/helpers";
+import { PrimodiumScene } from "@game/types";
 
 export class AsteroidMap {
   private scene: PrimodiumScene;
@@ -40,7 +40,7 @@ export class AsteroidMap {
   drawResources(tiles: ResourceTile[], maxBounds?: Bounds) {
     if (!this.maxBounds) {
       console.warn(
-        "AsteroidMap.drawResources: maxBounds was not initially set. Either manually set or drawBounds first"
+        "AsteroidMap.drawResources: maxBounds was not initially set. Either manually set or drawBounds first",
       );
       return this;
     }

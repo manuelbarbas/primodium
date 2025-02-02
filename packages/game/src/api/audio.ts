@@ -1,6 +1,5 @@
 import { Assets, Audio, AudioKeys } from "@primodiumxyz/assets";
 import { Scene } from "@primodiumxyz/engine/types";
-
 import { usePersistentStore } from "@game/stores/PersistentStore";
 import { Channel } from "@game/types";
 

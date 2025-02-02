@@ -1,7 +1,8 @@
-//TODO: move into client
-import { createAudioApi } from "@game/api/audio";
-import { Scene } from "@primodiumxyz/engine/types";
+// TODO: move into client
 import { toast, ToastContent, ToastOptions } from "react-toastify";
+
+import { Scene } from "@primodiumxyz/engine/types";
+import { createAudioApi } from "@game/api/audio";
 
 type ToastType = "success" | "error" | "info" | "warning";
 export const createNotificationApi = (scene: Scene) => {

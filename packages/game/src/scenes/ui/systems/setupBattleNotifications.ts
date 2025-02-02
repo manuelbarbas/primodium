@@ -1,6 +1,6 @@
-import { PrimodiumScene } from "@game/types";
 import { Core, entityToFleetName, entityToRockName, Mode } from "@primodiumxyz/core";
 import { Entity, namespaceWorld } from "@primodiumxyz/reactive-tables";
+import { PrimodiumScene } from "@game/types";
 
 export function battleNotification(scene: PrimodiumScene, core: Core, entity: Entity) {
   const { tables } = core;
@@ -33,14 +33,14 @@ export function battleNotification(scene: PrimodiumScene, core: Core, entity: En
       ? scene.notify(
           "success",
           `Victory! You defended against ${entityToFleetName(
-            battle.attacker
-          )} and won! View details in the battle report.`
+            battle.attacker,
+          )} and won! View details in the battle report.`,
         )
       : scene.notify(
           "error",
           `Defeat! You defended against ${entityToFleetName(
-            battle.attacker
-          )} and lost! View details in the battle report .`
+            battle.attacker,
+          )} and lost! View details in the battle report .`,
         );
   }
 }

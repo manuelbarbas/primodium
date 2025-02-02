@@ -1,11 +1,11 @@
-import { Entity, namespaceWorld, $query, defaultEntity } from "@primodiumxyz/reactive-tables";
-import { Action, Core, hashEntities } from "@primodiumxyz/core";
-import { ContractCalls } from "@client/contractCalls/createContractCalls";
-
-import { Building, BuildingConstruction } from "@game/lib/objects/building";
-import { DepthLayers } from "@game/lib/constants/common";
-import { PrimodiumScene } from "@game/types";
 import { toHex } from "viem";
+
+import { Action, Core, hashEntities } from "@primodiumxyz/core";
+import { $query, defaultEntity, Entity, namespaceWorld } from "@primodiumxyz/reactive-tables";
+import { ContractCalls } from "@client/contractCalls/createContractCalls";
+import { DepthLayers } from "@game/lib/constants/common";
+import { Building, BuildingConstruction } from "@game/lib/objects/building";
+import { PrimodiumScene } from "@game/types";
 
 export const handleClick = (pointer: Phaser.Input.Pointer, core: Core, scene: PrimodiumScene, calls: ContractCalls) => {
   const { tables, utils } = core;
@@ -60,7 +60,7 @@ export const handleClick = (pointer: Phaser.Input.Pointer, core: Core, scene: Pr
       pendingAnim.destroy();
       placeholderBuilding.destroy();
       selectedBuildingObj?.setAlpha(1);
-    }
+    },
   );
   tables.SelectedAction.remove();
 };
@@ -93,7 +93,7 @@ export const renderBuildingMoveTool = (scene: PrimodiumScene, core: Core, calls:
       tileCoord,
       buildingPrototype,
       activeRock ?? defaultEntity,
-      selectedBuilding
+      selectedBuilding,
     );
 
     if (!placementBuilding) {

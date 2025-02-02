@@ -1,7 +1,8 @@
-import { PrimodiumScene } from "@game/types";
+import { EResource } from "contracts/config/enums";
+
 import { Core, formatResourceCount, getEntityTypeName, ResourceEntityLookup } from "@primodiumxyz/core";
 import { namespaceWorld } from "@primodiumxyz/reactive-tables";
-import { EResource } from "contracts/config/enums";
+import { PrimodiumScene } from "@game/types";
 
 export function setupSwapNotifications(scene: PrimodiumScene, core: Core) {
   const {
@@ -27,11 +28,11 @@ export function setupSwapNotifications(scene: PrimodiumScene, core: Core) {
         scene.notify(
           "success",
           `Swap success! ${formattedIn} ${getEntityTypeName(
-            inResource
-          )} swapped for ${formattedOut} ${getEntityTypeName(outResource)}.`
+            inResource,
+          )} swapped for ${formattedOut} ${getEntityTypeName(outResource)}.`,
         );
       },
     },
-    { runOnInit: false }
+    { runOnInit: false },
   );
 }

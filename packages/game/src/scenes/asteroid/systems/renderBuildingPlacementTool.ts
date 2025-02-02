@@ -1,10 +1,9 @@
 import { Action, BuildingEnumLookup, Core, getEntityTypeName } from "@primodiumxyz/core";
 import { $query, Entity, namespaceWorld } from "@primodiumxyz/reactive-tables";
 import { ContractCalls } from "@client/contractCalls/createContractCalls";
-
+import { DepthLayers } from "@game/lib/constants/common";
 import { Building } from "@game/lib/objects/building";
 import { PrimodiumScene } from "@game/types";
-import { DepthLayers } from "@game/lib/constants/common";
 
 export const handleClick = (pointer: Phaser.Input.Pointer, core: Core, scene: PrimodiumScene, calls: ContractCalls) => {
   const { tables, utils } = core;

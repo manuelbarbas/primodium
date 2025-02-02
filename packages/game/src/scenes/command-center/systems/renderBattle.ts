@@ -1,9 +1,8 @@
-import { addCoords } from "@primodiumxyz/engine/lib/util/coords";
-import { Entity, namespaceWorld, defaultEntity } from "@primodiumxyz/reactive-tables";
 import { Core, Mode } from "@primodiumxyz/core";
-
-import { PrimodiumScene } from "@game/types";
+import { addCoords } from "@primodiumxyz/engine/lib/util/coords";
+import { defaultEntity, Entity, namespaceWorld } from "@primodiumxyz/reactive-tables";
 import { battleNotification } from "@game/scenes/ui/systems/setupBattleNotifications";
+import { PrimodiumScene } from "@game/types";
 
 const OFFSET = 1000;
 export const renderBattle = (scene: PrimodiumScene, core: Core) => {

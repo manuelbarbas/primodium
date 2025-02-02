@@ -1,8 +1,7 @@
 import { Core, entityToPlayerName, entityToRockName, EntityType, getEnsName } from "@primodiumxyz/core";
 import { defaultEntity, Entity, namespaceWorld } from "@primodiumxyz/reactive-tables";
-
-import { PrimodiumScene } from "@game/types";
 import { MainbaseLevelToEmblem } from "@game/lib/mappings";
+import { PrimodiumScene } from "@game/types";
 
 // Setup the asteroid label updates over visible entities
 // Systems will be executed inside the starmap and command center scenes
@@ -29,7 +28,7 @@ export const asteroidsLiveSystem = (starmapScene: PrimodiumScene, commandCenterS
     ownerEntity?: Entity,
     expansionLevel?: bigint,
     ownerAllianceEntity?: Entity,
-    ownerAllianceName?: string
+    ownerAllianceName?: string,
   ) => {
     const asteroid = scene.objects.asteroid.get(asteroidEntity);
     if (!asteroid) return;
@@ -46,8 +45,8 @@ export const asteroidsLiveSystem = (starmapScene: PrimodiumScene, commandCenterS
         nameLabelColor: ownedByPlayer
           ? 0xffff00
           : tables.Asteroid.get(asteroidEntity)?.spawnsSecondary
-          ? 0x00ffff
-          : 0xffffff,
+            ? 0x00ffff
+            : 0xffffff,
         ownerLabel: ownedByPlayer ? "You" : ownerEntity === defaultEntity ? "unowned" : entityToPlayerName(ownerEntity),
       });
 
@@ -98,7 +97,7 @@ export const asteroidsLiveSystem = (starmapScene: PrimodiumScene, commandCenterS
 
     deferredStarmapContainer?.addOnEventOnce(entity, () => {
       const ownerEntity = (tables.OwnedBy.get(entity)?.value as Entity | undefined) ?? defaultEntity;
-      const expansionLevel = tables.ShardAsteroid.get(entity) ? undefined : tables.Level.get(entity)?.value ?? 1n;
+      const expansionLevel = tables.ShardAsteroid.get(entity) ? undefined : (tables.Level.get(entity)?.value ?? 1n);
       const ownerAllianceEntity = tables.PlayerAlliance.get(ownerEntity)?.alliance as Entity | undefined;
 
       updateAsteroidLabel(starmapScene, entity, ownerEntity, expansionLevel, ownerAllianceEntity);

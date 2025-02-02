@@ -1,10 +1,10 @@
+import { EResource } from "contracts/config/enums";
+
+import { Core, ResourceEntityLookup } from "@primodiumxyz/core";
 import { Entity, namespaceWorld } from "@primodiumxyz/reactive-tables";
 import { decodeEntity } from "@primodiumxyz/reactive-tables/utils";
-import { Core, ResourceEntityLookup } from "@primodiumxyz/core";
-
-import { EResource } from "contracts/config/enums";
-import { PrimodiumScene } from "@game/types";
 import { AsteroidMap } from "@game/lib/objects/asteroid-map/AsteroidMap";
+import { PrimodiumScene } from "@game/types";
 
 //TODO: Temp system implementation. Logic be replaced with state machine instead of direct obj manipulation
 export const renderAsteroidMap = (scene: PrimodiumScene, core: Core) => {
@@ -35,15 +35,18 @@ export const renderAsteroidMap = (scene: PrimodiumScene, core: Core) => {
       if (asteroidMap) asteroidMap.dispose();
 
       const terrain = tables.P_Terrain.getAll();
-      const tiles = terrain.reduce((acc, tile) => {
-        const tileId = tables.P_Terrain.get(tile)?.value;
-        if (!tileId) return acc;
-        const { mapId, x, y } = decodeEntity(tables.P_Terrain.metadata.abiKeySchema, tile);
-        if (mapId !== asteroidData.mapId) return acc;
-        const resourceId = ResourceEntityLookup[tileId as EResource];
-        acc.push({ x, y, resourceType: resourceId });
-        return acc;
-      }, [] as { x: number; y: number; resourceType: Entity }[]);
+      const tiles = terrain.reduce(
+        (acc, tile) => {
+          const tileId = tables.P_Terrain.get(tile)?.value;
+          if (!tileId) return acc;
+          const { mapId, x, y } = decodeEntity(tables.P_Terrain.metadata.abiKeySchema, tile);
+          if (mapId !== asteroidData.mapId) return acc;
+          const resourceId = ResourceEntityLookup[tileId as EResource];
+          acc.push({ x, y, resourceType: resourceId });
+          return acc;
+        },
+        [] as { x: number; y: number; resourceType: Entity }[],
+      );
       const asteroidDimensions = tables.P_Asteroid.get();
       if (!asteroidDimensions) return;
       asteroidMap = new AsteroidMap(scene, asteroidDimensions)

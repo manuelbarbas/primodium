@@ -1,5 +1,5 @@
 import { Sprites } from "@primodiumxyz/assets";
-
+import { Entity } from "@primodiumxyz/reactive-tables";
 import { Relationship } from "@game/lib/constants/common";
 import {
   EntityTypeSizeToSecondaryAsteroidSprites,
@@ -8,7 +8,6 @@ import {
   RelationshipSizeToSecondaryAsteroidOutlineSprites,
   RelationshipToPrimaryAsteroidOutlineSprites,
 } from "@game/lib/mappings";
-import { Entity } from "@primodiumxyz/reactive-tables";
 
 export enum LODs {
   FullyShow = 0,

@@ -1,16 +1,16 @@
 import Phaser from "phaser";
-import { Coord } from "@primodiumxyz/engine/types";
-import { Assets, Sprites } from "@primodiumxyz/assets";
-import { Entity } from "@primodiumxyz/reactive-tables";
 
-import { PrimodiumScene } from "@game/types";
-import { IPrimodiumGameObject } from "@game/lib/objects/interfaces";
-import { FleetsContainer } from "@game/lib/objects/asteroid/FleetsContainer";
-import { AsteroidLabel } from "@game/lib/objects/asteroid/AsteroidLabel";
-import { isValidClick, isValidHover } from "@game/lib/objects/inputGuards";
-import { DeferredAsteroidsRenderContainer } from "@game/lib/objects/asteroid/DeferredAsteroidsRenderContainer";
-import { LODs } from "@game/lib/objects/asteroid/helpers";
+import { Assets, Sprites } from "@primodiumxyz/assets";
+import { Coord } from "@primodiumxyz/engine/types";
+import { Entity } from "@primodiumxyz/reactive-tables";
 import { DepthLayers } from "@game/lib/constants/common";
+import { AsteroidLabel } from "@game/lib/objects/asteroid/AsteroidLabel";
+import { DeferredAsteroidsRenderContainer } from "@game/lib/objects/asteroid/DeferredAsteroidsRenderContainer";
+import { FleetsContainer } from "@game/lib/objects/asteroid/FleetsContainer";
+import { LODs } from "@game/lib/objects/asteroid/helpers";
+import { isValidClick, isValidHover } from "@game/lib/objects/inputGuards";
+import { IPrimodiumGameObject } from "@game/lib/objects/interfaces";
+import { PrimodiumScene } from "@game/types";
 
 interface LODConfig {
   asteroidAlpha: number;
@@ -64,7 +64,7 @@ export abstract class BaseAsteroid extends Phaser.GameObjects.Zone implements IP
       pixelCoord.x,
       -pixelCoord.y,
       Assets.SpriteAtlas,
-      sprite
+      sprite,
     ).setDepth(DepthLayers.Rock);
 
     this.asteroidLabel = new AsteroidLabel({
@@ -81,7 +81,7 @@ export abstract class BaseAsteroid extends Phaser.GameObjects.Zone implements IP
       360,
       false,
       0xffff00,
-      0.4
+      0.4,
     )
       .setInteractive(new Phaser.Geom.Circle(0, 0, this.asteroidSprite.width / 4), Phaser.Geom.Circle.Contains)
       .disableInteractive()
@@ -370,7 +370,7 @@ export abstract class BaseAsteroid extends Phaser.GameObjects.Zone implements IP
     this.fleetsContainer.setAlpha(config.fleetContainerAlpha);
     this.asteroidLabel.setPosition(
       pixelCoord.x + config.asteroidLabelPosition.x,
-      -pixelCoord.y + config.asteroidLabelPosition.y
+      -pixelCoord.y + config.asteroidLabelPosition.y,
     );
   }
 

@@ -1,9 +1,9 @@
 import Phaser from "phaser";
-import { Coord, TileCoord } from "@primodiumxyz/engine/types";
 
+import { Coord, TileCoord } from "@primodiumxyz/engine/types";
+import { DepthLayers } from "@game/lib/constants/common";
 import { Fleet } from "@game/lib/objects/Fleet";
 import { PrimodiumScene } from "@game/types";
-import { DepthLayers } from "@game/lib/constants/common";
 
 const WIDTH = 150;
 const HEIGHT = 100;

@@ -1,10 +1,9 @@
 import { Core, Mode } from "@primodiumxyz/core";
 import { namespaceWorld } from "@primodiumxyz/reactive-tables";
-
+import { ContractCalls } from "@client/contractCalls/createContractCalls";
 import init from "@game/init";
 import { Scenes } from "@game/lib/constants/common";
 import { runSystems as runCommonSystems } from "@game/scenes/common/systems";
-import { ContractCalls } from "@client/contractCalls/createContractCalls";
 
 export async function initGame(core: Core, calls: ContractCalls, version = "v1") {
   const {

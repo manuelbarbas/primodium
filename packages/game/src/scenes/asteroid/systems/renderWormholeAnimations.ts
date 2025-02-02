@@ -1,8 +1,7 @@
 import { Core, EntityType } from "@primodiumxyz/core";
-
-import { PrimodiumScene } from "@game/types";
-import { WormholeBase } from "@game/lib/objects/building/Wormhole";
 import { Entity, namespaceWorld } from "@primodiumxyz/reactive-tables";
+import { WormholeBase } from "@game/lib/objects/building/Wormhole";
+import { PrimodiumScene } from "@game/types";
 
 export const renderWormholeAnimations = (scene: PrimodiumScene, core: Core) => {
   const {
@@ -41,7 +40,7 @@ export const renderWormholeAnimations = (scene: PrimodiumScene, core: Core) => {
             wormholeBuilding.runExplosionAnimation();
           },
         },
-        { runOnInit: false }
+        { runOnInit: false },
       );
 
       let currentResource = tables.WormholeResource.get()?.resource;
@@ -68,7 +67,7 @@ export const renderWormholeAnimations = (scene: PrimodiumScene, core: Core) => {
             powerUp(current?.value ?? 0n);
           },
         },
-        { runOnInit: false }
+        { runOnInit: false },
       );
     },
   });

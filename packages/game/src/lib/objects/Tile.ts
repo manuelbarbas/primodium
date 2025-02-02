@@ -1,4 +1,5 @@
 import Phaser from "phaser";
+
 import { Coord } from "@primodiumxyz/engine/types";
 import { PrimodiumScene } from "@game/types";
 

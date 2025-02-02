@@ -1,9 +1,10 @@
-import { PrimodiumScene } from "@game/types";
+import { EAllianceRole } from "contracts/config/enums";
+import { Hex, hexToString, padHex, zeroAddress } from "viem";
+
 import { Core, entityToPlayerName } from "@primodiumxyz/core";
 import { Entity, namespaceWorld } from "@primodiumxyz/reactive-tables";
 import { decodeEntity } from "@primodiumxyz/reactive-tables/utils";
-import { EAllianceRole } from "contracts/config/enums";
-import { Hex, hexToString, padHex, zeroAddress } from "viem";
+import { PrimodiumScene } from "@game/types";
 
 export function setupPlayerInvites(scene: PrimodiumScene, core: Core): void {
   const {
@@ -32,7 +33,7 @@ export function setupPlayerInvites(scene: PrimodiumScene, core: Core): void {
           player: current?.inviter as Entity,
           timestamp: current?.timeStamp ?? 0n,
         },
-        entity
+        entity,
       );
     },
   });
@@ -65,7 +66,7 @@ export function setupPlayerInvites(scene: PrimodiumScene, core: Core): void {
           alliance: alliance as Entity,
           timestamp: current?.timeStamp ?? 0n,
         },
-        entity
+        entity,
       );
 
       // Notify members of the alliance (only officers that can actually accept)

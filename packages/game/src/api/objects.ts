@@ -1,24 +1,23 @@
-import { Entity } from "@primodiumxyz/reactive-tables";
-import { Coord, Scene } from "@primodiumxyz/engine/types";
 import { BoundingBox, PrimodiumGameObject } from "@primodiumxyz/engine/lib/core/StaticObjectManager";
-
-import { TransitLine } from "@game/lib/objects/TransitLine";
+import { Coord, Scene } from "@primodiumxyz/engine/types";
+import { Entity } from "@primodiumxyz/reactive-tables";
 import { BaseAsteroid } from "@game/lib/objects/asteroid/BaseAsteroid";
-import { BaseSpawnArgs, DeferredRenderContainer } from "@game/lib/objects/DeferredRenderContainer";
 import { Building, BuildingConstruction } from "@game/lib/objects/building";
+import { BaseSpawnArgs, DeferredRenderContainer } from "@game/lib/objects/DeferredRenderContainer";
 import { Fleet } from "@game/lib/objects/Fleet";
+import { TransitLine } from "@game/lib/objects/TransitLine";
 
 export type PrimodiumObjectApi<T extends PrimodiumGameObject | DeferredRenderContainer> = {
   has: (entity: Entity) => boolean;
   get: (entity: Entity) => T | undefined;
   getContainer: <SpawnedObject extends PrimodiumGameObject, SpawnArgs extends BaseSpawnArgs>(
-    entity: Entity
+    entity: Entity,
   ) => DeferredRenderContainer<SpawnedObject, SpawnArgs> | undefined;
   remove: (entity: Entity, destroy?: boolean, decrement?: boolean) => void;
   add: (entity: Entity, object: PrimodiumGameObject, cull?: boolean) => PrimodiumGameObject;
   addContainer: <SpawnedObject extends PrimodiumGameObject, SpawnArgs extends BaseSpawnArgs>(
     entity: Entity,
-    container: DeferredRenderContainer<SpawnedObject, SpawnArgs>
+    container: DeferredRenderContainer<SpawnedObject, SpawnArgs>,
   ) => DeferredRenderContainer<SpawnedObject, SpawnArgs>;
   updatePosition: (entity: Entity, coord: Coord) => void;
   setBoundingBoxes: (entity: Entity, boundingBoxes: BoundingBox[]) => void;
@@ -30,7 +29,7 @@ function factory<T extends PrimodiumGameObject | DeferredRenderContainer>(
   scene: Scene,
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   objectClass: abstract new (...args: any[]) => T,
-  prefix?: string
+  prefix?: string,
 ): PrimodiumObjectApi<T> {
   const fullId = (entity: Entity) => `${prefix ? `${prefix}_` : ""}${entity}`;
 
@@ -45,7 +44,7 @@ function factory<T extends PrimodiumGameObject | DeferredRenderContainer>(
     },
     addContainer: <SpawnedObject extends PrimodiumGameObject, SpawnArgs extends BaseSpawnArgs>(
       entity: Entity,
-      container: DeferredRenderContainer<SpawnedObject, SpawnArgs>
+      container: DeferredRenderContainer<SpawnedObject, SpawnArgs>,
     ) => {
       if (container instanceof DeferredRenderContainer) {
         scene.objects.addContainer(fullId(entity), container);

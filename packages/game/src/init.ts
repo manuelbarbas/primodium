@@ -1,16 +1,15 @@
-import { engine } from "@primodiumxyz/engine";
 import { Core } from "@primodiumxyz/core";
+import { engine } from "@primodiumxyz/engine";
 import type { ContractCalls } from "@client/contractCalls/createContractCalls";
-
 import { createGlobalApi, GlobalApi } from "@game/api/global";
-import { PrimodiumScene } from "@game/types";
-import { SceneKeys } from "@game/lib/constants/common";
-import { initCommandCenter } from "@game/scenes/command-center/init";
 import gameConfig from "@game/lib/config/game";
+import { SceneKeys } from "@game/lib/constants/common";
 import { initAsteroidScene } from "@game/scenes/asteroid/init";
+import { initCommandCenter } from "@game/scenes/command-center/init";
 import { initRootScene } from "@game/scenes/root/init";
 import { initStarmapScene } from "@game/scenes/starmap/init";
 import { initUIScene } from "@game/scenes/ui/init";
+import { PrimodiumScene } from "@game/types";
 
 export type InitResult = Promise<Record<SceneKeys, PrimodiumScene> & { GLOBAL: GlobalApi }>;
 async function init(core: Core, calls: ContractCalls): InitResult {

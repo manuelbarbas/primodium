@@ -1,11 +1,11 @@
-import { Core, EntityType } from "@primodiumxyz/core";
-import { defaultEntity, Entity, namespaceWorld } from "@primodiumxyz/reactive-tables";
 import { EFleetStance } from "contracts/config/enums";
 
+import { Core, EntityType } from "@primodiumxyz/core";
+import { defaultEntity, Entity, namespaceWorld } from "@primodiumxyz/reactive-tables";
+import { StanceToIcon } from "@game/lib/mappings";
+import { DeferredAsteroidsRenderContainer } from "@game/lib/objects/asteroid/DeferredAsteroidsRenderContainer";
 import { TransitLine } from "@game/lib/objects/TransitLine";
 import { renderFleet } from "@game/lib/render/renderFleet";
-import { DeferredAsteroidsRenderContainer } from "@game/lib/objects/asteroid/DeferredAsteroidsRenderContainer";
-import { StanceToIcon } from "@game/lib/mappings";
 import { PrimodiumScene } from "@game/types";
 
 export const renderFleets = (scene: PrimodiumScene, core: Core) => {
@@ -17,7 +17,7 @@ export const renderFleets = (scene: PrimodiumScene, core: Core) => {
 
   const systemsWorld = namespaceWorld(world, "systems");
   const deferredRenderContainer = scene.objects.deferredRenderContainer.getContainer(
-    EntityType.Asteroid
+    EntityType.Asteroid,
   ) as DeferredAsteroidsRenderContainer;
   const transitsToUpdate = new Set<Entity>();
   const { objects } = scene;

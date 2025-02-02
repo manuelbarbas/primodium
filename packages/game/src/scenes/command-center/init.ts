@@ -1,11 +1,10 @@
 // COMMAND CENTER ENTRY POINT
 import { Core } from "@primodiumxyz/core";
-
 import { GlobalApi } from "@game/api/global";
 import { createSceneApi } from "@game/api/scene";
-import { PrimodiumScene } from "@game/types";
 import { commandCenterScene } from "@game/lib/config/commandCenterScene";
 import { runSystems as runCommandSystems } from "@game/scenes/command-center/systems";
+import { PrimodiumScene } from "@game/types";
 
 export const initCommandCenter = async (game: GlobalApi, core: Core): Promise<PrimodiumScene> => {
   const {

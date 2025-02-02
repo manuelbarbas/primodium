@@ -1,8 +1,8 @@
 import { Core } from "@primodiumxyz/core";
 import { $query, namespaceWorld } from "@primodiumxyz/reactive-tables";
-import { PrimodiumScene } from "@game/types";
 import { DepthLayers } from "@game/lib/constants/common";
 import { Tile } from "@game/lib/objects/Tile";
+import { PrimodiumScene } from "@game/types";
 
 export const renderHoverTile = (scene: PrimodiumScene, core: Core) => {
   const {

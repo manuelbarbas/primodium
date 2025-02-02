@@ -1,6 +1,5 @@
-import { SceneConfig } from "@primodiumxyz/engine/types";
 import { AnimationConfig, Tilemaps } from "@primodiumxyz/assets";
-
+import { SceneConfig } from "@primodiumxyz/engine/types";
 import { DepthLayers, Scenes } from "@game/lib/constants/common";
 
 export const asteroidSceneConfig: SceneConfig = {

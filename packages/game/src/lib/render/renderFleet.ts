@@ -1,10 +1,10 @@
-import { Tables } from "@primodiumxyz/core";
-import { Entity } from "@primodiumxyz/reactive-tables";
 import { EFleetStance } from "contracts/config/enums";
 
+import { Tables } from "@primodiumxyz/core";
+import { Entity } from "@primodiumxyz/reactive-tables";
+import { StanceToIcon } from "@game/lib/mappings";
 import { Fleet } from "@game/lib/objects/Fleet";
 import { PrimodiumScene } from "@game/types";
-import { StanceToIcon } from "@game/lib/mappings";
 
 export function renderFleet(args: { scene: PrimodiumScene; entity: Entity; tables: Tables }) {
   const { scene, entity, tables } = args;
