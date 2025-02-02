@@ -1,4 +1,4 @@
-import { createGame as _createGame } from "@core/createGame";
+import { createGame as _createGame } from "@/lib/core/createGame";
 import { useEngineStore } from "@/store/EngineStore";
 import { Game, GameConfig } from "@/types";
 

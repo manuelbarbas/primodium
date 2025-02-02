@@ -1,4 +1,4 @@
-import { transformIterator } from "@util/iterable";
+import { transformIterator } from "@/lib/util/iterable";
 import { Coord } from "@/types";
 
 const LOWER_HALF_MASK = 2 ** 16 - 1;

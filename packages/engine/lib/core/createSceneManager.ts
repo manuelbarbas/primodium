@@ -1,5 +1,5 @@
-import { createScene as _createScene } from "@core/createScene";
-import { deferred } from "@util/deferred";
+import { createScene as _createScene } from "@/lib/core/createScene";
+import { deferred } from "@/lib/util/deferred";
 
 export type Scene = Awaited<ReturnType<typeof _createScene>>;
 

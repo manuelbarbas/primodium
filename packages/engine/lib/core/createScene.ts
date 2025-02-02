@@ -1,10 +1,10 @@
-import { createCamera } from "@core/createCamera";
-import createInput from "@core/createInput";
-import { createTilemap } from "@core/createTilemap";
-import { StaticObjectManager } from "@core/StaticObjectManager";
-import { createPhaserScene } from "@util/createPhaserScene";
-import { generateFrames } from "@util/generateFrames";
-import { resizePhaserGame } from "@util/resizePhaserGame";
+import { createCamera } from "@/lib/core/createCamera";
+import createInput from "@/lib/core/createInput";
+import { createTilemap } from "@/lib/core/createTilemap";
+import { StaticObjectManager } from "@/lib/core/StaticObjectManager";
+import { createPhaserScene } from "@/lib/util/createPhaserScene";
+import { generateFrames } from "@/lib/util/generateFrames";
+import { resizePhaserGame } from "@/lib/util/resizePhaserGame";
 import { SceneConfig } from "@/types";
 
 type PhaserAudio =

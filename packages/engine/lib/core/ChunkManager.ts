@@ -1,5 +1,5 @@
-import type { createCamera } from "@core/createCamera";
-import { BoundingBox } from "@core/StaticObjectManager";
+import type { createCamera } from "@/lib/core/createCamera";
+import { BoundingBox } from "@/lib/core/StaticObjectManager";
 import { Coord } from "@/types";
 
 const MARGIN = 5;

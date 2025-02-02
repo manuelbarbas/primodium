@@ -1,7 +1,7 @@
-import { createSceneManager } from "@core/createSceneManager";
-import createPhaserScene from "@util/createPhaserScene";
-import { deferred } from "@util/deferred";
-import { getSceneLoadPromise } from "@util/getSceneLoadPromise";
+import { createSceneManager } from "@/lib/core/createSceneManager";
+import createPhaserScene from "@/lib/util/createPhaserScene";
+import { deferred } from "@/lib/util/deferred";
+import { getSceneLoadPromise } from "@/lib/util/getSceneLoadPromise";
 import { initializeContext } from "@/api";
 import { GameConfig } from "@/types";
 
