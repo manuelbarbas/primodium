@@ -35,7 +35,7 @@
   },
   "devDependencies": {
     "@latticexyz/cli": "2.0.9",
-    "@primodiumxyz/pg-indexer-reader": "^0.6.6",
+    "@primodiumxyz/pg-indexer-reader": "^0.6.14",
     "@typescript-eslint/eslint-plugin": "5.46.1",
     "@typescript-eslint/parser": "5.46.1",
     "concurrently": "^8.0.1",
