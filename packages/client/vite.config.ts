@@ -3,6 +3,7 @@ import react from "@vitejs/plugin-react";
 import { defineConfig } from "vite";
 import { comlink } from "vite-plugin-comlink";
 import tsconfigPaths from "vite-tsconfig-paths";
+
 import postcss from "./postcss.config";
 
 export default defineConfig({
@@ -29,7 +30,7 @@ export default defineConfig({
       output: {
         manualChunks: {
           react: ["react", "react-dom"],
-          mud: ["@latticexyz/common", "@latticexyz/world"],
+          mud: ["@latticexyz/common"],
           core: ["@primodiumxyz/core"],
           phaser: ["phaser"],
         },
@@ -44,18 +45,7 @@ export default defineConfig({
         bigint: true,
       },
     },
-    include: [
-      "bn.js",
-      "js-sha3",
-      "hash.js",
-      "bech32",
-      "long",
-      "protobufjs/minimal",
-      "debug",
-      "is-observable",
-      "nice-grpc-web",
-      "@improbable-eng/grpc-web",
-    ],
+    include: ["bn.js", "js-sha3", "hash.js", "bech32", "long", "protobufjs/minimal", "debug", "is-observable"],
     exclude: ["@primodiumxyz/assets", "contract"],
   },
   envPrefix: "PRI_",
