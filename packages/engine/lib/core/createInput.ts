@@ -1,10 +1,9 @@
 // MODIFIED FROM LATTICEXYZ/PHASERX
 // https://github.com/latticexyz/mud/blob/main/packages/phaserx/src/createInput.ts
 
+import { Key } from "@enginetypes";
 import Phaser from "phaser";
 import { bufferCount, filter, fromEvent, map, merge, Observable, tap, throttleTime } from "rxjs";
-
-import { Key } from "@/types";
 
 const enabled = {
   value: true,

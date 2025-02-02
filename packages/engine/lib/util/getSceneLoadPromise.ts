@@ -1,4 +1,4 @@
-import { deferred } from "@/lib/util/deferred";
+import { deferred } from "@enginelib/util/deferred";
 
 export const getSceneLoadPromise = async (scene: Phaser.Scene) => {
   const [resolve, , promise] = deferred();

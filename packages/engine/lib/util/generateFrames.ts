@@ -1,4 +1,4 @@
-import { Animation } from "@/types";
+import { Animation } from "@enginetypes";
 
 export function generateFrames(
   anims: Phaser.Animations.AnimationManager,

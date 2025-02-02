@@ -1,8 +1,9 @@
-import { ChunkManager } from "@/lib/core/ChunkManager";
-import { createCamera } from "@/lib/core/createCamera";
-import { CoordMap } from "@/lib/util/coordMap";
-import { pixelToChunkCoord } from "@/lib/util/coords";
-import { Coord } from "@/types";
+import { ChunkManager } from "@enginelib/core/ChunkManager";
+import { createCamera } from "@enginelib/core/createCamera";
+import { CoordMap } from "@enginelib/util/coordMap";
+import { pixelToChunkCoord } from "@enginelib/util/coords";
+import { Coord } from "@enginetypes";
+
 import { BaseSpawnArgs, DeferredRenderContainer } from "../../../game/src/lib/objects/DeferredRenderContainer";
 
 type Spawnable = {

@@ -1,11 +1,11 @@
-import { createCamera } from "@/lib/core/createCamera";
-import createInput from "@/lib/core/createInput";
-import { createTilemap } from "@/lib/core/createTilemap";
-import { StaticObjectManager } from "@/lib/core/StaticObjectManager";
-import { createPhaserScene } from "@/lib/util/createPhaserScene";
-import { generateFrames } from "@/lib/util/generateFrames";
-import { resizePhaserGame } from "@/lib/util/resizePhaserGame";
-import { SceneConfig } from "@/types";
+import { createCamera } from "@enginelib/core/createCamera";
+import createInput from "@enginelib/core/createInput";
+import { createTilemap } from "@enginelib/core/createTilemap";
+import { StaticObjectManager } from "@enginelib/core/StaticObjectManager";
+import { createPhaserScene } from "@enginelib/util/createPhaserScene";
+import { generateFrames } from "@enginelib/util/generateFrames";
+import { resizePhaserGame } from "@enginelib/util/resizePhaserGame";
+import { SceneConfig } from "@enginetypes";
 
 type PhaserAudio =
   | Phaser.Sound.HTML5AudioSoundManager

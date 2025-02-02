@@ -1,6 +1,5 @@
+import { TilemapConfig } from "@enginetypes";
 import type Phaser from "phaser";
-
-import { TilemapConfig } from "@/types";
 
 export const createTilemap = (
   scene: Phaser.Scene,

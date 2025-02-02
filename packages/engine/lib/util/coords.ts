@@ -1,4 +1,4 @@
-import { Area, ChunkCoord, Coord, PixelCoord, TileCoord, WorldCoord } from "@/types";
+import { Area, ChunkCoord, Coord, PixelCoord, TileCoord, WorldCoord } from "@enginetypes";
 
 export const ZERO_VECTOR: Coord = { x: 0, y: 0 };
 

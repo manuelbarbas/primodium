@@ -1,6 +1,5 @@
+import { CameraConfig } from "@enginetypes";
 import { BehaviorSubject, share } from "rxjs";
-
-import { CameraConfig } from "@/types";
 
 export function createCamera(phaserCamera: Phaser.Cameras.Scene2D.Camera, options: CameraConfig) {
   // Stop default gesture events to not collide with use-gesture

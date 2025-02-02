@@ -1,6 +1,6 @@
-import type { createCamera } from "@/lib/core/createCamera";
-import { BoundingBox } from "@/lib/core/StaticObjectManager";
-import { Coord } from "@/types";
+import type { createCamera } from "@enginelib/core/createCamera";
+import { BoundingBox } from "@enginelib/core/StaticObjectManager";
+import { Coord } from "@enginetypes";
 
 const MARGIN = 5;
 export class ChunkManager {

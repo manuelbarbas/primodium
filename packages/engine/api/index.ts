@@ -1,6 +1,6 @@
-import { createGame as _createGame } from "@/lib/core/createGame";
-import { useEngineStore } from "@/store/EngineStore";
-import { Game, GameConfig } from "@/types";
+import { createGame as _createGame } from "@enginelib/core/createGame";
+import { useEngineStore } from "@enginestore/EngineStore";
+import { Game, GameConfig } from "@enginetypes";
 
 export const initializeContext = (key: string, game: Game) => {
   const setGame = useEngineStore.getState().setGame;
