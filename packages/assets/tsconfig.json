@@ -1,8 +1,7 @@
 {
   "extends": "../../.tsconfigs/bundler/dom/library-monorepo.json",
   "compilerOptions": {
-    "types": ["vite/client"],
-    "baseUrl": ".",
+    "baseUrl": "."
   },
   "include": ["**/*.tsx", "**/*.ts"],
   "exclude": ["node_modules", "dist"]

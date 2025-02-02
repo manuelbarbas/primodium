@@ -2,6 +2,13 @@
 
 This package provides a set of tools for working with sprite sheets and tilesets.
 
+## Requirements
+
+- Install FFMPEG from homebrew:
+  ```bash
+  brew install ffmpeg
+  ```
+
 ## Sprites
 
 To create a new Sprite animation you need to define a new folder structure inside of the `sprites` folder. Inside of that folder, create a series of images defining the frames of the animation. The name of the folder will be the name of the animation. The names of the images should be the `{animation_name}-{frame number}.png`.
