@@ -3,8 +3,12 @@
   "version": "1.0.0",
   "description": "Set of tools for interacting with the Primodium world.",
   "keywords": [],
-  "license": "ISC",
-  "author": "",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/primodiumxyz/primodium.git",
+    "directory": "packages/core"
+  },
+  "license": "MIT",
   "type": "module",
   "exports": {
     ".": "./dist/index.js",
