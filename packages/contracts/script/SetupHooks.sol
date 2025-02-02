@@ -18,7 +18,6 @@ function setupHooks(IWorld world) {
  */
 function registerPointsHook(IWorld world) {
   OnPoints_Alliance_Points onPoints_Alliance_Points = new OnPoints_Alliance_Points();
-  console.log("onPoints_Alliance_Points address: %s", address(onPoints_Alliance_Points));
   world.grantAccess(Points._tableId, address(onPoints_Alliance_Points));
   world.grantAccess(AlliancePointContribution._tableId, address(onPoints_Alliance_Points));
   world.registerStoreHook(Points._tableId, onPoints_Alliance_Points, BEFORE_SPLICE_STATIC_DATA);
