@@ -15,5 +15,12 @@
   "importOrderParserPlugins": ["typescript", "jsx", "decorators-legacy"],
   "importOrderCombineTypeAndValueImports": true,
   "plugins": ["@ianvs/prettier-plugin-sort-imports", "prettier-plugin-jsdoc"],
-  "importOrder": ["<THIRD_PARTY_MODULES>", "", "^@/lib/core/(.*)$", "^@/lib/util/(.*)$", "^@/(.*)$", "^[./]"]
+  "importOrder": [
+    "<THIRD_PARTY_MODULES>",
+    "",
+    "^@engine/lib/core/(.*)$",
+    "^@engine/lib/util/(.*)$",
+    "^@engine/(.*)$",
+    "^[./]"
+  ]
 }
