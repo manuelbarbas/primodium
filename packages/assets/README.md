@@ -43,3 +43,9 @@ Export does a few things:
 To export, run `pnpm run export`.
 
 Borrowed from, [MUD Phaser Template](https://github.com/latticexyz/mud/tree/086be4ef4f3c1ecb3eac0e9554d7d4eb64531fc2/templates/phaser/packages/art).
+
+## Usage
+
+All the assets in this directory are available, free of charge, to anyone who wants to use them **for non-commercial purposes**.
+
+If you want to use them for commercial purposes, you will need the express permission of the Primodium team to do so.
