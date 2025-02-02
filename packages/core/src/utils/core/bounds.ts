@@ -1,12 +1,13 @@
 import { Entity } from "@primodiumxyz/reactive-tables";
 import { Keys } from "@/lib/constants";
-import { Tables, Coord, Dimensions } from "@/lib/types";
+import { Coord, Dimensions, Tables } from "@/lib/types";
 
 export function createBoundsUtils(tables: Tables) {
   /**
    * Checks if coord is out of bounds of asteroid
-   * @param coord  coord to check
-   * @param asteroid  asteroid entity
+   *
+   * @param coord Coord to check
+   * @param asteroid Asteroid entity
    */
   function outOfBounds(coord: Coord, asteroid: Entity): boolean {
     const bounds = getAsteroidBounds(asteroid);
@@ -15,8 +16,9 @@ export function createBoundsUtils(tables: Tables) {
 
   /**
    * Checks if coord is out of max bounds of asteroid
-   * @param coord coord to check
-   * @param asteroid asteroid entity
+   *
+   * @param coord Coord to check
+   * @param asteroid Asteroid entity
    */
   function outOfMaxBounds(coord: Coord, asteroid: Entity): boolean {
     const bounds = getAsteroidMaxBounds(asteroid);
@@ -25,12 +27,13 @@ export function createBoundsUtils(tables: Tables) {
 
   /**
    * Gets the bounds of the asteroid
-   * @param asteroid asteroid entity
-   * @param next if true, gets the bounds of the asteroid's next level
+   *
+   * @param asteroid Asteroid entity
+   * @param next If true, gets the bounds of the asteroid's next level
    */
   function getAsteroidBounds(
     asteroid: Entity,
-    next?: boolean
+    next?: boolean,
   ): { minX: number; minY: number; maxX: number; maxY: number } {
     const level = tables.Level.get(asteroid as Entity, { value: 1n }).value;
     const asteroidDims = tables.P_Asteroid.get();
@@ -46,8 +49,9 @@ export function createBoundsUtils(tables: Tables) {
 
   /**
    * Gets the max possible bounds of an asteroid
-   * @param asteroid asteroid entity
-   * @returns max bounds of asteroid
+   *
+   * @param asteroid Asteroid entity
+   * @returns Max bounds of asteroid
    */
   function getAsteroidMaxBounds(asteroid: Entity): { minX: number; minY: number; maxX: number; maxY: number } {
     const asteroidMaxLevel = tables.Asteroid.get(asteroid)?.maxLevel ?? 1n;

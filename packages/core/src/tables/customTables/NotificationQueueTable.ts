@@ -1,6 +1,6 @@
 import { createLocalTable, Entity, Type } from "@primodiumxyz/reactive-tables";
 import { CreateNetworkResult } from "@/lib/types";
-import { NotificationType, Notification } from "@/tables/types";
+import { Notification, NotificationType } from "@/tables/types";
 
 export const NotificationQueueTable = ({ world }: CreateNetworkResult) => {
   const table = createLocalTable(
@@ -13,8 +13,9 @@ export const NotificationQueueTable = ({ world }: CreateNetworkResult) => {
     },
     {
       id: "NotificationQueue",
+      // @ts-expect-error contractId is not a valid metadata field
       metadata: { contractId: `table.NotificationQueue` },
-    }
+    },
   );
 
   const addNotification = (notification: Notification) => {

@@ -354,7 +354,7 @@ importers:
         version: 2.0.9(typescript@5.5.0-beta)
       '@primodiumxyz/reactive-tables':
         specifier: ^3.2.0
-        version: 3.2.0(prettier@3.2.5)(react-dom@18.3.1)(typescript@5.5.0-beta)(zod@3.23.8)
+        version: 3.2.0(prettier@3.4.2)(react-dom@18.3.1)(typescript@5.5.0-beta)(zod@3.23.8)
       '@primodiumxyz/sync-stack':
         specifier: ^0.6.14
         version: 0.6.14(typescript@5.5.0-beta)
@@ -380,6 +380,9 @@ importers:
         specifier: ^3.2.3
         version: 3.2.10(@types/node@18.19.39)
     devDependencies:
+      '@ianvs/prettier-plugin-sort-imports':
+        specifier: ^4.3.0
+        version: 4.4.1(prettier@3.4.2)
       '@testing-library/jest-dom':
         specifier: ^6.4.5
         version: 6.4.6(vitest@0.32.4)
@@ -404,6 +407,12 @@ importers:
       jsdom:
         specifier: ^24.1.0
         version: 24.1.0
+      prettier:
+        specifier: ^3.3.3
+        version: 3.4.2
+      prettier-plugin-jsdoc:
+        specifier: ^1.3.2
+        version: 1.3.2(prettier@3.4.2)
       tsup:
         specifier: ^8.1.0
         version: 8.1.0(ts-node@10.9.2)(typescript@5.5.0-beta)
@@ -5278,7 +5287,7 @@ packages:
       '@types/debug': 4.1.12
       debug: 4.4.0
       pony-cause: 2.1.11
-      semver: 7.6.2
+      semver: 7.7.0
       uuid: 9.0.1
     transitivePeerDependencies:
       - supports-color
@@ -5713,6 +5722,44 @@ packages:
       react: 18.3.1
       rxjs: 7.5.5
       tinybase: 4.8.15(prettier@3.2.5)(react-dom@18.3.1)(react@18.3.1)
+      viem: 2.9.20(typescript@5.5.0-beta)(zod@3.23.8)
+    transitivePeerDependencies:
+      - '@automerge/automerge-repo'
+      - '@aws-sdk/client-kms'
+      - '@journeyapps/powersync-sdk-common'
+      - '@libsql/client'
+      - '@sqlite.org/sqlite-wasm'
+      - '@vlcn.io/crsqlite-wasm'
+      - asn1.js
+      - bufferutil
+      - electric-sql
+      - expo-sqlite
+      - partykit
+      - partysocket
+      - prettier
+      - react-dom
+      - sqlite3
+      - supports-color
+      - typescript
+      - utf-8-validate
+      - yjs
+      - zod
+    dev: false
+
+  /@primodiumxyz/reactive-tables@3.2.0(prettier@3.4.2)(react-dom@18.3.1)(typescript@5.5.0-beta)(zod@3.23.8):
+    resolution: {integrity: sha512-J/Y6JlmqTw68DiK7eoYnwqEOYbqhYZe3K3wtd64FR3SBtyzntXjUXI8nd63Ric+TzSWDCpdj3UYjbv1VgnstAw==}
+    engines: {node: 20.x, pnpm: 8.x}
+    dependencies:
+      '@latticexyz/protocol-parser': 2.0.9(typescript@5.5.0-beta)(zod@3.23.8)
+      '@latticexyz/schema-type': 2.0.9(typescript@5.5.0-beta)(zod@3.23.8)
+      '@latticexyz/store': 2.0.9(typescript@5.5.0-beta)
+      '@primodiumxyz/sync-stack': 0.6.14(typescript@5.5.0-beta)
+      debug: 4.3.5
+      fast-deep-equal: 3.1.3
+      mobx: 6.12.4
+      react: 18.3.1
+      rxjs: 7.5.5
+      tinybase: 4.8.15(prettier@3.4.2)(react-dom@18.3.1)(react@18.3.1)
       viem: 2.9.20(typescript@5.5.0-beta)(zod@3.23.8)
     transitivePeerDependencies:
       - '@automerge/automerge-repo'
@@ -14441,7 +14488,7 @@ packages:
     engines: {node: ^16.14.0 || >=18.0.0}
     dependencies:
       hosted-git-info: 7.0.2
-      semver: 7.6.2
+      semver: 7.7.0
       validate-npm-package-license: 3.0.4
     dev: true
 
@@ -15421,7 +15468,7 @@ packages:
     dependencies:
       '@solidity-parser/parser': 0.17.0
       prettier: 3.2.5
-      semver: 7.6.2
+      semver: 7.7.0
       solidity-comments-extractor: 0.0.8
 
   /prettier-plugin-solidity@1.3.1(prettier@3.4.2):

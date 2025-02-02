@@ -1,9 +1,7 @@
-import { Core } from "@/lib/types";
 import { Entity, namespaceWorld } from "@primodiumxyz/reactive-tables";
+import { Core } from "@/lib/types";
 
-/**
- * This system sets up the reverse position of a building
- */
+/** This system sets up the reverse position of a building */
 export const setupBuildingReversePosition = (core: Core) => {
   const {
     network: { world },

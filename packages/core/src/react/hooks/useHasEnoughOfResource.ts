@@ -1,6 +1,6 @@
 import { Entity } from "@primodiumxyz/reactive-tables";
 import { ResourceType } from "@/lib/types";
-import { useResourceCount } from "./useResourceCount";
+import { useResourceCount } from "@/react/hooks/useResourceCount";
 
 /**
  * Checks if the specified resource has enough quantity or production rate.
@@ -15,7 +15,7 @@ export function useHasEnoughOfResource(
   resource: Entity,
   amount: bigint,
   spaceRock: Entity,
-  resourceType = ResourceType.Resource
+  resourceType = ResourceType.Resource,
 ) {
   const { resourceCount, production } = useResourceCount(resource, spaceRock);
   switch (resourceType) {

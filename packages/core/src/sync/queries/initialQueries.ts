@@ -1,7 +1,8 @@
-import { ContractTableDefs } from "@primodiumxyz/reactive-tables";
-import { EntityType } from "@/lib/constants";
-import { DecodedIndexerQuery } from "@primodiumxyz/sync-stack/types";
 import { Hex } from "viem";
+
+import { ContractTableDefs } from "@primodiumxyz/reactive-tables";
+import { DecodedIndexerQuery } from "@primodiumxyz/sync-stack/types";
+import { EntityType } from "@/lib/constants";
 
 export const getInitialQuery = ({
   tables,

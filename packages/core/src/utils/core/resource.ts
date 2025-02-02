@@ -1,9 +1,11 @@
-import { defaultEntity, Entity } from "@primodiumxyz/reactive-tables";
 import { EResource, MUDEnums } from "contracts/config/enums";
 import { Hex } from "viem";
-import { clampBigInt } from "../global/common";
+
+import { defaultEntity, Entity } from "@primodiumxyz/reactive-tables";
 import { ResourceEntityLookup, ResourceEnumLookup, SPEED_SCALE } from "@/lib";
 import { Tables } from "@/lib/types";
+
+import { clampBigInt } from "../global/common";
 
 export type ResourceCountData = {
   resourceCount: bigint;
@@ -12,9 +14,7 @@ export type ResourceCountData = {
 };
 
 export function createResourceUtils(tables: Tables) {
-  /**
-   * Checks if resource is a utility
-   */
+  /** Checks if resource is a utility */
   function isUtility(resource: Entity) {
     const id = ResourceEnumLookup[resource];
     return tables.P_IsUtility.getWithKeys({ id })?.value ?? false;
@@ -28,9 +28,7 @@ export function createResourceUtils(tables: Tables) {
     }
   > = new Map();
 
-  /**
-   * Gets the resource count for a given entity (asteroid or fleet)
-   */
+  /** Gets the resource count for a given entity (asteroid or fleet) */
   function getResourceCount(resource: Entity, entity: Entity) {
     return (
       getResourceCounts(entity).get(resource) ?? {
@@ -41,22 +39,21 @@ export function createResourceUtils(tables: Tables) {
     );
   }
 
-  /**
-   * Gets all resource counts for a given fleets
-   */
+  /** Gets all resource counts for a given fleets */
   function getFleetResourceCount(fleet: Entity) {
     const transportables = tables.P_Transportables.get()?.value ?? [];
-    return transportables.reduce((acc, resource) => {
-      const resourceCount = tables.ResourceCount.getWithKeys({ entity: fleet as Hex, resource })?.value ?? 0n;
-      if (!resourceCount) return acc;
-      acc.set(ResourceEntityLookup[resource as EResource], { resourceStorage: 0n, production: 0n, resourceCount });
-      return acc;
-    }, new Map() as Map<Entity, ResourceCountData>);
+    return transportables.reduce(
+      (acc, resource) => {
+        const resourceCount = tables.ResourceCount.getWithKeys({ entity: fleet as Hex, resource })?.value ?? 0n;
+        if (!resourceCount) return acc;
+        acc.set(ResourceEntityLookup[resource as EResource], { resourceStorage: 0n, production: 0n, resourceCount });
+        return acc;
+      },
+      new Map() as Map<Entity, ResourceCountData>,
+    );
   }
 
-  /**
-   * Gets all resource counts for a given asteroid
-   */
+  /** Gets all resource counts for a given asteroid */
   function getAsteroidResourceCount(asteroid: Entity) {
     const time = tables.Time.get()?.value ?? 0n;
 
@@ -148,9 +145,7 @@ export function createResourceUtils(tables: Tables) {
     return result;
   }
 
-  /**
-   * Gets all resource counts for a given entity (asteroid or fleet)
-   */
+  /** Gets all resource counts for a given entity (asteroid or fleet) */
   function getResourceCounts(entity: Entity): Map<Entity, ResourceCountData> {
     if (entity === defaultEntity) return new Map();
     return tables.IsFleet.get(entity) ? getFleetResourceCount(entity) : getAsteroidResourceCount(entity);

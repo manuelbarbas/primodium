@@ -1,8 +1,9 @@
-import { Entity } from "@primodiumxyz/reactive-tables";
 import { EResource } from "contracts/config/enums";
 import { Hex } from "viem";
-import { Tables, ResourceType } from "@/lib/types";
+
+import { Entity } from "@primodiumxyz/reactive-tables";
 import { ResourceEntityLookup } from "@/lib";
+import { ResourceType, Tables } from "@/lib/types";
 import { createResourceUtils } from "@/utils/core/resource";
 
 export type Recipe = {
@@ -16,9 +17,10 @@ export function createRecipeUtils(tables: Tables) {
 
   /**
    * Gets recipe for a given entity and level
-   * @param rawEntityType entity (building, unit, etc.)
-   * @param level level of the entity
-   * @param upgrade whether to get the upgrade recipe (default: false)
+   *
+   * @param rawEntityType Entity (building, unit, etc.)
+   * @param level Level of the entity
+   * @param upgrade Whether to get the upgrade recipe (default: false)
    */
   function getRecipe(rawEntityType: Entity, level: bigint, upgrade = false) {
     const entityType = rawEntityType as Hex;
@@ -27,11 +29,11 @@ export function createRecipeUtils(tables: Tables) {
       {
         resources: [],
         amounts: [],
-      }
+      },
     );
     const requiredProduction = tables.P_RequiredDependency.getWithKeys(
       { prototype: entityType, level: level },
-      undefined
+      undefined,
     );
 
     const resources = requiredResources.resources.map((resource: EResource, index: number) => ({
@@ -54,9 +56,7 @@ export function createRecipeUtils(tables: Tables) {
     return [...resources, ...resourceRate];
   }
 
-  /**
-   * Checks if a space rock has enough resources for the recipe
-   */
+  /** Checks if a space rock has enough resources for the recipe */
   function hasEnoughResources(recipe: ReturnType<typeof getRecipe>, spaceRock: Entity, count = 1n) {
     const resourceAmounts = recipe.map((resource) => {
       return getResourceCount(resource.id, spaceRock);

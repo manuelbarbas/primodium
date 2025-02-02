@@ -1,13 +1,12 @@
-import { Entity } from "@primodiumxyz/reactive-tables";
 import { bigIntMin } from "@latticexyz/common/utils";
 import { Hex } from "viem";
-import { EntityType, SPEED_SCALE, RESOURCE_SCALE } from "@/lib/constants";
+
+import { Entity } from "@primodiumxyz/reactive-tables";
+import { EntityType, RESOURCE_SCALE, SPEED_SCALE } from "@/lib/constants";
 import { Tables } from "@/lib/types";
 
 export function createDroidRegenUtils(tables: Tables) {
-  /**
-   * Gets the droid count for an asteroid
-   */
+  /** Gets the droid count for an asteroid */
   function getAsteroidDroidCount(asteroid: Entity): bigint {
     const homeHex = asteroid as Hex;
 
@@ -32,9 +31,7 @@ export function createDroidRegenUtils(tables: Tables) {
 
     return bigIntMin(totalDroidCount, maxDroidCount);
   }
-  /**
-   * Gets the droid count and encryption of an asteroid
-   */
+  /** Gets the droid count and encryption of an asteroid */
   function getSecondaryAsteroidUnitsAndEncryption(level: bigint) {
     // this is a crime but wanted to preserve the const without using an implicit equation.
     const droidCount = level < 3n ? 5n : level < 6n ? 80n : level < 8n ? 1280n : 20480n;

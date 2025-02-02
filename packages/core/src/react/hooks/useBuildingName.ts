@@ -1,6 +1,7 @@
+import { useMemo } from "react";
+
 import { Entity } from "@primodiumxyz/reactive-tables";
 import { useCore } from "@/react/hooks/useCore";
-import { useMemo } from "react";
 
 /**
  * Gets the name of a building.

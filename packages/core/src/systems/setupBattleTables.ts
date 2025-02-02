@@ -1,5 +1,5 @@
-import { Core } from "@/lib/types";
 import { Entity, namespaceWorld } from "@primodiumxyz/reactive-tables";
+import { Core } from "@/lib/types";
 
 function isZeroHex(value: string): boolean {
   return /^0x0+$/i.test(value);

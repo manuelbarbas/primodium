@@ -1,5 +1,6 @@
-import { Entity } from "@primodiumxyz/reactive-tables";
 import { useMemo } from "react";
+
+import { Entity } from "@primodiumxyz/reactive-tables";
 import { useCore } from "@/react/hooks/useCore";
 import { Recipe } from "@/utils/core/recipe";
 

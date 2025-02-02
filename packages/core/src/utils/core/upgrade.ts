@@ -1,24 +1,26 @@
-import { Entity } from "@primodiumxyz/reactive-tables";
 import { Hex } from "viem";
-import { getEntityTypeName } from "../global/common";
+
+import { Entity } from "@primodiumxyz/reactive-tables";
 import { EntityType } from "@/lib/constants";
 import { Tables } from "@/lib/types";
 import { createRecipeUtils } from "@/utils/core/recipe";
+import { getEntityTypeName } from "@/utils/global/common";
 
 export function createUpgradeUtils(tables: Tables) {
   const { getRecipe } = createRecipeUtils(tables);
 
   /**
    * Gets upgrade info for a given research (building or unit upgrade) on a given asteroid
-   * @param research upgrade entity
+   *
+   * @param research Upgrade entity
    * @param asteroid
-   * @returns upgrade info
+   * @returns Upgrade info
    */
   function getUpgradeInfo(research: Entity, asteroid: Entity) {
     const level =
       research === EntityType.Expansion
-        ? tables.Level.get(asteroid as Entity)?.value ?? 1n
-        : tables.UnitLevel.getWithKeys({ entity: asteroid as Hex, unit: research as Hex })?.value ?? 0n;
+        ? (tables.Level.get(asteroid as Entity)?.value ?? 1n)
+        : (tables.UnitLevel.getWithKeys({ entity: asteroid as Hex, unit: research as Hex })?.value ?? 0n);
     let nextLevel = level + 1n;
 
     const maxLevel =

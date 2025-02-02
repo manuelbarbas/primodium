@@ -1,5 +1,6 @@
-import { Entity } from "@primodiumxyz/reactive-tables";
 import { useMemo } from "react";
+
+import { Entity } from "@primodiumxyz/reactive-tables";
 import { SPEED_SCALE } from "@/lib/constants";
 import { useCore } from "@/react";
 

@@ -1,4 +1,5 @@
 import { defaultEntity, Entity } from "@primodiumxyz/reactive-tables";
+
 import { hashEntities } from "./encode";
 
 const adjectives = [
@@ -95,6 +96,7 @@ const phoneticAlphabet: Record<string, string> = {
 
 /**
  * Formats a raw name by inserting spaces and handling camelCase.
+ *
  * @param rawName - The raw name to format.
  * @returns The formatted name.
  */
@@ -112,6 +114,7 @@ const entityPlayerName = new Map<Entity, string>();
 
 /**
  * Converts an entity to a player name.
+ *
  * @param entity - The entity to convert.
  * @returns The player name.
  */
@@ -133,6 +136,7 @@ export const entityToPlayerName = (entity: Entity | undefined): string => {
 
 /**
  * Converts a player name to an entity.
+ *
  * @param name - The player name.
  * @returns The entity.
  */
@@ -144,6 +148,7 @@ const entityRockname = new Map<Entity, string>();
 
 /**
  * Converts an entity to a rock name.
+ *
  * @param entity - The entity to convert.
  * @returns The rock name.
  */
@@ -158,7 +163,7 @@ export const entityToRockName = (entity: Entity): string => {
   const suffix = parseInt(hash.substring(12, 16), 16) % 26;
 
   const name = `${String.fromCharCode(65 + prefix1)}${String.fromCharCode(
-    65 + prefix2
+    65 + prefix2,
   )} ${number} ${String.fromCharCode(65 + suffix)}`;
 
   entityRockname.set(entity, name);
@@ -168,6 +173,7 @@ export const entityToRockName = (entity: Entity): string => {
 
 /**
  * Converts a rock name to an entity.
+ *
  * @param name - The rock name.
  * @returns The entity.
  */
@@ -185,6 +191,7 @@ const entityFleetName = new Map<Entity, string>();
 
 /**
  * Converts an entity to a fleet name.
+ *
  * @param entity - The entity to convert.
  * @param shorten - Whether to shorten the fleet name.
  * @returns The fleet name.
@@ -208,6 +215,7 @@ export const entityToFleetName = (entity: Entity, shorten?: boolean): string => 
 
 /**
  * Converts a fleet name to an entity.
+ *
  * @param name - The fleet name.
  * @returns The entity.
  */

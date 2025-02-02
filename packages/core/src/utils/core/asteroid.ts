@@ -1,8 +1,9 @@
-import { defaultEntity, Entity } from "@primodiumxyz/reactive-tables";
 import { EFleetStance } from "contracts/config/enums";
+
+import { defaultEntity, Entity } from "@primodiumxyz/reactive-tables";
 import { EntityType, ResourceStorages, RockRelationship } from "@/lib/constants";
 import { MapEntityLookup } from "@/lib/lookups";
-import { Tables, Coord } from "@/lib/types";
+import { Coord, Tables } from "@/lib/types";
 import { createResourceUtils } from "@/utils/core/resource";
 import { createUnitUtils } from "@/utils/core/unit";
 import { getEntityTypeName } from "@/utils/global/common";
@@ -13,8 +14,9 @@ export function createAsteroidUtils(tables: Tables) {
 
   /**
    * Gets asteroid name from entity
-   * @param asteroid  entity of asteroid
-   * @returns asteroid name
+   *
+   * @param asteroid Entity of asteroid
+   * @returns Asteroid name
    */
   function getAsteroidName(asteroid: Entity): string {
     const expansionLevel = tables.Level.get(asteroid)?.value;
@@ -37,9 +39,10 @@ export function createAsteroidUtils(tables: Tables) {
 
   /**
    * Gets asteroid description from entity
-   * @param asteroid entity of asteroid
-   * @returns asteroid description
-   * */
+   *
+   * @param asteroid Entity of asteroid
+   * @returns Asteroid description
+   */
   function getAsteroidDescription(asteroid: Entity): { type: string; size: string } {
     const asteroidData = tables.Asteroid.get(asteroid);
 
@@ -59,8 +62,9 @@ export function createAsteroidUtils(tables: Tables) {
 
   /**
    * Gets asteroid info from entity
-   * @param asteroid entity of asteroid
-   * @returns asteroid info
+   *
+   * @param asteroid Entity of asteroid
+   * @returns Asteroid info
    */
   function getAsteroidInfo(asteroid: Entity) {
     const ownedBy = tables.OwnedBy.get(asteroid)?.value as Entity | undefined;
@@ -74,17 +78,20 @@ export function createAsteroidUtils(tables: Tables) {
       parentEntity: "0" as Entity,
     }) as Coord;
 
-    const resources = [...ResourceStorages].reduce((acc, resource) => {
-      const { resourceCount } = getResourceCount(resource, asteroid);
-      const amount = resourceCount;
+    const resources = [...ResourceStorages].reduce(
+      (acc, resource) => {
+        const { resourceCount } = getResourceCount(resource, asteroid);
+        const amount = resourceCount;
 
-      if (amount) {
-        // only add to the array if amount is non-zero
-        acc.push({ resource, amount });
-      }
+        if (amount) {
+          // only add to the array if amount is non-zero
+          acc.push({ resource, amount });
+        }
 
-      return acc;
-    }, [] as { resource: Entity; amount: bigint }[]);
+        return acc;
+      },
+      [] as { resource: Entity; amount: bigint }[],
+    );
     const { resourceCount: encryption } = getResourceCount(EntityType.Encryption, asteroid);
 
     const hangar = tables.Hangar.get(asteroid);
@@ -94,7 +101,7 @@ export function createAsteroidUtils(tables: Tables) {
     const isInGracePeriod = gracePeriodValue > 0n && gracePeriodValue > now;
 
     const isBlocked = !!getOrbitingFleets(asteroid).find(
-      (fleet) => tables.FleetStance.get(fleet)?.stance == EFleetStance.Block
+      (fleet) => tables.FleetStance.get(fleet)?.stance == EFleetStance.Block,
     );
 
     return {
@@ -115,7 +122,8 @@ export function createAsteroidUtils(tables: Tables) {
 
   /**
    * Gets whether asteroid is blocked
-   * @param asteroid  entity of asteroid
+   *
+   * @param asteroid Entity of asteroid
    */
   function isAsteroidBlocked(asteroid: Entity): boolean {
     return !!getOrbitingFleets(asteroid).find((fleet) => tables.FleetStance.get(fleet)?.stance == EFleetStance.Block);
@@ -123,6 +131,7 @@ export function createAsteroidUtils(tables: Tables) {
 
   /**
    * Gets the relationship between a player and a rock
+   *
    * @param player Player entity
    * @param rock Rock entity
    * @returns Relationship

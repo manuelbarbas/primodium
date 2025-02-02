@@ -1,14 +1,16 @@
-import { hexToString, Hex } from "viem";
+import { Hex, hexToString } from "viem";
+
 import { Entity } from "@primodiumxyz/reactive-tables";
-import { censorText } from "@/utils/global/profanity";
 import { Tables } from "@/lib/types";
+import { censorText } from "@/utils/global/profanity";
 
 export const createAllianceUtils = (tables: Tables) => {
   /**
-   * gets alliance name from alliance entity
-   * @param alliance alliance entity
-   * @param censor don't show inappropriate words
-   * @returns alliance name
+   * Gets alliance name from alliance entity
+   *
+   * @param alliance Alliance entity
+   * @param censor Don't show inappropriate words
+   * @returns Alliance name
    */
   const getAllianceName = (alliance: Entity, censor = false): string => {
     const allianceData = tables.Alliance.get(alliance);
@@ -21,9 +23,10 @@ export const createAllianceUtils = (tables: Tables) => {
 
   /**
    * Get alliance name from player
-   * @param player player entity
-   * @param censor don't show inappropriate words
-   * @returns alliance name
+   *
+   * @param player Player entity
+   * @param censor Don't show inappropriate words
+   * @returns Alliance name
    */
 
   const getAllianceNameFromPlayer = (player: Entity, censor = false): string => {
@@ -37,9 +40,10 @@ export const createAllianceUtils = (tables: Tables) => {
 
   /**
    * Decode raw alliance name from contracts
-   * @param allianceName encoded name of alliance
-   * @param censor don't show inappropriate words
-   * @returns alliance name
+   *
+   * @param allianceName Encoded name of alliance
+   * @param censor Don't show inappropriate words
+   * @returns Alliance name
    */
   const decodeAllianceName = (allianceName: string, censor = false): string => {
     const decoded = hexToString(allianceName as Hex, { size: 32 });

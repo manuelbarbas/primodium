@@ -1,10 +1,11 @@
 import { Entity, query } from "@primodiumxyz/reactive-tables";
-import { Tables, Coord } from "@/lib/types";
+import { Coord, Tables } from "@/lib/types";
 import { getBuildingPositionEntity } from "@/utils/global/encode";
 
 export function createTileUtils(tables: Tables) {
   /**
    * Gets the resource key at a given coord
+   *
    * @param coord
    * @param mapId
    * @returns
@@ -23,10 +24,11 @@ export function createTileUtils(tables: Tables) {
 
   /**
    * Gets all buildings of a given type within a range of a given origin
-   * @param origin origin coord
-   * @param type building type
-   * @param range range to search
-   * @returns array of  coords
+   *
+   * @param origin Origin coord
+   * @param type Building type
+   * @param range Range to search
+   * @returns Array of coords
    */
 
   function getBuildingsOfTypeInRange(origin: Coord, type: Entity, range: number): Coord[] {
@@ -53,9 +55,7 @@ export function createTileUtils(tables: Tables) {
     return tiles;
   }
 
-  /**
-   * Gets the building at a given coord
-   */
+  /** Gets the building at a given coord */
   const getBuildingAtCoord = (coord: Coord, asteroid: Entity) => {
     const positionEntity = getBuildingPositionEntity(coord, asteroid);
     return tables.ReverseBuildingPosition.get(positionEntity)?.value;

@@ -1,5 +1,6 @@
-import { Entity, namespaceWorld, query } from "@primodiumxyz/reactive-tables";
 import { Hex } from "viem";
+
+import { Entity, namespaceWorld, query } from "@primodiumxyz/reactive-tables";
 import { EntityType } from "@/lib/constants";
 import { Core } from "@/lib/types";
 

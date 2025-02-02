@@ -1,9 +1,11 @@
-import { Entity } from "@primodiumxyz/reactive-tables";
 import { useMemo } from "react";
+
+import { Entity } from "@primodiumxyz/reactive-tables";
 import { useCore } from "@/react/hooks/useCore";
 
 /**
  * Retrieves building information based on the provided building entity.
+ *
  * @param building - The building entity for which to retrieve information.
  * @returns The building information.
  */

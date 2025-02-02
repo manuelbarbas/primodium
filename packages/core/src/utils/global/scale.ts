@@ -1,9 +1,11 @@
-import { Entity } from "@primodiumxyz/reactive-tables";
 import { DECIMALS } from "contracts/config/constants";
+
+import { Entity } from "@primodiumxyz/reactive-tables";
 import { EntityType, UnitEnumLookup } from "@/lib";
 
 /**
  * Gets the scale of a resource.
+ *
  * @param resource - The resource entity.
  * @returns The scale.
  */
@@ -22,6 +24,7 @@ const multipliers = new Set([EntityType.DefenseMultiplier, EntityType.UnitProduc
 
 /**
  * Gets the decimal places for a resource.
+ *
  * @param resource - The resource entity.
  * @returns The number of decimal places.
  */

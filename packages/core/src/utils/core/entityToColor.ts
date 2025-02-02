@@ -8,9 +8,10 @@ export function createColorUtils(tables: Tables) {
 
   /**
    * Get color for entity
-   * @param entity entity to get color for
-   * @returns color for entity
-   * */
+   *
+   * @param entity Entity to get color for
+   * @returns Color for entity
+   */
   function getEntityColor(entity: Entity | undefined) {
     if (!entity || entity === defaultEntity) return "#999999";
     const alliance = tables.PlayerAlliance.get(entity)?.alliance as Entity;

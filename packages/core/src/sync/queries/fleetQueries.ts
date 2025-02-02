@@ -1,5 +1,6 @@
-import { ContractTableDefs, Entity } from "@primodiumxyz/reactive-tables";
 import { Hex } from "viem";
+
+import { ContractTableDefs, Entity } from "@primodiumxyz/reactive-tables";
 import { LogFilter } from "@primodiumxyz/sync-stack/types";
 
 export const getFleetFilter = ({

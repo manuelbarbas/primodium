@@ -1,35 +1,36 @@
-import { Entity } from "@primodiumxyz/reactive-tables";
-import { toHex32 } from "@/utils/global/encode";
 import { resourceToHex } from "@latticexyz/common";
 import { DECIMALS } from "contracts/config/constants";
 import { EObjectives, EUnit } from "contracts/config/enums";
 import { parseEther } from "viem";
 
-/** minimum eth required to get drip */
+import { Entity } from "@primodiumxyz/reactive-tables";
+import { toHex32 } from "@/utils/global/encode";
+
+/** Minimum eth required to get drip */
 export const minEth = parseEther("0.0049");
 
-/** resource id of unlimited delegation system  */
+/** Resource id of unlimited delegation system */
 export const UNLIMITED_DELEGATION = resourceToHex({ type: "system", namespace: "", name: "unlimited" });
 
-/** speed scale of the world. Note: This is not the actual speed of the world. That is found in the P_GameConfig table.  */
+/** Speed scale of the world. Note: This is not the actual speed of the world. That is found in the P_GameConfig table. */
 export const SPEED_SCALE = BigInt(100);
 
-/** Precision of resource decimals  */
+/** Precision of resource decimals */
 export const RESOURCE_DECIMALS = DECIMALS;
 
-/** Scale of resource decimals  */
+/** Scale of resource decimals */
 export const RESOURCE_SCALE = BigInt(10 ** DECIMALS);
 
-/** Scale of multipliers. Used in multiplier tables.  */
+/** Scale of multipliers. Used in multiplier tables. */
 export const MULTIPLIER_SCALE = BigInt(100);
 
-/** Scale of unit speed.  */
+/** Scale of unit speed. */
 export const UNIT_SPEED_SCALE = BigInt(100);
 
 export const NUM_UNITS = Object.keys(EUnit).length / 2;
 export const STORAGE_PREFIX = "primodiumSessionKey:";
 
-/** Encoded keys. Used in prototype tables to prevent collisions  */
+/** Encoded keys. Used in prototype tables to prevent collisions */
 export const Keys = {
   SELECTED: toHex32("selected") as Entity,
   ACTIVE: toHex32("active") as Entity,

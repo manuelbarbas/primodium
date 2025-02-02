@@ -1,5 +1,6 @@
-import { Entity } from "@primodiumxyz/reactive-tables";
 import { useEffect, useMemo, useState } from "react";
+
+import { Entity } from "@primodiumxyz/reactive-tables";
 import { useCore } from "@/react/hooks/useCore";
 import { isPlayer as _isPlayer, entityToAddress, shortenAddress } from "@/utils/global/common";
 import { getEnsName, LinkedAddressResult } from "@/utils/global/ens";
@@ -28,7 +29,7 @@ export function usePlayerName(playerEntity: Entity, address?: boolean) {
 
   const name = useMemo(() => {
     if (!linkedAddress) return entityToPlayerName(playerEntity);
-    return linkedAddress.ensName ?? address
+    return (linkedAddress.ensName ?? address)
       ? shortenAddress(entityToAddress(playerEntity))
       : entityToPlayerName(playerEntity);
   }, [linkedAddress, playerEntity, address]);

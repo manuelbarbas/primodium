@@ -1,24 +1,26 @@
-import { defaultEntity, Entity } from "@primodiumxyz/reactive-tables";
-import { Read, Sync } from "@primodiumxyz/sync-stack";
-import { Tables, CoreConfig, CreateNetworkResult, SyncSourceType, SyncStep } from "@/lib/types";
-import { Keys } from "@/lib/constants";
-import { hashEntities } from "@/utils/global/encode";
 import { Hex } from "viem";
+
+import { defaultEntity, Entity } from "@primodiumxyz/reactive-tables";
+import { StorageAdapterLog } from "@primodiumxyz/reactive-tables/utils";
+import { Read, Sync } from "@primodiumxyz/sync-stack";
+import { Keys } from "@/lib/constants";
+import { CoreConfig, CreateNetworkResult, SyncSourceType, SyncStep, Tables } from "@/lib/types";
+import { getSecondaryQuery } from "@/sync/queries/secondaryQueries";
+import { hashEntities } from "@/utils/global/encode";
+
 import { getAllianceQuery } from "./queries/allianceQueries";
 import { getActiveAsteroidQuery, getAsteroidFilter, getShardAsteroidFilter } from "./queries/asteroidQueries";
 import { getBattleReportQuery } from "./queries/battleReportQueries";
 import { getFleetFilter } from "./queries/fleetQueries";
 import { getInitialQuery } from "./queries/initialQueries";
 import { getPlayerQuery } from "./queries/playerQueries";
-import { getSecondaryQuery } from "@/sync/queries/secondaryQueries";
-import { StorageAdapterLog } from "@primodiumxyz/reactive-tables/utils";
 
 /**
  * Creates sync object. Includes methods to sync data from RPC and Indexer
  *
- * @param config core configuration {@link CoreConfig}
- * @param network network object created in {@link createNetwork} {@link CreateNetworkResult}
- * @param tables tables generated for core object
+ * @param config Core configuration {@link CoreConfig}
+ * @param network Network object created in {@link createNetwork} {@link CreateNetworkResult}
+ * @param tables Tables generated for core object
  * @returns {@link SyncType Sync}
  */
 export function createSync(config: CoreConfig, network: CreateNetworkResult, tables: Tables) {
@@ -31,7 +33,7 @@ export function createSync(config: CoreConfig, network: CreateNetworkResult, tab
     toBlock: bigint,
     onComplete?: () => void,
     onError?: (err: unknown) => void,
-    syncId?: Entity
+    syncId?: Entity,
   ) => {
     const sync = Sync.withCustom({
       reader: Read.fromRPC.filter({
@@ -50,7 +52,7 @@ export function createSync(config: CoreConfig, network: CreateNetworkResult, tab
           progress,
           message: `Hydrating from RPC`,
         },
-        syncId
+        syncId,
       );
 
       if (progress === 1) {
@@ -60,7 +62,7 @@ export function createSync(config: CoreConfig, network: CreateNetworkResult, tab
             progress: 1,
             message: `DONE`,
           },
-          syncId
+          syncId,
         );
 
         onComplete?.();
@@ -107,7 +109,7 @@ export function createSync(config: CoreConfig, network: CreateNetworkResult, tab
       progress: string;
       complete: string;
       error: string;
-    }
+    },
   ) {
     return [
       (_: number, ___: bigint, progress: number) => {
@@ -117,7 +119,7 @@ export function createSync(config: CoreConfig, network: CreateNetworkResult, tab
             progress,
             message: message.progress,
           },
-          syncId
+          syncId,
         );
 
         if (progress === 1) {
@@ -127,7 +129,7 @@ export function createSync(config: CoreConfig, network: CreateNetworkResult, tab
               progress,
               message: message.complete,
             },
-            syncId
+            syncId,
           );
         }
       },
@@ -140,7 +142,7 @@ export function createSync(config: CoreConfig, network: CreateNetworkResult, tab
             progress: 0,
             message: message.error,
           },
-          syncId
+          syncId,
         );
       },
     ];
@@ -201,7 +203,7 @@ export function createSync(config: CoreConfig, network: CreateNetworkResult, tab
           progress,
           message: `Hydrating from Indexer`,
         },
-        syncId
+        syncId,
       );
 
       // sync remaining blocks from RPC
@@ -218,7 +220,7 @@ export function createSync(config: CoreConfig, network: CreateNetworkResult, tab
           () => {
             console.warn("Failed to sync remaining blocks. Client may be out of sync!");
           },
-          syncId
+          syncId,
         );
       }
     }, onError);
@@ -255,7 +257,7 @@ export function createSync(config: CoreConfig, network: CreateNetworkResult, tab
         complete: "DONE",
         error: "Failed to sync Player data",
         progress: "Hydrating Player Data",
-      })
+      }),
     );
 
     world.registerDisposer(() => {
@@ -295,7 +297,7 @@ export function createSync(config: CoreConfig, network: CreateNetworkResult, tab
         complete: "DONE",
         error: "Failed to sync Selected Asteroid data",
         progress: "Hydrating Selected Asteroid Data",
-      })
+      }),
     );
 
     world.registerDisposer(() => {
@@ -333,7 +335,7 @@ export function createSync(config: CoreConfig, network: CreateNetworkResult, tab
         complete: "DONE",
         error: "Failed to sync Active Asteroid data",
         progress: "Hydrating Active Asteroid Data",
-      })
+      }),
     );
 
     world.registerDisposer(() => {
@@ -369,7 +371,7 @@ export function createSync(config: CoreConfig, network: CreateNetworkResult, tab
         complete: "DONE",
         error: "Failed to sync Alliance data",
         progress: "Hydrating Alliance Data",
-      })
+      }),
     );
 
     world.registerDisposer(() => {
@@ -407,7 +409,7 @@ export function createSync(config: CoreConfig, network: CreateNetworkResult, tab
         complete: "DONE",
         error: "Failed to sync Fleet data",
         progress: "Hydrating Fleet Data",
-      })
+      }),
     );
 
     world.registerDisposer(() => {
@@ -445,7 +447,7 @@ export function createSync(config: CoreConfig, network: CreateNetworkResult, tab
         complete: "DONE",
         error: "Failed to sync Battle Reports",
         progress: "Hydrating Battle Reports",
-      })
+      }),
     );
 
     world.registerDisposer(() => {

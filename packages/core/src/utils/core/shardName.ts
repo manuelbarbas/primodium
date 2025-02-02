@@ -57,9 +57,7 @@ export function createShardNameUtils(tables: Tables) {
     },
   ];
 
-  /**
-   * Gets shard data for a given entity
-   */
+  /** Gets shard data for a given entity */
   const getShardData = (entity: Entity) => {
     const shardIndex = tables.ShardAsteroidIndex.get(entity)?.value;
     if (shardIndex !== undefined) {
@@ -68,9 +66,7 @@ export function createShardNameUtils(tables: Tables) {
     return undefined;
   };
 
-  /**
-   * Gets shard name for a given entity
-   */
+  /** Gets shard name for a given entity */
   const getShardName = (entity: Entity) => {
     const shardIndex = tables.ShardAsteroidIndex.get(entity)?.value;
     if (shardIndex == undefined) return "UNKNOWN";

@@ -1,8 +1,9 @@
-import { Entity } from "@primodiumxyz/reactive-tables";
-import { censorText } from "@/utils/global/profanity";
 import { useMemo } from "react";
-import { useCore } from "@/react/hooks/useCore";
 import { Hex, hexToString } from "viem";
+
+import { Entity } from "@primodiumxyz/reactive-tables";
+import { useCore } from "@/react/hooks/useCore";
+import { censorText } from "@/utils/global/profanity";
 
 /**
  * Custom hook that returns the name of an alliance.

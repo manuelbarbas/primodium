@@ -14,19 +14,20 @@ export type FinalLeaderboardData = {
 export function createLeaderboardUtils(tables: Tables) {
   /**
    * Get leaderboard data for player or alliance
-   * @param entity entity to get leaderboard data for
-   * @param alliance if true, entity is an alliance
+   *
+   * @param entity Entity to get leaderboard data for
+   * @param alliance If true, entity is an alliance
    */
   const getFinalLeaderboardData = (
     entity: Entity,
-    alliance: boolean
+    alliance: boolean,
   ): { allPlayers: FinalLeaderboardData[]; player?: FinalLeaderboardData } => {
     const selfEntity = alliance ? (tables.PlayerAlliance.get(entity)?.alliance as Entity) : entity;
     const wormholeData = tables.Leaderboard.get(
-      alliance ? EntityType.AllianceWormholeLeaderboard : EntityType.PlayerWormholeLeaderboard
+      alliance ? EntityType.AllianceWormholeLeaderboard : EntityType.PlayerWormholeLeaderboard,
     );
     const shardData = tables.Leaderboard.get(
-      alliance ? EntityType.AllianceShardLeaderboard : EntityType.PlayerShardLeaderboard
+      alliance ? EntityType.AllianceShardLeaderboard : EntityType.PlayerShardLeaderboard,
     );
 
     const ret: { allPlayers: FinalLeaderboardData[]; player?: FinalLeaderboardData } = {
@@ -67,8 +68,8 @@ export function createLeaderboardUtils(tables: Tables) {
         index == 0
           ? 1
           : playerData.finalScore == ret.allPlayers[index - 1]?.finalScore
-          ? ret.allPlayers[index - 1].rank
-          : index + 1;
+            ? ret.allPlayers[index - 1].rank
+            : index + 1;
 
       const retData = {
         ...playerData,
