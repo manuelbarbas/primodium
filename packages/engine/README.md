@@ -15,6 +15,5 @@ api - "Consumer-facing API for the engine"
 lib - "Internal logic for the engine"
 ├── core - "Core Phaser logic for creating various components and classes"
 └── util - "Utilities and low-level logic"
-├── config - "Core and Wagmi config"
 store - "Zustand store for managing the state of the engine"
 ```
