@@ -115,11 +115,11 @@ To start a development server at `localhost:3000` run:
 pnpm dev
 ```
 
-This wil run a series of scripts in one batch process. However, it is recommended to run each process individually for
-better control and debugging. To do this, we use a handy tool called `run-pty`. Use it by running:
+This wil run a series of scripts each in a separate window. If you would like to better separate for a more fine-grained control and debugging, you can run the backend and the frontend in separate terminals.
 
 ```bash
-pnpm dev:pty
+pnpm dev:backend
+pnpm dev:client
 ```
 
 This will run the following:
