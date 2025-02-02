@@ -1,7 +1,8 @@
-import { Animation } from "../../types";
+import { Animation } from "@/types";
+
 export function generateFrames(
   anims: Phaser.Animations.AnimationManager,
-  animation: Animation
+  animation: Animation,
 ): Phaser.Types.Animations.AnimationFrame[] {
   if (animation.prefix && animation.suffix) {
     return anims.generateFrameNames(animation.assetKey, {

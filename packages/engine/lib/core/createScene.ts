@@ -1,11 +1,11 @@
-import { SceneConfig } from "../../types";
-import { createTilemap } from "./createTilemap";
-import { createCamera } from "./createCamera";
-import createInput from "./createInput";
-import { StaticObjectManager } from "./StaticObjectManager";
-import { generateFrames } from "../util/generateFrames";
-import { createPhaserScene } from "../util/createPhaserScene";
-import { resizePhaserGame } from "../util/resizePhaserGame";
+import { createCamera } from "@core/createCamera";
+import createInput from "@core/createInput";
+import { createTilemap } from "@core/createTilemap";
+import { StaticObjectManager } from "@core/StaticObjectManager";
+import { createPhaserScene } from "@util/createPhaserScene";
+import { generateFrames } from "@util/generateFrames";
+import { resizePhaserGame } from "@util/resizePhaserGame";
+import { SceneConfig } from "@/types";
 
 type PhaserAudio =
   | Phaser.Sound.HTML5AudioSoundManager

@@ -1,10 +1,8 @@
-import { ChunkManager } from "./ChunkManager";
-import { createCamera } from "./createCamera";
-import { Coord } from "../../types";
-import { CoordMap } from "../util/coordMap";
-import { pixelToChunkCoord } from "../util/coords";
-
-//TODO: should not be importing from game.
+import { ChunkManager } from "@core/ChunkManager";
+import { createCamera } from "@core/createCamera";
+import { CoordMap } from "@util/coordMap";
+import { pixelToChunkCoord } from "@util/coords";
+import { Coord } from "@/types";
 import { BaseSpawnArgs, DeferredRenderContainer } from "../../../game/src/lib/objects/DeferredRenderContainer";
 
 type Spawnable = {
@@ -42,7 +40,7 @@ export class StaticObjectManager {
       camera,
       chunkSize,
       (coord) => this.onEnterChunk(coord),
-      (coord) => this.onExitChunk(coord)
+      (coord) => this.onExitChunk(coord),
     );
   }
 
@@ -79,7 +77,7 @@ export class StaticObjectManager {
 
   addContainer<SpawnedObject extends PrimodiumGameObject, SpawnArgs extends BaseSpawnArgs>(
     id: string,
-    container: DeferredRenderContainer<SpawnedObject, SpawnArgs>
+    container: DeferredRenderContainer<SpawnedObject, SpawnArgs>,
   ) {
     this.deferredRenderContainerMap.set(id, container);
   }

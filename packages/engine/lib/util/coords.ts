@@ -1,4 +1,4 @@
-import { Area, ChunkCoord, Coord, PixelCoord, TileCoord, WorldCoord } from "../../types";
+import { Area, ChunkCoord, Coord, PixelCoord, TileCoord, WorldCoord } from "@/types";
 
 export const ZERO_VECTOR: Coord = { x: 0, y: 0 };
 
@@ -50,7 +50,7 @@ export function tileCoordToChunkCoord(
   tileCoord: WorldCoord,
   tileWidth: number,
   tileHeight: number,
-  chunkSize: number
+  chunkSize: number,
 ): ChunkCoord {
   const pixelCoord = tileCoordToPixelCoord(tileCoord, tileWidth, tileHeight);
   return pixelToChunkCoord(pixelCoord, chunkSize);
@@ -60,7 +60,7 @@ export function chunkCoordToTileCoord(
   chunkCoord: ChunkCoord,
   tileWidth: number,
   tileHeight: number,
-  chunkSize: number
+  chunkSize: number,
 ): WorldCoord {
   const pixelCoord = chunkToPixelCoord(chunkCoord, chunkSize);
   return pixelCoordToTileCoord(pixelCoord, tileWidth, tileHeight);

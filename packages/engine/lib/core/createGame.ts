@@ -1,9 +1,9 @@
-import { initializeContext } from "../../api";
-import { createSceneManager } from "./createSceneManager";
-import { GameConfig } from "../../types";
-import createPhaserScene from "../util/createPhaserScene";
-import { getSceneLoadPromise } from "../util/getSceneLoadPromise";
-import { deferred } from "../util/deferred";
+import { createSceneManager } from "@core/createSceneManager";
+import createPhaserScene from "@util/createPhaserScene";
+import { deferred } from "@util/deferred";
+import { getSceneLoadPromise } from "@util/getSceneLoadPromise";
+import { initializeContext } from "@/api";
+import { GameConfig } from "@/types";
 
 export const createGame = async (config: GameConfig) => {
   //Initialize Phaser Game

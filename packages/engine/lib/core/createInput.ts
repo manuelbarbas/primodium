@@ -1,9 +1,10 @@
 // MODIFIED FROM LATTICEXYZ/PHASERX
 // https://github.com/latticexyz/mud/blob/main/packages/phaserx/src/createInput.ts
 
-import { Observable, bufferCount, filter, fromEvent, map, merge, tap, throttleTime } from "rxjs";
 import Phaser from "phaser";
-import { Key } from "../../types";
+import { bufferCount, filter, fromEvent, map, merge, Observable, tap, throttleTime } from "rxjs";
+
+import { Key } from "@/types";
 
 const enabled = {
   value: true,
@@ -48,7 +49,7 @@ export function createInput(inputPlugin: Phaser.Input.InputPlugin) {
     map(() => {
       inputPlugin.manager.activePointer.updateWorldPoint(inputPlugin.scene.cameras.main);
       return inputPlugin.manager?.activePointer;
-    })
+    }),
     // filter(({ pointer }) => pointer?.downElement?.nodeName === "CANVAS"),
     // filterNullish()
   );
@@ -61,7 +62,7 @@ export function createInput(inputPlugin: Phaser.Input.InputPlugin) {
     map((event) => ({
       pointer: inputPlugin.manager?.activePointer,
       event: event as MouseEvent,
-    }))
+    })),
   );
 
   const pointerup$: Observable<{
@@ -72,7 +73,7 @@ export function createInput(inputPlugin: Phaser.Input.InputPlugin) {
     map((event) => ({
       pointer: inputPlugin.manager?.activePointer,
       event: event as MouseEvent,
-    }))
+    })),
   );
 
   // Click stream
@@ -83,13 +84,13 @@ export function createInput(inputPlugin: Phaser.Input.InputPlugin) {
       Date.now(),
     ]), // Map events to whether the left button is down and the current timestamp
     bufferCount(2, 1), // Store the last two timestamps
-    filter(([prev, now]) => prev[0] && !now[0] && now[1] - prev[1] < 150), // Only care if button was pressed before and is not anymore and it happened within 500ms
+    filter(([prev, now]) => (prev?.[0] && !now?.[0] && (now?.[1] ?? 0) - (prev?.[1] ?? 0) < 150) ?? false), // Only care if button was pressed before and is not anymore and it happened within 500ms
     map((): [Phaser.Input.Pointer, Phaser.GameObjects.GameObject[]] => {
       const pointer = inputPlugin.manager.activePointer;
       const hitTestResults = inputPlugin.hitTestPointer(pointer);
       return [pointer, hitTestResults];
     }), // Return the current pointer
-    filter(([pointer]) => pointer?.downElement?.nodeName === "CANVAS")
+    filter(([pointer]) => pointer?.downElement?.nodeName === "CANVAS"),
   );
 
   // Double click stream
@@ -100,7 +101,7 @@ export function createInput(inputPlugin: Phaser.Input.InputPlugin) {
     })),
     bufferCount(2, 1),
     filter(([prev, now]) => {
-      const timeDiff = now.time - prev.time;
+      const timeDiff = (now?.time ?? 0) - (prev?.time ?? 0);
       return timeDiff < 250 && timeDiff > 20;
     }),
     throttleTime(250),
@@ -108,14 +109,14 @@ export function createInput(inputPlugin: Phaser.Input.InputPlugin) {
     filter((pointer) => pointer?.downElement?.nodeName === "CANVAS"),
     tap(() => {
       inputPlugin.manager.activePointer.updateWorldPoint(inputPlugin.scene.cameras.main);
-    })
+    }),
   );
 
   // Right click stream
   const rightClick$ = merge(pointerdown$, pointerup$).pipe(
     filter(({ pointer }) => enabled.current() && pointer.rightButtonDown() && inputPlugin.scene.scene.isActive()),
     map(() => inputPlugin.manager?.activePointer), // Return the current pointer
-    filter((pointer) => pointer?.downElement?.nodeName === "CANVAS")
+    filter((pointer) => pointer?.downElement?.nodeName === "CANVAS"),
   );
 
   // const pressedKeys = new BehaviorSubject<Set<Key>>(new Set<Key>());

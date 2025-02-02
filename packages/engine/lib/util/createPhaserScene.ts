@@ -20,7 +20,7 @@ export const createPhaserScene = (options: {
       create && create(this);
     }
 
-    update(time: number, delta: number) {
+    override update(time: number, delta: number) {
       update && update(this);
 
       this.children.each((child) => {

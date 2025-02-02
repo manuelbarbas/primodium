@@ -1,5 +1,5 @@
-import { deferred } from "../util/deferred";
-import { createScene as _createScene } from "./createScene";
+import { createScene as _createScene } from "@core/createScene";
+import { deferred } from "@util/deferred";
 
 export type Scene = Awaited<ReturnType<typeof _createScene>>;
 
@@ -32,7 +32,7 @@ export const createSceneManager = (phaserGame: Phaser.Game) => {
     duration = 1000,
     onTransitionStart?: (originScene: Scene, targetScene: Scene) => void,
     onTransitionComplete?: (originScene: Scene, targetScene: Scene) => void,
-    sleep = true
+    sleep = true,
   ) => {
     const [resolve, , promise] = deferred();
     const originScene = scenes.get(key);

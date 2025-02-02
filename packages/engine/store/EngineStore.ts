@@ -1,5 +1,6 @@
-import { create } from "zustand";
 import { mountStoreDevtool } from "simple-zustand-devtools";
+import { create } from "zustand";
+
 import { Game } from "../types";
 
 type EngineState = {
@@ -25,6 +26,7 @@ export const useEngineStore = create<EngineState & EngineActions>()((set) => ({
 }));
 
 // store dev tools
+// @ts-expect-error import.meta.env is not defined in the browser
 if (import.meta.env.VITE_DEV === "true") {
   mountStoreDevtool("EngineStore", useEngineStore);
 }

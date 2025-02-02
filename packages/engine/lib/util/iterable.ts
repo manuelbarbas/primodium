@@ -43,12 +43,14 @@ export function transformIterator<A, B>(iterator: Iterator<A>, transform: (value
 
 /**
  * Turns an array into an iterator. NOTE: an iterator can only be iterated once.
+ *
  * @param array Array to be turned into an iterator
  * @returns Iterator to iterate through the array
  */
 export function arrayToIterator<T>(array: T[]): IterableIterator<T> {
   let i = 0;
   const iterator: Iterator<T> = {
+    // @ts-expect-error can be instantiated with a generic
     next() {
       const done = i >= array.length;
       if (done) return { done, value: null };

@@ -1,5 +1,5 @@
-import { Coord } from "../../types";
-import { transformIterator } from "./iterable";
+import { transformIterator } from "@util/iterable";
+import { Coord } from "@/types";
 
 const LOWER_HALF_MASK = 2 ** 16 - 1;
 const MAX_SUPPORTED = 2 ** 15 - 1;
