@@ -1,27 +1,24 @@
 {
   "name": "@primodiumxyz/game",
   "version": "1.0.0",
-  "license": "MIT",
-  "imports": {
-    "@": {
-      "default": "./src"
-    }
+  "description": "Phaser game objects, scenes and api for Primodium.",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/primodiumxyz/primodium.git",
+    "directory": "packages/game"
   },
+  "license": "MIT",
   "main": "src/index.ts",
-  "files": [
-    "dist"
-  ],
   "dependencies": {
     "@primodiumxyz/assets": "workspace:*",
     "@primodiumxyz/core": "workspace:*",
     "@primodiumxyz/engine": "workspace:*",
     "@primodiumxyz/reactive-tables": "^3.2.0",
-    "contracts": "0.0.0",
+    "contracts": "workspace:*",
     "lodash": "^4.17.21",
     "phaser": "^3.80.1",
     "react": "^18.2.0",
     "react-toastify": "^9.1.3",
-    "rxjs": "^7.8.1",
     "viem": "2.9.20",
     "zustand": "^4.4.7"
   },
