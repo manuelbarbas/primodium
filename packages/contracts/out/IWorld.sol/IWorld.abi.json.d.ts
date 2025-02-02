@@ -519,6 +519,301 @@ declare const abi: [
   },
   {
     type: "function";
+    name: "Pri_11__devDeleteRecord";
+    inputs: [
+      {
+        name: "tableId";
+        type: "bytes32";
+        internalType: "ResourceId";
+      },
+      {
+        name: "keyTuple";
+        type: "bytes32[]";
+        internalType: "bytes32[]";
+      }
+    ];
+    outputs: [];
+    stateMutability: "nonpayable";
+  },
+  {
+    type: "function";
+    name: "Pri_11__devPopFromDynamicField";
+    inputs: [
+      {
+        name: "tableId";
+        type: "bytes32";
+        internalType: "ResourceId";
+      },
+      {
+        name: "keyTuple";
+        type: "bytes32[]";
+        internalType: "bytes32[]";
+      },
+      {
+        name: "dynamicFieldIndex";
+        type: "uint8";
+        internalType: "uint8";
+      },
+      {
+        name: "byteLengthToPop";
+        type: "uint256";
+        internalType: "uint256";
+      }
+    ];
+    outputs: [];
+    stateMutability: "nonpayable";
+  },
+  {
+    type: "function";
+    name: "Pri_11__devPushToDynamicField";
+    inputs: [
+      {
+        name: "tableId";
+        type: "bytes32";
+        internalType: "ResourceId";
+      },
+      {
+        name: "keyTuple";
+        type: "bytes32[]";
+        internalType: "bytes32[]";
+      },
+      {
+        name: "dynamicFieldIndex";
+        type: "uint8";
+        internalType: "uint8";
+      },
+      {
+        name: "dataToPush";
+        type: "bytes";
+        internalType: "bytes";
+      }
+    ];
+    outputs: [];
+    stateMutability: "nonpayable";
+  },
+  {
+    type: "function";
+    name: "Pri_11__devSetDynamicField";
+    inputs: [
+      {
+        name: "tableId";
+        type: "bytes32";
+        internalType: "ResourceId";
+      },
+      {
+        name: "keyTuple";
+        type: "bytes32[]";
+        internalType: "bytes32[]";
+      },
+      {
+        name: "dynamicFieldIndex";
+        type: "uint8";
+        internalType: "uint8";
+      },
+      {
+        name: "data";
+        type: "bytes";
+        internalType: "bytes";
+      }
+    ];
+    outputs: [];
+    stateMutability: "nonpayable";
+  },
+  {
+    type: "function";
+    name: "Pri_11__devSetField";
+    inputs: [
+      {
+        name: "tableId";
+        type: "bytes32";
+        internalType: "ResourceId";
+      },
+      {
+        name: "keyTuple";
+        type: "bytes32[]";
+        internalType: "bytes32[]";
+      },
+      {
+        name: "fieldIndex";
+        type: "uint8";
+        internalType: "uint8";
+      },
+      {
+        name: "data";
+        type: "bytes";
+        internalType: "bytes";
+      },
+      {
+        name: "fieldLayout";
+        type: "bytes32";
+        internalType: "FieldLayout";
+      }
+    ];
+    outputs: [];
+    stateMutability: "nonpayable";
+  },
+  {
+    type: "function";
+    name: "Pri_11__devSetField";
+    inputs: [
+      {
+        name: "tableId";
+        type: "bytes32";
+        internalType: "ResourceId";
+      },
+      {
+        name: "keyTuple";
+        type: "bytes32[]";
+        internalType: "bytes32[]";
+      },
+      {
+        name: "fieldIndex";
+        type: "uint8";
+        internalType: "uint8";
+      },
+      {
+        name: "data";
+        type: "bytes";
+        internalType: "bytes";
+      }
+    ];
+    outputs: [];
+    stateMutability: "nonpayable";
+  },
+  {
+    type: "function";
+    name: "Pri_11__devSetRecord";
+    inputs: [
+      {
+        name: "tableId";
+        type: "bytes32";
+        internalType: "ResourceId";
+      },
+      {
+        name: "keyTuple";
+        type: "bytes32[]";
+        internalType: "bytes32[]";
+      },
+      {
+        name: "staticData";
+        type: "bytes";
+        internalType: "bytes";
+      },
+      {
+        name: "encodedLengths";
+        type: "bytes32";
+        internalType: "EncodedLengths";
+      },
+      {
+        name: "dynamicData";
+        type: "bytes";
+        internalType: "bytes";
+      }
+    ];
+    outputs: [];
+    stateMutability: "nonpayable";
+  },
+  {
+    type: "function";
+    name: "Pri_11__devSetStaticField";
+    inputs: [
+      {
+        name: "tableId";
+        type: "bytes32";
+        internalType: "ResourceId";
+      },
+      {
+        name: "keyTuple";
+        type: "bytes32[]";
+        internalType: "bytes32[]";
+      },
+      {
+        name: "fieldIndex";
+        type: "uint8";
+        internalType: "uint8";
+      },
+      {
+        name: "data";
+        type: "bytes";
+        internalType: "bytes";
+      },
+      {
+        name: "fieldLayout";
+        type: "bytes32";
+        internalType: "FieldLayout";
+      }
+    ];
+    outputs: [];
+    stateMutability: "nonpayable";
+  },
+  {
+    type: "function";
+    name: "Pri_11__devSpliceDynamicData";
+    inputs: [
+      {
+        name: "tableId";
+        type: "bytes32";
+        internalType: "ResourceId";
+      },
+      {
+        name: "keyTuple";
+        type: "bytes32[]";
+        internalType: "bytes32[]";
+      },
+      {
+        name: "dynamicFieldIndex";
+        type: "uint8";
+        internalType: "uint8";
+      },
+      {
+        name: "startWithinField";
+        type: "uint40";
+        internalType: "uint40";
+      },
+      {
+        name: "deleteCount";
+        type: "uint40";
+        internalType: "uint40";
+      },
+      {
+        name: "data";
+        type: "bytes";
+        internalType: "bytes";
+      }
+    ];
+    outputs: [];
+    stateMutability: "nonpayable";
+  },
+  {
+    type: "function";
+    name: "Pri_11__devSpliceStaticData";
+    inputs: [
+      {
+        name: "tableId";
+        type: "bytes32";
+        internalType: "ResourceId";
+      },
+      {
+        name: "keyTuple";
+        type: "bytes32[]";
+        internalType: "bytes32[]";
+      },
+      {
+        name: "start";
+        type: "uint48";
+        internalType: "uint48";
+      },
+      {
+        name: "data";
+        type: "bytes";
+        internalType: "bytes";
+      }
+    ];
+    outputs: [];
+    stateMutability: "nonpayable";
+  },
+  {
+    type: "function";
     name: "Pri_11__grantRole";
     inputs: [
       {
