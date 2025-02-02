@@ -21,7 +21,6 @@
     "dev:core": "pnpm --filter 'core' run dev",
     "dev:indexer": "pnpm clean-local-docker-indexer && pnpm local-docker-indexer",
     "dev:node": "pnpm --filter 'contracts' devnode",
-    "dev:vercel": "vercel dev --local-config packages/client/vercel-dev.json",
     "export:assets": "pnpm --filter 'assets' export",
     "export:audio": "pnpm --filter 'assets' export-audio",
     "export:sprites": "pnpm --filter 'assets' export-sprites",
