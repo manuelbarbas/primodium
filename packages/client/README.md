@@ -20,7 +20,7 @@ Then navigate to [http://localhost:3000](http://localhost:3000) in your browser.
 
 ## Organization
 
-This package uses [the core package](../../core) for all the logic, [the engine package](../../engine) for the game engine (api & rendering chunks), [the game package](../../game) for Phaser, and [the assets package](../../assets) for the assets.
+This package uses [the core package](../../core) for all the logic, [the engine package](../../engine) for the Phaser scene management (api, creating scenes, rendering chunks), [the game package](../../game) for Phaser, and [the assets package](../../assets) for the assets.
 
 It is dedicated to the various UI components, hooks, and utilities.
 
