@@ -1,6 +1,12 @@
 {
   "name": "@primodiumxyz/engine",
   "version": "1.0.0",
+  "description": "Engine for creating, managing and rendering Phaser scenes.",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/primodiumxyz/primodium.git",
+    "directory": "packages/engine"
+  },
   "license": "MIT",
   "main": "index.ts",
   "dependencies": {
