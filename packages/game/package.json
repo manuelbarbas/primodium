@@ -33,6 +33,6 @@
     "simple-zustand-devtools": "^1.1.0",
     "ts-node": "^10.9.2",
     "tsup": "^8.1.0",
-    "typescript": "5.5.0-beta"
+    "typescript": "5.5.2"
   }
 }
