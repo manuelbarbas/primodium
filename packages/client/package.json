@@ -29,7 +29,7 @@
     "@primodiumxyz/core": "workspace:*",
     "@primodiumxyz/engine": "workspace:*",
     "@primodiumxyz/game": "workspace:*",
-    "@primodiumxyz/reactive-tables": "^3.2.0",
+    "@primodiumxyz/reactive-tables": "^3.6.2",
     "@tanstack/react-query": "^5.28.6",
     "@vercel/analytics": "^1.0.1",
     "class-variance-authority": "^0.7.0",

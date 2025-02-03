@@ -37,7 +37,7 @@
     "@latticexyz/faucet": "2.0.9",
     "@latticexyz/store": "2.0.9",
     "@latticexyz/world-modules": "2.0.9",
-    "@primodiumxyz/reactive-tables": "^3.2.0",
+    "@primodiumxyz/reactive-tables": "^3.6.2",
     "@primodiumxyz/sync-stack": "^0.6.14",
     "abitype": "^1.0.2",
     "dayjs": "^1.11.10",
