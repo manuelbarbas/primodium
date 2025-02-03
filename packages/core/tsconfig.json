@@ -16,6 +16,5 @@
     "jsx": "react-jsx",
     "jsxImportSource": "react"
   },
-  "include": ["./src/**/*", "./__tests__/**/*"],
-  "references": [{ "path": "../contracts" }]
+  "include": ["./src/**/*", "./__tests__/**/*"]
 }
