@@ -53,6 +53,7 @@
     "@testing-library/react": "^16.0.0",
     "@testing-library/react-hooks": "^8.0.1",
     "@types/debug": "^4.1.12",
+    "@types/node": "^22.13.0",
     "@types/react": "^18.0.26",
     "debug": "^4.3.5",
     "happy-dom": "^14.12.0",

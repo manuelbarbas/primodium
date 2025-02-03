@@ -378,7 +378,7 @@ importers:
         version: 2.9.20(typescript@5.5.0-beta)(zod@3.23.8)
       vite:
         specifier: ^3.2.3
-        version: 3.2.10(@types/node@18.19.39)
+        version: 3.2.10(@types/node@22.13.0)
     devDependencies:
       '@ianvs/prettier-plugin-sort-imports':
         specifier: ^4.3.0
@@ -395,6 +395,9 @@ importers:
       '@types/debug':
         specifier: ^4.1.12
         version: 4.1.12
+      '@types/node':
+        specifier: ^22.13.0
+        version: 22.13.0
       '@types/react':
         specifier: ^18.0.26
         version: 18.3.3
@@ -4121,7 +4124,7 @@ packages:
     dependencies:
       '@latticexyz/common': 2.0.9(typescript@5.5.0-beta)(zod@3.24.1)
       abitype: 1.0.0(typescript@5.5.0-beta)(zod@3.24.1)
-      debug: 4.4.0
+      debug: 4.3.5
       rxjs: 7.5.5
       viem: 2.9.20(typescript@5.5.0-beta)(zod@3.24.1)
     transitivePeerDependencies:
@@ -4139,7 +4142,7 @@ packages:
     dependencies:
       '@latticexyz/common': 2.0.9(typescript@5.5.2)(zod@3.24.1)
       abitype: 1.0.0(typescript@5.5.2)(zod@3.24.1)
-      debug: 4.4.0
+      debug: 4.3.5
       rxjs: 7.5.5
       viem: 2.9.20(typescript@5.5.2)(zod@3.24.1)
     transitivePeerDependencies:
@@ -7141,6 +7144,11 @@ packages:
     resolution: {integrity: sha512-nPwTRDKUctxw3di5b4TfT3I0sWDiWoPQCZjXhvdkINntwr8lcoVCKsTgnXeRubKIlfnV+eN/HYk6Jb40tbcEAQ==}
     dependencies:
       undici-types: 5.26.5
+
+  /@types/node@22.13.0:
+    resolution: {integrity: sha512-ClIbNe36lawluuvq3+YYhnIN2CELi+6q8NpnM7PYp4hBn/TatfboPgVSm2rwKRfnV2M+Ty9GWDFI64KEe+kysA==}
+    dependencies:
+      undici-types: 6.20.0
 
   /@types/normalize-package-data@2.4.4:
     resolution: {integrity: sha512-37i+OaWTh9qeK4LSHPsyRC7NahnGotNuZvjLSgcPzblpHB3rrCJxAOgI5gCdKm7coonsaX1Of0ILiTcnZjbfxA==}
@@ -18006,6 +18014,9 @@ packages:
   /undici-types@5.26.5:
     resolution: {integrity: sha512-JlCMO+ehdEIKqlFxk6IfVoAUVmgz7cU7zD/h9XZ0qzeosSHmUJVOzSQvvYSYWXkFXC+IfLKSIffhv0sVZup6pA==}
 
+  /undici-types@6.20.0:
+    resolution: {integrity: sha512-Ny6QZ2Nju20vw1SRHe3d9jVu6gJ+4e3+MMpqu7pqE5HT6WsTSlce++GQmK5UXS8mzV8DSYHrQH+Xrf2jVcuKNg==}
+
   /undici@5.28.4:
     resolution: {integrity: sha512-72RFADWFqKmUb2hmmvNODKL3p9hcB6Gt2DOQMis1SEBaV6a4MH8soBvzg+95CYhCKPFedut2JY9bMfrDl9D23g==}
     engines: {node: '>=14.0'}
@@ -18599,6 +18610,41 @@ packages:
       rollup: 2.79.1
     optionalDependencies:
       fsevents: 2.3.3
+    dev: true
+
+  /vite@3.2.10(@types/node@22.13.0):
+    resolution: {integrity: sha512-Dx3olBo/ODNiMVk/cA5Yft9Ws+snLOXrhLtrI3F4XLt4syz2Yg8fayZMWScPKoz12v5BUv7VEmQHnsfpY80fYw==}
+    engines: {node: ^14.18.0 || >=16.0.0}
+    hasBin: true
+    peerDependencies:
+      '@types/node': '>= 14'
+      less: '*'
+      sass: '*'
+      stylus: '*'
+      sugarss: '*'
+      terser: ^5.4.0
+    peerDependenciesMeta:
+      '@types/node':
+        optional: true
+      less:
+        optional: true
+      sass:
+        optional: true
+      stylus:
+        optional: true
+      sugarss:
+        optional: true
+      terser:
+        optional: true
+    dependencies:
+      '@types/node': 22.13.0
+      esbuild: 0.15.18
+      postcss: 8.4.38
+      resolve: 1.22.10
+      rollup: 2.79.1
+    optionalDependencies:
+      fsevents: 2.3.3
+    dev: false
 
   /vitest@0.32.4(happy-dom@14.12.3)(jsdom@24.1.0):
     resolution: {integrity: sha512-3czFm8RnrsWwIzVDu/Ca48Y/M+qh3vOnF16czJm98Q/AN1y3B6PBsyV8Re91Ty5s7txKNjEhpgtGPcfdbh2MZg==}
