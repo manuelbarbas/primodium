@@ -54,7 +54,11 @@ export class ChunkManager {
 
   decodeKeyFromChunk(key: string): Coord {
     const [x, y] = key.split(":").map(Number);
-    if (!x || !y) throw new Error(`Invalid chunk key: ${key}`);
+    if (x === undefined || y === undefined) {
+      console.error(`Invalid chunk key: ${key}`);
+      return { x: 0, y: 0 };
+    }
+
     return { x, y };
   }
 
