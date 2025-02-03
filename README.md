@@ -1,6 +1,6 @@
 # Primodium v0.11.1
 
-A fully onchain space-based resource management game.
+A fully onchain space-based resource management game, built with MUD & Phaser.
 
 - [Introduction](#introduction)
   - [Overview](#overview)
@@ -28,6 +28,8 @@ In this game, players can:
 - Create and join alliances to form a community (or gang up on other players)
 - Compete to raid special shard asteroids for rare resources during events
 - Trade resources with other players
+
+This monorepo contains the entire stack for running Primodium, including the React client and Phaser game, the local postgres indexer (that can be deployed to a cloud provider as well) and all the contracts.
 
 ### Installation
 

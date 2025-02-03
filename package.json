@@ -9,7 +9,6 @@
   "scripts": {
     "build": "pnpm recursive run build",
     "build:contracts": "pnpm --filter 'contracts' build",
-    "clean": "bash clean.sh",
     "clean:indexer": "pnpm clean-local-docker-indexer",
     "deploy:caldera": "pnpm --filter 'contracts' deploy:caldera",
     "deploy:caldera-sepolia": "pnpm --filter 'contracts' deploy:caldera-sepolia",
