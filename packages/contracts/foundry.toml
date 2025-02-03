@@ -30,3 +30,7 @@ chain_id = 10017
 [profile.redstone-holesky]
 eth_rpc_url = "https://rpc.holesky.redstone.xyz"
 chain_id = 17001
+
+[profile.base-sepolia]
+eth_rpc_url = "https://sepolia.base.org"
+chain_id = 84532
