@@ -39,5 +39,5 @@ src - "Source files"
 ├── hooks - "Various hooks"
 ├── screens - "React screens"
 ├── systems - "Game systems (session account)"
-├── util - "Utility functions and cheatcodes"
+└── util - "Utility functions and cheatcodes"
 ```

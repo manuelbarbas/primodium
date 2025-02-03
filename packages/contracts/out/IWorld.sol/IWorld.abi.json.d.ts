@@ -7,7 +7,7 @@ declare const abi: [
         name: "asteroidEntity";
         type: "bytes32";
         internalType: "bytes32";
-      }
+      },
     ];
     outputs: [];
     stateMutability: "nonpayable";
@@ -20,7 +20,7 @@ declare const abi: [
         name: "fleetEntity";
         type: "bytes32";
         internalType: "bytes32";
-      }
+      },
     ];
     outputs: [];
     stateMutability: "nonpayable";
@@ -33,7 +33,7 @@ declare const abi: [
         name: "accepted";
         type: "address";
         internalType: "address";
-      }
+      },
     ];
     outputs: [];
     stateMutability: "nonpayable";
@@ -61,7 +61,7 @@ declare const abi: [
         name: "liquidityB";
         type: "uint256";
         internalType: "uint256";
-      }
+      },
     ];
     outputs: [];
     stateMutability: "nonpayable";
@@ -89,14 +89,14 @@ declare const abi: [
         name: "damage";
         type: "uint256";
         internalType: "uint256";
-      }
+      },
     ];
     outputs: [
       {
         name: "";
         type: "uint256";
         internalType: "uint256";
-      }
+      },
     ];
     stateMutability: "nonpayable";
   },
@@ -113,7 +113,7 @@ declare const abi: [
         name: "targetEntity";
         type: "bytes32";
         internalType: "bytes32";
-      }
+      },
     ];
     outputs: [];
     stateMutability: "nonpayable";
@@ -136,7 +136,7 @@ declare const abi: [
         name: "target";
         type: "bytes32";
         internalType: "bytes32";
-      }
+      },
     ];
     outputs: [];
     stateMutability: "nonpayable";
@@ -169,16 +169,16 @@ declare const abi: [
             name: "parentEntity";
             type: "bytes32";
             internalType: "bytes32";
-          }
+          },
         ];
-      }
+      },
     ];
     outputs: [
       {
         name: "buildingEntity";
         type: "bytes32";
         internalType: "bytes32";
-      }
+      },
     ];
     stateMutability: "nonpayable";
   },
@@ -190,7 +190,7 @@ declare const abi: [
         name: "asteroidEntity";
         type: "bytes32";
         internalType: "bytes32";
-      }
+      },
     ];
     outputs: [];
     stateMutability: "nonpayable";
@@ -203,7 +203,7 @@ declare const abi: [
         name: "asteroidEntity";
         type: "bytes32";
         internalType: "bytes32";
-      }
+      },
     ];
     outputs: [];
     stateMutability: "nonpayable";
@@ -221,7 +221,7 @@ declare const abi: [
         name: "objective";
         type: "uint8";
         internalType: "enum EObjectives";
-      }
+      },
     ];
     outputs: [];
     stateMutability: "nonpayable";
@@ -234,7 +234,7 @@ declare const abi: [
         name: "asteroidEntity";
         type: "bytes32";
         internalType: "bytes32";
-      }
+      },
     ];
     outputs: [];
     stateMutability: "nonpayable";
@@ -247,7 +247,7 @@ declare const abi: [
         name: "asteroidEntity";
         type: "bytes32";
         internalType: "bytes32";
-      }
+      },
     ];
     outputs: [];
     stateMutability: "nonpayable";
@@ -260,7 +260,7 @@ declare const abi: [
         name: "asteroidEntity";
         type: "bytes32";
         internalType: "bytes32";
-      }
+      },
     ];
     outputs: [];
     stateMutability: "nonpayable";
@@ -273,7 +273,7 @@ declare const abi: [
         name: "asteroidEntity";
         type: "bytes32";
         internalType: "bytes32";
-      }
+      },
     ];
     outputs: [];
     stateMutability: "nonpayable";
@@ -286,7 +286,7 @@ declare const abi: [
         name: "fleetEntity";
         type: "bytes32";
         internalType: "bytes32";
-      }
+      },
     ];
     outputs: [];
     stateMutability: "nonpayable";
@@ -299,7 +299,7 @@ declare const abi: [
         name: "fleetEntity";
         type: "bytes32";
         internalType: "bytes32";
-      }
+      },
     ];
     outputs: [];
     stateMutability: "nonpayable";
@@ -312,7 +312,7 @@ declare const abi: [
         name: "buildingEntity";
         type: "bytes32";
         internalType: "bytes32";
-      }
+      },
     ];
     outputs: [];
     stateMutability: "nonpayable";
@@ -325,7 +325,7 @@ declare const abi: [
         name: "buildingEntity";
         type: "bytes32";
         internalType: "bytes32";
-      }
+      },
     ];
     outputs: [];
     stateMutability: "nonpayable";
@@ -343,7 +343,7 @@ declare const abi: [
         name: "resourceCounts";
         type: "uint256[]";
         internalType: "uint256[]";
-      }
+      },
     ];
     outputs: [];
     stateMutability: "nonpayable";
@@ -361,7 +361,7 @@ declare const abi: [
         name: "unitCounts";
         type: "uint256[]";
         internalType: "uint256[]";
-      }
+      },
     ];
     outputs: [];
     stateMutability: "nonpayable";
@@ -384,7 +384,7 @@ declare const abi: [
         name: "resourceCounts";
         type: "uint256[]";
         internalType: "uint256[]";
-      }
+      },
     ];
     outputs: [];
     stateMutability: "nonpayable";
@@ -397,7 +397,7 @@ declare const abi: [
         name: "buildingEntity";
         type: "bytes32";
         internalType: "bytes32";
-      }
+      },
     ];
     outputs: [];
     stateMutability: "nonpayable";
@@ -415,14 +415,14 @@ declare const abi: [
         name: "allianceInviteMode";
         type: "uint8";
         internalType: "enum EAllianceInviteMode";
-      }
+      },
     ];
     outputs: [
       {
         name: "allianceEntity";
         type: "bytes32";
         internalType: "bytes32";
-      }
+      },
     ];
     stateMutability: "nonpayable";
   },
@@ -444,14 +444,14 @@ declare const abi: [
         name: "resourceCounts";
         type: "uint256[]";
         internalType: "uint256[]";
-      }
+      },
     ];
     outputs: [
       {
         name: "fleetEntity";
         type: "bytes32";
         internalType: "bytes32";
-      }
+      },
     ];
     stateMutability: "nonpayable";
   },
@@ -478,16 +478,16 @@ declare const abi: [
             name: "parentEntity";
             type: "bytes32";
             internalType: "bytes32";
-          }
+          },
         ];
-      }
+      },
     ];
     outputs: [
       {
         name: "";
         type: "bytes32";
         internalType: "bytes32";
-      }
+      },
     ];
     stateMutability: "nonpayable";
   },
@@ -499,7 +499,7 @@ declare const abi: [
         name: "inviter";
         type: "address";
         internalType: "address";
-      }
+      },
     ];
     outputs: [];
     stateMutability: "nonpayable";
@@ -512,302 +512,7 @@ declare const abi: [
         name: "buildingEntity";
         type: "bytes32";
         internalType: "bytes32";
-      }
-    ];
-    outputs: [];
-    stateMutability: "nonpayable";
-  },
-  {
-    type: "function";
-    name: "Pri_11__devDeleteRecord";
-    inputs: [
-      {
-        name: "tableId";
-        type: "bytes32";
-        internalType: "ResourceId";
       },
-      {
-        name: "keyTuple";
-        type: "bytes32[]";
-        internalType: "bytes32[]";
-      }
-    ];
-    outputs: [];
-    stateMutability: "nonpayable";
-  },
-  {
-    type: "function";
-    name: "Pri_11__devPopFromDynamicField";
-    inputs: [
-      {
-        name: "tableId";
-        type: "bytes32";
-        internalType: "ResourceId";
-      },
-      {
-        name: "keyTuple";
-        type: "bytes32[]";
-        internalType: "bytes32[]";
-      },
-      {
-        name: "dynamicFieldIndex";
-        type: "uint8";
-        internalType: "uint8";
-      },
-      {
-        name: "byteLengthToPop";
-        type: "uint256";
-        internalType: "uint256";
-      }
-    ];
-    outputs: [];
-    stateMutability: "nonpayable";
-  },
-  {
-    type: "function";
-    name: "Pri_11__devPushToDynamicField";
-    inputs: [
-      {
-        name: "tableId";
-        type: "bytes32";
-        internalType: "ResourceId";
-      },
-      {
-        name: "keyTuple";
-        type: "bytes32[]";
-        internalType: "bytes32[]";
-      },
-      {
-        name: "dynamicFieldIndex";
-        type: "uint8";
-        internalType: "uint8";
-      },
-      {
-        name: "dataToPush";
-        type: "bytes";
-        internalType: "bytes";
-      }
-    ];
-    outputs: [];
-    stateMutability: "nonpayable";
-  },
-  {
-    type: "function";
-    name: "Pri_11__devSetDynamicField";
-    inputs: [
-      {
-        name: "tableId";
-        type: "bytes32";
-        internalType: "ResourceId";
-      },
-      {
-        name: "keyTuple";
-        type: "bytes32[]";
-        internalType: "bytes32[]";
-      },
-      {
-        name: "dynamicFieldIndex";
-        type: "uint8";
-        internalType: "uint8";
-      },
-      {
-        name: "data";
-        type: "bytes";
-        internalType: "bytes";
-      }
-    ];
-    outputs: [];
-    stateMutability: "nonpayable";
-  },
-  {
-    type: "function";
-    name: "Pri_11__devSetField";
-    inputs: [
-      {
-        name: "tableId";
-        type: "bytes32";
-        internalType: "ResourceId";
-      },
-      {
-        name: "keyTuple";
-        type: "bytes32[]";
-        internalType: "bytes32[]";
-      },
-      {
-        name: "fieldIndex";
-        type: "uint8";
-        internalType: "uint8";
-      },
-      {
-        name: "data";
-        type: "bytes";
-        internalType: "bytes";
-      },
-      {
-        name: "fieldLayout";
-        type: "bytes32";
-        internalType: "FieldLayout";
-      }
-    ];
-    outputs: [];
-    stateMutability: "nonpayable";
-  },
-  {
-    type: "function";
-    name: "Pri_11__devSetField";
-    inputs: [
-      {
-        name: "tableId";
-        type: "bytes32";
-        internalType: "ResourceId";
-      },
-      {
-        name: "keyTuple";
-        type: "bytes32[]";
-        internalType: "bytes32[]";
-      },
-      {
-        name: "fieldIndex";
-        type: "uint8";
-        internalType: "uint8";
-      },
-      {
-        name: "data";
-        type: "bytes";
-        internalType: "bytes";
-      }
-    ];
-    outputs: [];
-    stateMutability: "nonpayable";
-  },
-  {
-    type: "function";
-    name: "Pri_11__devSetRecord";
-    inputs: [
-      {
-        name: "tableId";
-        type: "bytes32";
-        internalType: "ResourceId";
-      },
-      {
-        name: "keyTuple";
-        type: "bytes32[]";
-        internalType: "bytes32[]";
-      },
-      {
-        name: "staticData";
-        type: "bytes";
-        internalType: "bytes";
-      },
-      {
-        name: "encodedLengths";
-        type: "bytes32";
-        internalType: "EncodedLengths";
-      },
-      {
-        name: "dynamicData";
-        type: "bytes";
-        internalType: "bytes";
-      }
-    ];
-    outputs: [];
-    stateMutability: "nonpayable";
-  },
-  {
-    type: "function";
-    name: "Pri_11__devSetStaticField";
-    inputs: [
-      {
-        name: "tableId";
-        type: "bytes32";
-        internalType: "ResourceId";
-      },
-      {
-        name: "keyTuple";
-        type: "bytes32[]";
-        internalType: "bytes32[]";
-      },
-      {
-        name: "fieldIndex";
-        type: "uint8";
-        internalType: "uint8";
-      },
-      {
-        name: "data";
-        type: "bytes";
-        internalType: "bytes";
-      },
-      {
-        name: "fieldLayout";
-        type: "bytes32";
-        internalType: "FieldLayout";
-      }
-    ];
-    outputs: [];
-    stateMutability: "nonpayable";
-  },
-  {
-    type: "function";
-    name: "Pri_11__devSpliceDynamicData";
-    inputs: [
-      {
-        name: "tableId";
-        type: "bytes32";
-        internalType: "ResourceId";
-      },
-      {
-        name: "keyTuple";
-        type: "bytes32[]";
-        internalType: "bytes32[]";
-      },
-      {
-        name: "dynamicFieldIndex";
-        type: "uint8";
-        internalType: "uint8";
-      },
-      {
-        name: "startWithinField";
-        type: "uint40";
-        internalType: "uint40";
-      },
-      {
-        name: "deleteCount";
-        type: "uint40";
-        internalType: "uint40";
-      },
-      {
-        name: "data";
-        type: "bytes";
-        internalType: "bytes";
-      }
-    ];
-    outputs: [];
-    stateMutability: "nonpayable";
-  },
-  {
-    type: "function";
-    name: "Pri_11__devSpliceStaticData";
-    inputs: [
-      {
-        name: "tableId";
-        type: "bytes32";
-        internalType: "ResourceId";
-      },
-      {
-        name: "keyTuple";
-        type: "bytes32[]";
-        internalType: "bytes32[]";
-      },
-      {
-        name: "start";
-        type: "uint48";
-        internalType: "uint48";
-      },
-      {
-        name: "data";
-        type: "bytes";
-        internalType: "bytes";
-      }
     ];
     outputs: [];
     stateMutability: "nonpayable";
@@ -825,7 +530,7 @@ declare const abi: [
         name: "role";
         type: "uint8";
         internalType: "enum EAllianceRole";
-      }
+      },
     ];
     outputs: [];
     stateMutability: "nonpayable";
@@ -843,7 +548,7 @@ declare const abi: [
         name: "level";
         type: "uint256";
         internalType: "uint256";
-      }
+      },
     ];
     outputs: [];
     stateMutability: "nonpayable";
@@ -857,7 +562,7 @@ declare const abi: [
         name: "";
         type: "uint256";
         internalType: "uint256";
-      }
+      },
     ];
     stateMutability: "nonpayable";
   },
@@ -874,7 +579,7 @@ declare const abi: [
         name: "playerEntity";
         type: "bytes32";
         internalType: "bytes32";
-      }
+      },
     ];
     outputs: [];
     stateMutability: "nonpayable";
@@ -887,7 +592,7 @@ declare const abi: [
         name: "target";
         type: "address";
         internalType: "address";
-      }
+      },
     ];
     outputs: [];
     stateMutability: "nonpayable";
@@ -900,7 +605,7 @@ declare const abi: [
         name: "alliance";
         type: "bytes32";
         internalType: "bytes32";
-      }
+      },
     ];
     outputs: [];
     stateMutability: "nonpayable";
@@ -913,7 +618,7 @@ declare const abi: [
         name: "target";
         type: "address";
         internalType: "address";
-      }
+      },
     ];
     outputs: [];
     stateMutability: "nonpayable";
@@ -931,7 +636,7 @@ declare const abi: [
         name: "asteroidEntity";
         type: "bytes32";
         internalType: "bytes32";
-      }
+      },
     ];
     outputs: [];
     stateMutability: "nonpayable";
@@ -951,7 +656,7 @@ declare const abi: [
         name: "fleets";
         type: "bytes32[]";
         internalType: "bytes32[]";
-      }
+      },
     ];
     outputs: [];
     stateMutability: "nonpayable";
@@ -984,9 +689,9 @@ declare const abi: [
             name: "parentEntity";
             type: "bytes32";
             internalType: "bytes32";
-          }
+          },
         ];
-      }
+      },
     ];
     outputs: [];
     stateMutability: "nonpayable";
@@ -1004,14 +709,14 @@ declare const abi: [
         name: "paymentAmounts";
         type: "uint256[]";
         internalType: "uint256[]";
-      }
+      },
     ];
     outputs: [
       {
         name: "";
         type: "bool";
         internalType: "bool";
-      }
+      },
     ];
     stateMutability: "nonpayable";
   },
@@ -1023,7 +728,7 @@ declare const abi: [
         name: "fleetEntity";
         type: "bytes32";
         internalType: "bytes32";
-      }
+      },
     ];
     outputs: [];
     stateMutability: "nonpayable";
@@ -1041,7 +746,7 @@ declare const abi: [
         name: "objectivePrototype";
         type: "bytes32";
         internalType: "bytes32";
-      }
+      },
     ];
     outputs: [];
     stateMutability: "nonpayable";
@@ -1054,7 +759,7 @@ declare const abi: [
         name: "rejectee";
         type: "address";
         internalType: "address";
-      }
+      },
     ];
     outputs: [];
     stateMutability: "nonpayable";
@@ -1082,7 +787,7 @@ declare const abi: [
         name: "liquidityB";
         type: "uint256";
         internalType: "uint256";
-      }
+      },
     ];
     outputs: [];
     stateMutability: "nonpayable";
@@ -1095,7 +800,7 @@ declare const abi: [
         name: "alliance";
         type: "bytes32";
         internalType: "bytes32";
-      }
+      },
     ];
     outputs: [];
     stateMutability: "nonpayable";
@@ -1108,7 +813,7 @@ declare const abi: [
         name: "fleetEntity";
         type: "bytes32";
         internalType: "bytes32";
-      }
+      },
     ];
     outputs: [];
     stateMutability: "nonpayable";
@@ -1131,7 +836,7 @@ declare const abi: [
         name: "aggressorEntity";
         type: "bytes32";
         internalType: "bytes32";
-      }
+      },
     ];
     outputs: [];
     stateMutability: "nonpayable";
@@ -1149,7 +854,7 @@ declare const abi: [
         name: "aggressorEntity";
         type: "bytes32";
         internalType: "bytes32";
-      }
+      },
     ];
     outputs: [];
     stateMutability: "nonpayable";
@@ -1162,7 +867,7 @@ declare const abi: [
         name: "target";
         type: "address";
         internalType: "address";
-      }
+      },
     ];
     outputs: [];
     stateMutability: "nonpayable";
@@ -1195,9 +900,9 @@ declare const abi: [
             name: "parentEntity";
             type: "bytes32";
             internalType: "bytes32";
-          }
+          },
         ];
-      }
+      },
     ];
     outputs: [];
     stateMutability: "nonpayable";
@@ -1215,7 +920,7 @@ declare const abi: [
         name: "asteroidEntity";
         type: "bytes32";
         internalType: "bytes32";
-      }
+      },
     ];
     outputs: [];
     stateMutability: "nonpayable";
@@ -1233,7 +938,7 @@ declare const abi: [
         name: "allianceInviteMode";
         type: "uint8";
         internalType: "enum EAllianceInviteMode";
-      }
+      },
     ];
     outputs: [];
     stateMutability: "nonpayable";
@@ -1251,7 +956,7 @@ declare const abi: [
         name: "newName";
         type: "bytes32";
         internalType: "bytes32";
-      }
+      },
     ];
     outputs: [];
     stateMutability: "nonpayable";
@@ -1274,7 +979,7 @@ declare const abi: [
         name: "target";
         type: "bytes32";
         internalType: "bytes32";
-      }
+      },
     ];
     outputs: [];
     stateMutability: "nonpayable";
@@ -1288,7 +993,7 @@ declare const abi: [
         name: "";
         type: "bytes32";
         internalType: "bytes32";
-      }
+      },
     ];
     stateMutability: "nonpayable";
   },
@@ -1305,7 +1010,7 @@ declare const abi: [
         name: "level";
         type: "uint256";
         internalType: "uint256";
-      }
+      },
     ];
     outputs: [];
     stateMutability: "nonpayable";
@@ -1328,7 +1033,7 @@ declare const abi: [
         name: "level";
         type: "uint256";
         internalType: "uint256";
-      }
+      },
     ];
     outputs: [];
     stateMutability: "nonpayable";
@@ -1356,7 +1061,7 @@ declare const abi: [
         name: "amountOutMin";
         type: "uint256";
         internalType: "uint256";
-      }
+      },
     ];
     outputs: [];
     stateMutability: "nonpayable";
@@ -1369,14 +1074,14 @@ declare const abi: [
         name: "buildingEntity";
         type: "bytes32";
         internalType: "bytes32";
-      }
+      },
     ];
     outputs: [
       {
         name: "isActive";
         type: "bool";
         internalType: "bool";
-      }
+      },
     ];
     stateMutability: "nonpayable";
   },
@@ -1388,7 +1093,7 @@ declare const abi: [
         name: "buildingEntity";
         type: "bytes32";
         internalType: "bytes32";
-      }
+      },
     ];
     outputs: [];
     stateMutability: "nonpayable";
@@ -1408,7 +1113,7 @@ declare const abi: [
         name: "buildingEntity";
         type: "bytes32";
         internalType: "bytes32";
-      }
+      },
     ];
     outputs: [];
     stateMutability: "nonpayable";
@@ -1421,7 +1126,7 @@ declare const abi: [
         name: "buildingEntity";
         type: "bytes32";
         internalType: "bytes32";
-      }
+      },
     ];
     outputs: [];
     stateMutability: "nonpayable";
@@ -1444,7 +1149,7 @@ declare const abi: [
         name: "count";
         type: "uint256";
         internalType: "uint256";
-      }
+      },
     ];
     outputs: [];
     stateMutability: "nonpayable";
@@ -1467,7 +1172,7 @@ declare const abi: [
         name: "count";
         type: "uint256";
         internalType: "uint256";
-      }
+      },
     ];
     outputs: [];
     stateMutability: "nonpayable";
@@ -1485,7 +1190,7 @@ declare const abi: [
         name: "ownerEntity";
         type: "bytes32";
         internalType: "bytes32";
-      }
+      },
     ];
     outputs: [];
     stateMutability: "nonpayable";
@@ -1508,7 +1213,7 @@ declare const abi: [
         name: "resourceCounts";
         type: "uint256[]";
         internalType: "uint256[]";
-      }
+      },
     ];
     outputs: [];
     stateMutability: "nonpayable";
@@ -1531,7 +1236,7 @@ declare const abi: [
         name: "resourceCounts";
         type: "uint256[]";
         internalType: "uint256[]";
-      }
+      },
     ];
     outputs: [];
     stateMutability: "nonpayable";
@@ -1554,7 +1259,7 @@ declare const abi: [
         name: "resourceCounts";
         type: "uint256[]";
         internalType: "uint256[]";
-      }
+      },
     ];
     outputs: [];
     stateMutability: "nonpayable";
@@ -1577,7 +1282,7 @@ declare const abi: [
         name: "resourceCounts";
         type: "int256[]";
         internalType: "int256[]";
-      }
+      },
     ];
     outputs: [];
     stateMutability: "nonpayable";
@@ -1605,7 +1310,7 @@ declare const abi: [
         name: "resourceCounts";
         type: "uint256[]";
         internalType: "uint256[]";
-      }
+      },
     ];
     outputs: [];
     stateMutability: "nonpayable";
@@ -1633,7 +1338,7 @@ declare const abi: [
         name: "resourceCounts";
         type: "uint256[]";
         internalType: "uint256[]";
-      }
+      },
     ];
     outputs: [];
     stateMutability: "nonpayable";
@@ -1661,7 +1366,7 @@ declare const abi: [
         name: "resourceCounts";
         type: "uint256[]";
         internalType: "uint256[]";
-      }
+      },
     ];
     outputs: [];
     stateMutability: "nonpayable";
@@ -1689,7 +1394,7 @@ declare const abi: [
         name: "resourceCounts";
         type: "int256[]";
         internalType: "int256[]";
-      }
+      },
     ];
     outputs: [];
     stateMutability: "nonpayable";
@@ -1712,7 +1417,7 @@ declare const abi: [
         name: "unitCounts";
         type: "uint256[]";
         internalType: "uint256[]";
-      }
+      },
     ];
     outputs: [];
     stateMutability: "nonpayable";
@@ -1735,7 +1440,7 @@ declare const abi: [
         name: "unitCounts";
         type: "uint256[]";
         internalType: "uint256[]";
-      }
+      },
     ];
     outputs: [];
     stateMutability: "nonpayable";
@@ -1758,7 +1463,7 @@ declare const abi: [
         name: "unitCounts";
         type: "uint256[]";
         internalType: "uint256[]";
-      }
+      },
     ];
     outputs: [];
     stateMutability: "nonpayable";
@@ -1781,7 +1486,7 @@ declare const abi: [
         name: "unitCounts";
         type: "int256[]";
         internalType: "int256[]";
-      }
+      },
     ];
     outputs: [];
     stateMutability: "nonpayable";
@@ -1794,7 +1499,7 @@ declare const abi: [
         name: "fleetEntity";
         type: "bytes32";
         internalType: "bytes32";
-      }
+      },
     ];
     outputs: [];
     stateMutability: "nonpayable";
@@ -1807,7 +1512,7 @@ declare const abi: [
         name: "buildingEntity";
         type: "bytes32";
         internalType: "bytes32";
-      }
+      },
     ];
     outputs: [];
     stateMutability: "nonpayable";
@@ -1825,7 +1530,7 @@ declare const abi: [
         name: "level";
         type: "uint256";
         internalType: "uint256";
-      }
+      },
     ];
     outputs: [];
     stateMutability: "nonpayable";
@@ -1838,7 +1543,7 @@ declare const abi: [
         name: "asteroidEntity";
         type: "bytes32";
         internalType: "bytes32";
-      }
+      },
     ];
     outputs: [];
     stateMutability: "nonpayable";
@@ -1856,7 +1561,7 @@ declare const abi: [
         name: "unit";
         type: "uint8";
         internalType: "enum EUnit";
-      }
+      },
     ];
     outputs: [];
     stateMutability: "nonpayable";
@@ -1874,7 +1579,7 @@ declare const abi: [
         name: "count";
         type: "uint256";
         internalType: "uint256";
-      }
+      },
     ];
     outputs: [];
     stateMutability: "nonpayable";
@@ -1897,16 +1602,16 @@ declare const abi: [
             name: "callData";
             type: "bytes";
             internalType: "bytes";
-          }
+          },
         ];
-      }
+      },
     ];
     outputs: [
       {
         name: "returnDatas";
         type: "bytes[]";
         internalType: "bytes[]";
-      }
+      },
     ];
     stateMutability: "nonpayable";
   },
@@ -1933,16 +1638,16 @@ declare const abi: [
             name: "callData";
             type: "bytes";
             internalType: "bytes";
-          }
+          },
         ];
-      }
+      },
     ];
     outputs: [
       {
         name: "returnDatas";
         type: "bytes[]";
         internalType: "bytes[]";
-      }
+      },
     ];
     stateMutability: "nonpayable";
   },
@@ -1959,14 +1664,14 @@ declare const abi: [
         name: "callData";
         type: "bytes";
         internalType: "bytes";
-      }
+      },
     ];
     outputs: [
       {
         name: "";
         type: "bytes";
         internalType: "bytes";
-      }
+      },
     ];
     stateMutability: "payable";
   },
@@ -1988,14 +1693,14 @@ declare const abi: [
         name: "callData";
         type: "bytes";
         internalType: "bytes";
-      }
+      },
     ];
     outputs: [
       {
         name: "";
         type: "bytes";
         internalType: "bytes";
-      }
+      },
     ];
     stateMutability: "payable";
   },
@@ -2008,7 +1713,7 @@ declare const abi: [
         name: "";
         type: "address";
         internalType: "address";
-      }
+      },
     ];
     stateMutability: "view";
   },
@@ -2025,7 +1730,7 @@ declare const abi: [
         name: "keyTuple";
         type: "bytes32[]";
         internalType: "bytes32[]";
-      }
+      },
     ];
     outputs: [];
     stateMutability: "nonpayable";
@@ -2048,14 +1753,14 @@ declare const abi: [
         name: "dynamicFieldIndex";
         type: "uint8";
         internalType: "uint8";
-      }
+      },
     ];
     outputs: [
       {
         name: "";
         type: "bytes";
         internalType: "bytes";
-      }
+      },
     ];
     stateMutability: "view";
   },
@@ -2077,14 +1782,14 @@ declare const abi: [
         name: "dynamicFieldIndex";
         type: "uint8";
         internalType: "uint8";
-      }
+      },
     ];
     outputs: [
       {
         name: "";
         type: "uint256";
         internalType: "uint256";
-      }
+      },
     ];
     stateMutability: "view";
   },
@@ -2116,14 +1821,14 @@ declare const abi: [
         name: "end";
         type: "uint256";
         internalType: "uint256";
-      }
+      },
     ];
     outputs: [
       {
         name: "data";
         type: "bytes";
         internalType: "bytes";
-      }
+      },
     ];
     stateMutability: "view";
   },
@@ -2150,14 +1855,14 @@ declare const abi: [
         name: "fieldLayout";
         type: "bytes32";
         internalType: "FieldLayout";
-      }
+      },
     ];
     outputs: [
       {
         name: "data";
         type: "bytes";
         internalType: "bytes";
-      }
+      },
     ];
     stateMutability: "view";
   },
@@ -2179,14 +1884,14 @@ declare const abi: [
         name: "fieldIndex";
         type: "uint8";
         internalType: "uint8";
-      }
+      },
     ];
     outputs: [
       {
         name: "data";
         type: "bytes";
         internalType: "bytes";
-      }
+      },
     ];
     stateMutability: "view";
   },
@@ -2198,14 +1903,14 @@ declare const abi: [
         name: "tableId";
         type: "bytes32";
         internalType: "ResourceId";
-      }
+      },
     ];
     outputs: [
       {
         name: "fieldLayout";
         type: "bytes32";
         internalType: "FieldLayout";
-      }
+      },
     ];
     stateMutability: "view";
   },
@@ -2232,14 +1937,14 @@ declare const abi: [
         name: "fieldLayout";
         type: "bytes32";
         internalType: "FieldLayout";
-      }
+      },
     ];
     outputs: [
       {
         name: "";
         type: "uint256";
         internalType: "uint256";
-      }
+      },
     ];
     stateMutability: "view";
   },
@@ -2261,14 +1966,14 @@ declare const abi: [
         name: "fieldIndex";
         type: "uint8";
         internalType: "uint8";
-      }
+      },
     ];
     outputs: [
       {
         name: "";
         type: "uint256";
         internalType: "uint256";
-      }
+      },
     ];
     stateMutability: "view";
   },
@@ -2280,14 +1985,14 @@ declare const abi: [
         name: "tableId";
         type: "bytes32";
         internalType: "ResourceId";
-      }
+      },
     ];
     outputs: [
       {
         name: "keySchema";
         type: "bytes32";
         internalType: "Schema";
-      }
+      },
     ];
     stateMutability: "view";
   },
@@ -2309,7 +2014,7 @@ declare const abi: [
         name: "fieldLayout";
         type: "bytes32";
         internalType: "FieldLayout";
-      }
+      },
     ];
     outputs: [
       {
@@ -2326,7 +2031,7 @@ declare const abi: [
         name: "dynamicData";
         type: "bytes";
         internalType: "bytes";
-      }
+      },
     ];
     stateMutability: "view";
   },
@@ -2343,7 +2048,7 @@ declare const abi: [
         name: "keyTuple";
         type: "bytes32[]";
         internalType: "bytes32[]";
-      }
+      },
     ];
     outputs: [
       {
@@ -2360,7 +2065,7 @@ declare const abi: [
         name: "dynamicData";
         type: "bytes";
         internalType: "bytes";
-      }
+      },
     ];
     stateMutability: "view";
   },
@@ -2387,14 +2092,14 @@ declare const abi: [
         name: "fieldLayout";
         type: "bytes32";
         internalType: "FieldLayout";
-      }
+      },
     ];
     outputs: [
       {
         name: "";
         type: "bytes32";
         internalType: "bytes32";
-      }
+      },
     ];
     stateMutability: "view";
   },
@@ -2406,14 +2111,14 @@ declare const abi: [
         name: "tableId";
         type: "bytes32";
         internalType: "ResourceId";
-      }
+      },
     ];
     outputs: [
       {
         name: "valueSchema";
         type: "bytes32";
         internalType: "Schema";
-      }
+      },
     ];
     stateMutability: "view";
   },
@@ -2430,7 +2135,7 @@ declare const abi: [
         name: "grantee";
         type: "address";
         internalType: "address";
-      }
+      },
     ];
     outputs: [];
     stateMutability: "nonpayable";
@@ -2443,7 +2148,7 @@ declare const abi: [
         name: "initModule";
         type: "address";
         internalType: "contract IModule";
-      }
+      },
     ];
     outputs: [];
     stateMutability: "nonpayable";
@@ -2461,7 +2166,7 @@ declare const abi: [
         name: "encodedArgs";
         type: "bytes";
         internalType: "bytes";
-      }
+      },
     ];
     outputs: [];
     stateMutability: "nonpayable";
@@ -2479,7 +2184,7 @@ declare const abi: [
         name: "encodedArgs";
         type: "bytes";
         internalType: "bytes";
-      }
+      },
     ];
     outputs: [];
     stateMutability: "nonpayable";
@@ -2507,7 +2212,7 @@ declare const abi: [
         name: "byteLengthToPop";
         type: "uint256";
         internalType: "uint256";
-      }
+      },
     ];
     outputs: [];
     stateMutability: "nonpayable";
@@ -2535,7 +2240,7 @@ declare const abi: [
         name: "dataToPush";
         type: "bytes";
         internalType: "bytes";
-      }
+      },
     ];
     outputs: [];
     stateMutability: "nonpayable";
@@ -2558,7 +2263,7 @@ declare const abi: [
         name: "initCallData";
         type: "bytes";
         internalType: "bytes";
-      }
+      },
     ];
     outputs: [];
     stateMutability: "nonpayable";
@@ -2576,14 +2281,14 @@ declare const abi: [
         name: "systemFunctionSignature";
         type: "string";
         internalType: "string";
-      }
+      },
     ];
     outputs: [
       {
         name: "worldFunctionSelector";
         type: "bytes4";
         internalType: "bytes4";
-      }
+      },
     ];
     stateMutability: "nonpayable";
   },
@@ -2595,7 +2300,7 @@ declare const abi: [
         name: "namespaceId";
         type: "bytes32";
         internalType: "ResourceId";
-      }
+      },
     ];
     outputs: [];
     stateMutability: "nonpayable";
@@ -2618,7 +2323,7 @@ declare const abi: [
         name: "initCallData";
         type: "bytes";
         internalType: "bytes";
-      }
+      },
     ];
     outputs: [];
     stateMutability: "nonpayable";
@@ -2641,14 +2346,14 @@ declare const abi: [
         name: "systemFunctionSignature";
         type: "string";
         internalType: "string";
-      }
+      },
     ];
     outputs: [
       {
         name: "worldFunctionSelector";
         type: "bytes4";
         internalType: "bytes4";
-      }
+      },
     ];
     stateMutability: "nonpayable";
   },
@@ -2670,7 +2375,7 @@ declare const abi: [
         name: "enabledHooksBitmap";
         type: "uint8";
         internalType: "uint8";
-      }
+      },
     ];
     outputs: [];
     stateMutability: "nonpayable";
@@ -2693,7 +2398,7 @@ declare const abi: [
         name: "publicAccess";
         type: "bool";
         internalType: "bool";
-      }
+      },
     ];
     outputs: [];
     stateMutability: "nonpayable";
@@ -2716,7 +2421,7 @@ declare const abi: [
         name: "enabledHooksBitmap";
         type: "uint8";
         internalType: "uint8";
-      }
+      },
     ];
     outputs: [];
     stateMutability: "nonpayable";
@@ -2754,7 +2459,7 @@ declare const abi: [
         name: "fieldNames";
         type: "string[]";
         internalType: "string[]";
-      }
+      },
     ];
     outputs: [];
     stateMutability: "nonpayable";
@@ -2767,7 +2472,7 @@ declare const abi: [
         name: "namespaceId";
         type: "bytes32";
         internalType: "ResourceId";
-      }
+      },
     ];
     outputs: [];
     stateMutability: "nonpayable";
@@ -2785,7 +2490,7 @@ declare const abi: [
         name: "grantee";
         type: "address";
         internalType: "address";
-      }
+      },
     ];
     outputs: [];
     stateMutability: "nonpayable";
@@ -2813,7 +2518,7 @@ declare const abi: [
         name: "data";
         type: "bytes";
         internalType: "bytes";
-      }
+      },
     ];
     outputs: [];
     stateMutability: "nonpayable";
@@ -2841,7 +2546,7 @@ declare const abi: [
         name: "data";
         type: "bytes";
         internalType: "bytes";
-      }
+      },
     ];
     outputs: [];
     stateMutability: "nonpayable";
@@ -2874,7 +2579,7 @@ declare const abi: [
         name: "fieldLayout";
         type: "bytes32";
         internalType: "FieldLayout";
-      }
+      },
     ];
     outputs: [];
     stateMutability: "nonpayable";
@@ -2907,7 +2612,7 @@ declare const abi: [
         name: "dynamicData";
         type: "bytes";
         internalType: "bytes";
-      }
+      },
     ];
     outputs: [];
     stateMutability: "nonpayable";
@@ -2940,7 +2645,7 @@ declare const abi: [
         name: "fieldLayout";
         type: "bytes32";
         internalType: "FieldLayout";
-      }
+      },
     ];
     outputs: [];
     stateMutability: "nonpayable";
@@ -2978,7 +2683,7 @@ declare const abi: [
         name: "data";
         type: "bytes";
         internalType: "bytes";
-      }
+      },
     ];
     outputs: [];
     stateMutability: "nonpayable";
@@ -3006,7 +2711,7 @@ declare const abi: [
         name: "data";
         type: "bytes";
         internalType: "bytes";
-      }
+      },
     ];
     outputs: [];
     stateMutability: "nonpayable";
@@ -3020,7 +2725,7 @@ declare const abi: [
         name: "version";
         type: "bytes32";
         internalType: "bytes32";
-      }
+      },
     ];
     stateMutability: "view";
   },
@@ -3042,7 +2747,7 @@ declare const abi: [
         name: "amount";
         type: "uint256";
         internalType: "uint256";
-      }
+      },
     ];
     outputs: [];
     stateMutability: "nonpayable";
@@ -3065,7 +2770,7 @@ declare const abi: [
         name: "amount";
         type: "uint256";
         internalType: "uint256";
-      }
+      },
     ];
     outputs: [];
     stateMutability: "nonpayable";
@@ -3083,7 +2788,7 @@ declare const abi: [
         name: "newOwner";
         type: "address";
         internalType: "address";
-      }
+      },
     ];
     outputs: [];
     stateMutability: "nonpayable";
@@ -3096,7 +2801,7 @@ declare const abi: [
         name: "delegatee";
         type: "address";
         internalType: "address";
-      }
+      },
     ];
     outputs: [];
     stateMutability: "nonpayable";
@@ -3109,7 +2814,7 @@ declare const abi: [
         name: "namespaceId";
         type: "bytes32";
         internalType: "ResourceId";
-      }
+      },
     ];
     outputs: [];
     stateMutability: "nonpayable";
@@ -3127,7 +2832,7 @@ declare const abi: [
         name: "hookAddress";
         type: "address";
         internalType: "contract IStoreHook";
-      }
+      },
     ];
     outputs: [];
     stateMutability: "nonpayable";
@@ -3145,7 +2850,7 @@ declare const abi: [
         name: "hookAddress";
         type: "address";
         internalType: "contract ISystemHook";
-      }
+      },
     ];
     outputs: [];
     stateMutability: "nonpayable";
@@ -3159,7 +2864,7 @@ declare const abi: [
         name: "";
         type: "bytes32";
         internalType: "bytes32";
-      }
+      },
     ];
     stateMutability: "view";
   },
@@ -3172,7 +2877,7 @@ declare const abi: [
         type: "bytes32";
         indexed: true;
         internalType: "bytes32";
-      }
+      },
     ];
     anonymous: false;
   },
@@ -3185,7 +2890,7 @@ declare const abi: [
         type: "bytes32";
         indexed: true;
         internalType: "bytes32";
-      }
+      },
     ];
     anonymous: false;
   },
@@ -3204,7 +2909,7 @@ declare const abi: [
         type: "bytes32[]";
         indexed: false;
         internalType: "bytes32[]";
-      }
+      },
     ];
     anonymous: false;
   },
@@ -3241,7 +2946,7 @@ declare const abi: [
         type: "bytes";
         indexed: false;
         internalType: "bytes";
-      }
+      },
     ];
     anonymous: false;
   },
@@ -3290,7 +2995,7 @@ declare const abi: [
         type: "bytes";
         indexed: false;
         internalType: "bytes";
-      }
+      },
     ];
     anonymous: false;
   },
@@ -3321,7 +3026,7 @@ declare const abi: [
         type: "bytes";
         indexed: false;
         internalType: "bytes";
-      }
+      },
     ];
     anonymous: false;
   },
@@ -3333,7 +3038,7 @@ declare const abi: [
         name: "length";
         type: "uint256";
         internalType: "uint256";
-      }
+      },
     ];
   },
   {
@@ -3354,7 +3059,7 @@ declare const abi: [
         name: "computedStaticDataLength";
         type: "uint256";
         internalType: "uint256";
-      }
+      },
     ];
   },
   {
@@ -3365,7 +3070,7 @@ declare const abi: [
         name: "index";
         type: "uint256";
         internalType: "uint256";
-      }
+      },
     ];
   },
   {
@@ -3376,7 +3081,7 @@ declare const abi: [
         name: "index";
         type: "uint256";
         internalType: "uint256";
-      }
+      },
     ];
   },
   {
@@ -3387,7 +3092,7 @@ declare const abi: [
         name: "index";
         type: "uint256";
         internalType: "uint256";
-      }
+      },
     ];
   },
   {
@@ -3403,7 +3108,7 @@ declare const abi: [
         name: "maxFields";
         type: "uint256";
         internalType: "uint256";
-      }
+      },
     ];
   },
   {
@@ -3419,7 +3124,7 @@ declare const abi: [
         name: "maxFields";
         type: "uint256";
         internalType: "uint256";
-      }
+      },
     ];
   },
   {
@@ -3435,7 +3140,7 @@ declare const abi: [
         name: "dependency";
         type: "address";
         internalType: "address";
-      }
+      },
     ];
   },
   {
@@ -3456,7 +3161,7 @@ declare const abi: [
         name: "length";
         type: "uint256";
         internalType: "uint256";
-      }
+      },
     ];
   },
   {
@@ -3482,7 +3187,7 @@ declare const abi: [
         name: "end";
         type: "uint256";
         internalType: "uint256";
-      }
+      },
     ];
   },
   {
@@ -3498,7 +3203,7 @@ declare const abi: [
         name: "accessedIndex";
         type: "uint256";
         internalType: "uint256";
-      }
+      },
     ];
   },
   {
@@ -3514,7 +3219,7 @@ declare const abi: [
         name: "end";
         type: "uint256";
         internalType: "uint256";
-      }
+      },
     ];
   },
   {
@@ -3530,7 +3235,7 @@ declare const abi: [
         name: "received";
         type: "uint256";
         internalType: "uint256";
-      }
+      },
     ];
   },
   {
@@ -3546,7 +3251,7 @@ declare const abi: [
         name: "received";
         type: "uint256";
         internalType: "uint256";
-      }
+      },
     ];
   },
   {
@@ -3567,7 +3272,7 @@ declare const abi: [
         name: "resourceIdString";
         type: "string";
         internalType: "string";
-      }
+      },
     ];
   },
   {
@@ -3588,7 +3293,7 @@ declare const abi: [
         name: "fieldLength";
         type: "uint40";
         internalType: "uint40";
-      }
+      },
     ];
   },
   {
@@ -3604,7 +3309,7 @@ declare const abi: [
         name: "received";
         type: "uint256";
         internalType: "uint256";
-      }
+      },
     ];
   },
   {
@@ -3620,7 +3325,7 @@ declare const abi: [
         name: "received";
         type: "uint256";
         internalType: "uint256";
-      }
+      },
     ];
   },
   {
@@ -3636,7 +3341,7 @@ declare const abi: [
         name: "received";
         type: "uint256";
         internalType: "uint256";
-      }
+      },
     ];
   },
   {
@@ -3652,7 +3357,7 @@ declare const abi: [
         name: "received";
         type: "uint256";
         internalType: "uint256";
-      }
+      },
     ];
   },
   {
@@ -3668,7 +3373,7 @@ declare const abi: [
         name: "tableIdString";
         type: "string";
         internalType: "string";
-      }
+      },
     ];
   },
   {
@@ -3684,7 +3389,7 @@ declare const abi: [
         name: "tableIdString";
         type: "string";
         internalType: "string";
-      }
+      },
     ];
   },
   {
@@ -3700,7 +3405,7 @@ declare const abi: [
         name: "caller";
         type: "address";
         internalType: "address";
-      }
+      },
     ];
   },
   {
@@ -3716,7 +3421,7 @@ declare const abi: [
         name: "functionSelector";
         type: "bytes4";
         internalType: "bytes4";
-      }
+      },
     ];
   },
   {
@@ -3732,7 +3437,7 @@ declare const abi: [
         name: "delegatee";
         type: "address";
         internalType: "address";
-      }
+      },
     ];
   },
   {
@@ -3743,7 +3448,7 @@ declare const abi: [
         name: "functionSelector";
         type: "bytes4";
         internalType: "bytes4";
-      }
+      },
     ];
   },
   {
@@ -3754,7 +3459,7 @@ declare const abi: [
         name: "functionSelector";
         type: "bytes4";
         internalType: "bytes4";
-      }
+      },
     ];
   },
   {
@@ -3770,7 +3475,7 @@ declare const abi: [
         name: "amount";
         type: "uint256";
         internalType: "uint256";
-      }
+      },
     ];
   },
   {
@@ -3786,7 +3491,7 @@ declare const abi: [
         name: "interfaceId";
         type: "bytes4";
         internalType: "bytes4";
-      }
+      },
     ];
   },
   {
@@ -3797,7 +3502,7 @@ declare const abi: [
         name: "namespace";
         type: "bytes14";
         internalType: "bytes14";
-      }
+      },
     ];
   },
   {
@@ -3813,7 +3518,7 @@ declare const abi: [
         name: "resourceIdString";
         type: "string";
         internalType: "string";
-      }
+      },
     ];
   },
   {
@@ -3834,7 +3539,7 @@ declare const abi: [
         name: "resourceIdString";
         type: "string";
         internalType: "string";
-      }
+      },
     ];
   },
   {
@@ -3850,7 +3555,7 @@ declare const abi: [
         name: "resourceIdString";
         type: "string";
         internalType: "string";
-      }
+      },
     ];
   },
   {
@@ -3866,7 +3571,7 @@ declare const abi: [
         name: "resourceIdString";
         type: "string";
         internalType: "string";
-      }
+      },
     ];
   },
   {
@@ -3877,13 +3582,13 @@ declare const abi: [
         name: "system";
         type: "address";
         internalType: "address";
-      }
+      },
     ];
   },
   {
     type: "error";
     name: "World_UnlimitedDelegationNotAllowed";
     inputs: [];
-  }
+  },
 ];
 export default abi;
