@@ -119,14 +119,6 @@ pnpm test
 
 Or if you want to run the tests for a specific package, navigate to that package directory and run the same command.
 
-For contracts specifically, a specific test contract can be ran individually from the `packages/contracts` directory with the following command:
-
-```bash
-pnpm mud test --skipBuild --forgeOptions='--mc <contract_name>'
-```
-
-This will incidentally skip rebuilding the contracts and run the test directly.
-
 ## Deployment
 
 To deploy the contracts on a specific chain, follow these steps:
