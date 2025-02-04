@@ -78,11 +78,11 @@ echo "PRIVATE_KEY=0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2
 examples - "Examples and boilerplate for adding extensions to the game"
 packages - "Components of the entire stack for running Primodium"
 ├── assets - "All ingame assets and atlas"
-└── client - "React client that integrates other components and supercharges with a browser UI"
+├── client - "React client that integrates other components and supercharges with a browser UI"
 ├── contracts - "MUD contracts, configuration and infrastructure—basically the whole state and conditions of the game"
 ├── core - "Core logic, systems, hooks and utilities for the client"
 ├── engine - "Game engine for managing Phaser scenes and user inputs"
-├── game - "Core Phaser infrastructure for the game; objects, scenes, systems, input controls, etc."
+└── game - "Core Phaser infrastructure for the game; objects, scenes, systems, input controls, etc."
 ```
 
 ## Development

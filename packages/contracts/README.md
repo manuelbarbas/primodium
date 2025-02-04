@@ -12,6 +12,7 @@ The Solidity contracts that define all the game's state and conditions, as well 
   - [Building](#building)
   - [Testing](#testing)
 - [Usage](#usage)
+- [Deployment](#deployment)
 
 ## Introduction
 
@@ -111,3 +112,7 @@ DevSystem.devSetRecord(tableId, key, data, valueSchema);
 // To remove a record:
 DevSystem.devDeleteRecord(tableId, key, valueSchema);
 ```
+
+## Deployment
+
+For deployment instructions, see the [README](../../README.md#deployment) in the root of the monorepo.
