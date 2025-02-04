@@ -109,8 +109,6 @@ pnpm build
 
 This will build the client and core packages, and compile the contracts as well as generate the ABIs and TypeScript bindings.
 
-To clean `types/` and `abis/` in `packages/contracts`, run `pnpm clean` in the top level directory.
-
 ### Testing
 
 To run the tests for every package, run the following:
