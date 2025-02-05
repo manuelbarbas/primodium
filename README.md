@@ -1,6 +1,6 @@
 # Primodium v0.11.1
 
-A fully onchain space-based resource management game, built with MUD & Phaser.
+A fully onchain space-based factory-building game, built with MUD & Phaser.
 
 - [Introduction](#introduction)
   - [Overview](#overview)

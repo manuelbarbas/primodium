@@ -1,6 +1,6 @@
 {
   "name": "primodium",
-  "description": "A fully onchain space-based resource management game.",
+  "description": "A fully onchain space-based factory-building game.",
   "repository": {
     "type": "git",
     "url": "https://github.com/primodiumxyz/primodium"
