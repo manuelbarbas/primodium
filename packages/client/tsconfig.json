@@ -17,13 +17,10 @@
     "jsxImportSource": "react",
     "baseUrl": ".",
     "paths": {
-      "@/*": ["./src/*"],
+      "@/*": ["./src/*"]
     }
   },
   "include": ["**/*.tsx", "**/*.ts", "../game-tools/src/CheatcodesList.tsx"],
   "exclude": ["node_modules", "dist"],
-  "references": [{"path": "../game"}, 
-    // {"path": "../core"}, composite mode does not work bc of tsup
-    {"path": "../assets"}
-  ]
+  "references": [{ "path": "../game" }, { "path": "../assets" }]
 }

@@ -1,6 +1,6 @@
 # Primodium Core
 
-Primodium Core exposes core functionality to [Primodium](primodium.com), a blockchain-based video game. This includes:
+Primodium Core exposes core functionality to [Primodium](primodium.com). This includes:
 
 - The Core object, which contains
   - Tables, allowing user to access and update functionality. [See here](https://github.com/primodiumxyz/reactive-tables) for more details.
@@ -10,6 +10,8 @@ Primodium Core exposes core functionality to [Primodium](primodium.com), a block
 - Hooks, which expose a set of hooks for React-based use cases
 - Constants and Mappings, used throughout the core package for type safety and developer experience.
 
+This package is available as a [npm package](https://www.npmjs.com/package/@primodiumxyz/core).
+
 ## Getting Started
 
 ### Documentation
@@ -18,7 +20,7 @@ You can find details about Primodium and ways to develop on top at [developer.pr
 
 ### Prerequisites
 
-- [node 18.x](https://nodejs.org/en/download/)
+- [node 20.x](https://nodejs.org/en/download/)
 - [pnpm](https://pnpm.io/installation)
 
 ### Installation
@@ -26,6 +28,8 @@ You can find details about Primodium and ways to develop on top at [developer.pr
 ```
 pnpm install @primodiumxyz/core
 ```
+
+Or if you're using the whole monorepo, install by following the [README](../../README.md) in the root of the monorepo.
 
 ## Usage
 

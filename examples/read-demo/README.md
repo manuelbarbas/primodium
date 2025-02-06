@@ -14,7 +14,7 @@ This demo will show you how to read `Table` data from the Primodium `World` usin
 ### Actions
 
 - Change your active directory:
-  - `cd examples/ReadDemo/packages/contracts`
+  - `cd examples/read-demo/packages/contracts`
 - Install the necessary packages:
   - `pnpm i`
 - Build the project:
@@ -44,10 +44,10 @@ You shouldn't need it, but the chain config for the Primodium Testnet is:
 
 ## MUD Versions
 
-This tutorial was built against MUD version `2.0.1`. If needed, the command to update to the latest MUD version is:
+This tutorial was built against MUD version `2.0.9`. If needed, the command to update to the latest MUD version is:
 
 ```bash
-pnpm mud set-version --mudVersion 2.0.1 && pnpm i && pnpm build
+pnpm mud set-version --mudVersion 2.0.9 && pnpm i && pnpm build
 ```
 
 The world address for the extension developer testnet v0.11.x is `0x46c1e9dd144fcf5477a542d3152d28bc0cfba0b6`

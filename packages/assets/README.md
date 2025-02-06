@@ -2,6 +2,13 @@
 
 This package provides a set of tools for working with sprite sheets and tilesets.
 
+## Requirements
+
+- Install FFMPEG from homebrew:
+  ```bash
+  brew install ffmpeg
+  ```
+
 ## Sprites
 
 To create a new Sprite animation you need to define a new folder structure inside of the `sprites` folder. Inside of that folder, create a series of images defining the frames of the animation. The name of the folder will be the name of the animation. The names of the images should be the `{animation_name}-{frame number}.png`.
@@ -36,3 +43,9 @@ Export does a few things:
 To export, run `pnpm run export`.
 
 Borrowed from, [MUD Phaser Template](https://github.com/latticexyz/mud/tree/086be4ef4f3c1ecb3eac0e9554d7d4eb64531fc2/templates/phaser/packages/art).
+
+## Usage
+
+While the codebase is published under the MIT license, all sprites and artwork remain the intellectual property of Primodium Inc. Commercial use of these assets is strictly prohibited unless explicit written permission is granted.
+
+Furthermore, at the artist’s request, the sprites and artwork may not be used for training any machine learning models.

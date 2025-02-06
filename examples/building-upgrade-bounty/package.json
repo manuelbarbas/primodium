@@ -1,10 +1,10 @@
 {
-  "name": "template",
-  "description": "A template for creating new Primodium extensions.",
+  "name": "building-upgrade-bounty",
+  "description": "An example of how to extend Primodium world using namespaces, private systems, and access control.",
   "repository": {
     "type": "git",
     "url": "https://github.com/primodiumxyz/primodium",
-    "directory": "examples/template"
+    "directory": "examples/building-upgrade-bounty"
   },
   "license": "MIT",
   "scripts": {

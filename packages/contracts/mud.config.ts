@@ -801,7 +801,7 @@ const getConfig = async () => {
   return getWorld([]);
 };
 
-const config = process.env.NODE_ENV === "production" ? getConfigBuild() : await getConfig();
+const config = process.env.PRI_DEV === "true" ? await getConfig() : getConfigBuild();
 export default config;
 
 export const configInputs: ConfigWithPrototypes<typeof worldInput, (typeof worldInput)["tables"]> = {

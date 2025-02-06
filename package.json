@@ -1,12 +1,15 @@
 {
   "name": "primodium",
-  "private": true,
+  "description": "A fully onchain space-based resource management game.",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/primodiumxyz/primodium"
+  },
+  "license": "MIT",
   "scripts": {
     "build": "pnpm recursive run build",
     "build:contracts": "pnpm --filter 'contracts' build",
-    "clean": "bash clean.sh",
     "clean:indexer": "pnpm clean-local-docker-indexer",
-    "clean:modules": "find . -name 'node_modules' -type d -prune -exec rm -rf '{}' + && find . -name 'pnpm-lock.yaml' -type f -prune -exec rm -rf '{}' +",
     "deploy:caldera": "pnpm --filter 'contracts' deploy:caldera",
     "deploy:caldera-sepolia": "pnpm --filter 'contracts' deploy:caldera-sepolia",
     "deploy:local": "pnpm --filter 'contracts' deploy:local",
@@ -17,14 +20,13 @@
     "dev:core": "pnpm --filter 'core' run dev",
     "dev:indexer": "pnpm clean-local-docker-indexer && pnpm local-docker-indexer",
     "dev:node": "pnpm --filter 'contracts' devnode",
-    "dev:vercel": "vercel dev --local-config packages/client/vercel-dev.json",
     "export:assets": "pnpm --filter 'assets' export",
     "export:audio": "pnpm --filter 'assets' export-audio",
     "export:sprites": "pnpm --filter 'assets' export-sprites",
     "foundry:up": "curl -L https://foundry.paradigm.xyz | bash && bash $HOME/.foundry/bin/foundryup",
     "mud:up": "pnpm mud set-version --tag main && pnpm install",
     "prepare": "husky install && (forge --version || pnpm foundry:up)",
-    "sort-package-json": "npx sort-package-json package.json 'packages/*/package.json'",
+    "sort-package-json": "npx sort-package-json package.json 'packages/*/package.json examples/*/package.json'",
     "test": "pnpm recursive run test",
     "upgrade:mud": "pnpm mud set-version --tag=next"
   },
@@ -35,21 +37,20 @@
   },
   "devDependencies": {
     "@latticexyz/cli": "2.0.9",
-    "@primodiumxyz/pg-indexer-reader": "^0.6.6",
+    "@primodiumxyz/pg-indexer-reader": "^0.6.14",
     "@typescript-eslint/eslint-plugin": "5.46.1",
     "@typescript-eslint/parser": "5.46.1",
-    "concurrently": "^8.0.1",
     "eslint": "8.29.0",
     "husky": ">=6",
     "lint-staged": ">=10",
-    "rimraf": "^3.0.2",
     "run-pty": "^5.0.0",
     "semantic-release": "^24.0.0",
     "semantic-release-monorepo": "^8.0.2",
     "typescript": "5.5.2"
   },
+  "packageManager": "pnpm@8.15.9+sha512.499434c9d8fdd1a2794ebf4552b3b25c0a633abcee5bb15e7b5de90f32f47b513aca98cd5cfd001c31f0db454bc3804edccd578501e4ca293a6816166bbd9f81",
   "engines": {
-    "node": "18.x",
+    "node": "20.x",
     "pnpm": "8.x"
   }
 }
