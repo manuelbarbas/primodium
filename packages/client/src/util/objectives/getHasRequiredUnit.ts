@@ -1,7 +1,8 @@
-import { Entity } from "@primodiumxyz/reactive-tables";
-import { ObjectiveReq, TrainUnitObjective } from "./types";
 import { Core, getEntityTypeName } from "@primodiumxyz/core";
+import { Entity } from "@primodiumxyz/reactive-tables";
 import { EntityToUnitImage } from "@/util/image";
+
+import { ObjectiveReq, TrainUnitObjective } from "./types";
 
 export function getHasRequiredUnit({ tables }: Core, asteroid: Entity, objective: TrainUnitObjective): ObjectiveReq {
   const hangar = tables.Hangar.get(asteroid);

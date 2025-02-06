@@ -1,6 +1,7 @@
-import { useCore } from "@primodiumxyz/core/react";
-import { BarLayoutUtilityLabel } from "./UtilityLabel";
 import { EntityType } from "@primodiumxyz/core";
+import { useCore } from "@primodiumxyz/core/react";
+
+import { BarLayoutUtilityLabel } from "./UtilityLabel";
 
 export const AllUtilityLabels = () => {
   const { tables } = useCore();

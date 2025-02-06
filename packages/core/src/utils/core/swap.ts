@@ -5,8 +5,9 @@ import { Tables } from "@/lib/types";
 export function createSwapUtils(tables: Tables) {
   /**
    * (Market) Gets the amount of out resource given an amount of in resource
-   * @param inAmount unscaled amount of in resource
-   * @param path array of entities representing the path of the swap
+   *
+   * @param inAmount Unscaled amount of in resource
+   * @param path Array of entities representing the path of the swap
    * @returns
    */
   function getOutAmount(inAmount: bigint, path: Entity[]): bigint {
@@ -15,8 +16,9 @@ export function createSwapUtils(tables: Tables) {
 
   /**
    * (Market) Gets the amount of in resource given an amount of out resource
-   * @param inAmount unscaled amount of in resource
-   * @param path array of entities representing the path of the swap
+   *
+   * @param inAmount Unscaled amount of in resource
+   * @param path Array of entities representing the path of the swap
    * @returns
    */
   function getInAmount(outAmount: bigint, path: Entity[]): bigint {

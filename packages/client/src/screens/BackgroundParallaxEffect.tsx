@@ -1,8 +1,9 @@
+import { memo, useEffect, useRef } from "react";
+
+import { lerp, Mode } from "@primodiumxyz/core";
+import { useCore } from "@primodiumxyz/core/react";
 import { ModeToSceneKey } from "@primodiumxyz/game";
 import { useGame } from "@/hooks/useGame";
-import { useCore } from "@primodiumxyz/core/react";
-import { lerp, Mode } from "@primodiumxyz/core";
-import { memo, useEffect, useRef } from "react";
 
 export const BackgroundParallaxEffect = memo(() => {
   const { tables } = useCore();
@@ -26,7 +27,7 @@ export const BackgroundParallaxEffect = memo(() => {
           game[sceneKey].config.camera.minZoom,
           game[sceneKey].config.camera.maxZoom,
           1,
-          1.25
+          1.25,
         )})`;
       }
     });

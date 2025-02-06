@@ -1,14 +1,15 @@
-import { describe, it, expect } from "vitest";
-import { commonTests, createTestConfig } from "../lib/common";
 import { render, screen } from "@testing-library/react";
 import React from "react";
+import { describe, expect, it } from "vitest";
 
-import { AccountClientProvider, CoreProvider, useCore } from "../../src/react/hooks";
-import { createCore } from "../../src/createCore";
-import { useAccountClient } from "../../src/react/hooks/useAccountClient";
+import { createCore } from "@/createCore";
+import { AccountClientProvider, CoreProvider, useCore } from "@/react/hooks";
+import { useAccountClient } from "@/react/hooks/useAccountClient";
+
+import { commonTests, createTestConfig } from "../lib/common";
 
 describe("browser", () => {
-  const { coreConfig, address, privateKey } = createTestConfig();
+  const { coreConfig, privateKey } = createTestConfig();
 
   commonTests();
 
@@ -19,7 +20,7 @@ describe("browser", () => {
 
         return (
           <div>
-            <p>{core.config.playerAddress}</p>
+            <p>{core.config.initialBlockNumber?.toString()}</p>
           </div>
         );
       };
@@ -30,10 +31,11 @@ describe("browser", () => {
       render(
         <CoreProvider {...core}>
           <TestCoreComponent />
-        </CoreProvider>
+        </CoreProvider>,
       );
 
-      expect(screen.getAllByText(address)[0]).toBeInTheDocument();
+      // @ts-expect-error Property 'toBeInTheDocument' does not exist on type 'Assertion<HTMLElement>'
+      expect(screen.getAllByText(coreConfig.initialBlockNumber?.toString() ?? "")[0]).toBeInTheDocument();
     });
 
     it("should contain account client in a hook", () => {
@@ -53,9 +55,11 @@ describe("browser", () => {
           <AccountClientProvider playerPrivateKey={privateKey} sessionPrivateKey={privateKey}>
             <TestCoreComponent />
           </AccountClientProvider>
-        </CoreProvider>
+        </CoreProvider>,
       );
-      expect(screen.getAllByText(address)[0]).toBeInTheDocument();
+
+      // @ts-expect-error Property 'toBeInTheDocument' does not exist on type 'Assertion<HTMLElement>'
+      expect(screen.getAllByText(coreConfig.initialBlockNumber?.toString() ?? "")[0]).toBeInTheDocument();
     });
   });
 });

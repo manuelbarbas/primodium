@@ -1,11 +1,12 @@
-import { Entity } from "@primodiumxyz/reactive-tables";
-import { ClaimableObjective, ObjectiveReq } from "./types";
 import { Core } from "@primodiumxyz/core";
+import { Entity } from "@primodiumxyz/reactive-tables";
+
+import { ClaimableObjective, ObjectiveReq } from "./types";
 
 export const getHasClaimableObjective = (
   { tables }: Core,
   objectiveEntity: Entity,
-  objective: ClaimableObjective
+  objective: ClaimableObjective,
 ): ObjectiveReq => {
   const isClaimable = tables.IsObjectiveClaimable.get(objectiveEntity);
   return {

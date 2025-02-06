@@ -1,8 +1,8 @@
-import { Entity } from "@primodiumxyz/reactive-tables";
 import { InterfaceIcons } from "@primodiumxyz/assets";
+import { Entity } from "@primodiumxyz/reactive-tables";
 import { SecondaryCard } from "@/components/core/Card";
 import { Modal } from "@/components/core/Modal";
-import { Swap } from "../../../global/modals/Swap";
+import { Swap } from "@/components/hud/global/modals/Swap";
 
 export const OpenMarket: React.FC<{ building: Entity }> = ({ building }) => {
   return (

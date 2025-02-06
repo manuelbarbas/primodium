@@ -1,16 +1,17 @@
-import { Core, AccountClient, TxQueueOptions, Coord, ExecuteFunctions } from "@primodiumxyz/core";
-import { Entity } from "@primodiumxyz/reactive-tables";
 import { EFleetStance, EObjectives } from "contracts/config/enums";
-import { makeObjectiveClaimable } from "@/util/objectives/makeObjectiveClaimable";
+
+import { AccountClient, Coord, Core, ExecuteFunctions, TxQueueOptions } from "@primodiumxyz/core";
+import { Entity } from "@primodiumxyz/reactive-tables";
 import { ampli } from "@/ampli";
 import { parseReceipt } from "@/contractCalls/parseReceipt";
+import { makeObjectiveClaimable } from "@/util/objectives/makeObjectiveClaimable";
 
 export const createFleetCalls = (core: Core, { playerAccount }: AccountClient, { execute }: ExecuteFunctions) => {
   const { tables, utils } = core;
   const createFleet = async (
     asteroidEntity: Entity,
     deltas: Map<Entity, bigint>,
-    options?: Partial<TxQueueOptions>
+    options?: Partial<TxQueueOptions>,
   ) => {
     await execute({
       functionName: "Pri_11__createFleet",
@@ -234,8 +235,8 @@ export const createFleetCalls = (core: Core, { playerAccount }: AccountClient, {
       stance == EFleetStance.Defend
         ? EObjectives.DefendWithFleet
         : stance == EFleetStance.Block
-        ? EObjectives.BlockWithFleet
-        : undefined;
+          ? EObjectives.BlockWithFleet
+          : undefined;
     await execute({
       functionName: "Pri_11__setFleetStance",
 

@@ -1,7 +1,7 @@
 import Phaser from "phaser";
+
 import { PixelCoord } from "@primodiumxyz/engine/types";
 import { Entity } from "@primodiumxyz/reactive-tables";
-
 import { PrimodiumScene } from "@game/types";
 import { IPrimodiumGameObject } from "./interfaces";
 

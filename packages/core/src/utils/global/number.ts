@@ -1,9 +1,11 @@
-import { Entity } from "@primodiumxyz/reactive-tables";
 import { formatUnits, parseUnits } from "viem";
+
+import { Entity } from "@primodiumxyz/reactive-tables";
 import { getResourceDecimals } from "@/utils/global/scale";
 
 /**
  * Converts a bigint or number to a number within the safe range of JavaScript.
+ *
  * @param value - The value to convert.
  * @returns The converted number.
  */
@@ -17,6 +19,7 @@ export function bigintToNumber(value: bigint | number): number {
 
 /**
  * Adjusts the decimals of a number.
+ *
  * @param num - The number to adjust.
  * @param toFixed - The number of fixed decimal places.
  * @returns The adjusted number.
@@ -34,6 +37,7 @@ export function adjustDecimals(num: string, toFixed: number): string {
 
 /**
  * Gets the decimal representation of a number.
+ *
  * @param num - The number.
  * @param max - The maximum number of decimal places.
  * @returns The decimal representation.
@@ -48,6 +52,7 @@ type FormatOptions = { fractionDigits?: number; short?: boolean; showZero?: bool
 
 /**
  * Returns the maximum of two bigints.
+ *
  * @param a - The first bigint.
  * @param b - The second bigint.
  * @returns The maximum bigint.
@@ -56,6 +61,7 @@ export const bigintMax = (a: bigint, b: bigint): bigint => (a > b ? a : b);
 
 /**
  * Returns the minimum of two bigints.
+ *
  * @param a - The first bigint.
  * @param b - The second bigint.
  * @returns The minimum bigint.
@@ -64,6 +70,7 @@ export const bigintMin = (a: bigint, b: bigint): bigint => (a < b ? a : b);
 
 /**
  * Formats a resource count.
+ *
  * @param resource - The resource entity.
  * @param amountRaw - The raw amount.
  * @param formatOptions - The formatting options.
@@ -79,6 +86,7 @@ export const formatResourceCount = (resource: Entity, amountRaw: bigint, formatO
 
 /**
  * Parses a resource count.
+ *
  * @param resource - The resource entity.
  * @param amount - The amount to parse.
  * @returns The parsed amount.
@@ -100,6 +108,7 @@ const shorten = (n: number, digits: number): string => {
 
 /**
  * Formats a number.
+ *
  * @param num - The number to format.
  * @param options - The formatting options.
  * @returns The formatted number.
@@ -127,6 +136,7 @@ export function formatNumber(num: number | bigint, options?: FormatOptions): str
 
 /**
  * Formats time.
+ *
  * @param rawSeconds - The raw time in seconds.
  * @returns The formatted time.
  */
@@ -143,6 +153,7 @@ export function formatTime(rawSeconds: number | bigint): string {
 
 /**
  * Formats time in a short format.
+ *
  * @param rawSeconds - The raw time in seconds.
  * @returns The formatted time.
  */
@@ -158,6 +169,7 @@ export function formatTimeShort(rawSeconds: number | bigint): string {
 
 /**
  * Formats time ago.
+ *
  * @param time - The time.
  * @returns The formatted time ago string.
  */

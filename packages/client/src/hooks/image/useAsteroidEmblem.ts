@@ -1,8 +1,9 @@
-import { useGame } from "@/hooks/useGame";
+import { useMemo } from "react";
+
 import { InterfaceIcons } from "@primodiumxyz/assets";
 import { useCore } from "@primodiumxyz/core/react";
 import { Entity } from "@primodiumxyz/reactive-tables";
-import { useMemo } from "react";
+import { useGame } from "@/hooks/useGame";
 
 export function useAsteroidEmblem(asteroid?: Entity): string {
   const game = useGame();

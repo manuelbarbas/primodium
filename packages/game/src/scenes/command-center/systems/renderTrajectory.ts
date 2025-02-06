@@ -1,6 +1,5 @@
-import { Entity, namespaceWorld, defaultEntity } from "@primodiumxyz/reactive-tables";
 import { Core } from "@primodiumxyz/core";
-
+import { defaultEntity, Entity, namespaceWorld } from "@primodiumxyz/reactive-tables";
 import { TargetLine } from "@game/lib/objects/TargetLine";
 import { PrimodiumScene } from "@game/types";
 

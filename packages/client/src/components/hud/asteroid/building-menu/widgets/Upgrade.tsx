@@ -1,14 +1,14 @@
-import { Button } from "@/components/core/Button";
-import { Entity } from "@primodiumxyz/reactive-tables";
 import { InterfaceIcons } from "@primodiumxyz/assets";
+import { getEntityTypeName } from "@primodiumxyz/core";
+import { useBuildingInfo, useCore, useHasEnoughResources } from "@primodiumxyz/core/react";
+import { Entity } from "@primodiumxyz/reactive-tables";
 import { Badge } from "@/components/core/Badge";
+import { Button } from "@/components/core/Button";
 import { SecondaryCard } from "@/components/core/Card";
 import { ResourceIconTooltip } from "@/components/shared/ResourceIconTooltip";
 import { TransactionQueueMask } from "@/components/shared/TransactionQueueMask";
-import { useCore, useHasEnoughResources, useBuildingInfo } from "@primodiumxyz/core/react";
-import { getEntityTypeName } from "@primodiumxyz/core";
-import { EntityToResourceImage } from "@/util/image";
 import { useContractCalls } from "@/hooks/useContractCalls";
+import { EntityToResourceImage } from "@/util/image";
 
 export const Upgrade: React.FC<{ building: Entity }> = ({ building }) => {
   const { tables } = useCore();

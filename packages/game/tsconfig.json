@@ -6,6 +6,6 @@
       "@client/*": ["../client/src/*"]
     }
   },
-  "references": [{ "path": "../client" }],
+  "references": [{ "path": "../client" }, { "path": "../engine" }],
   "exclude": ["node_modules", "dist"]
 }

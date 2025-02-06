@@ -1,8 +1,8 @@
-import { Entity, defaultEntity } from "@primodiumxyz/reactive-tables";
 import { Mode, RockRelationshipColors } from "@primodiumxyz/core";
-import { useCore, useAccountClient, usePlayerName } from "@primodiumxyz/core/react";
+import { useAccountClient, useCore, usePlayerName } from "@primodiumxyz/core/react";
+import { defaultEntity, Entity } from "@primodiumxyz/reactive-tables";
+import { Modal } from "@/components/core/Modal";
 import { useGame } from "@/hooks/useGame";
-import { Modal } from "../core/Modal";
 
 export const AccountDisplay: React.FC<{
   player: Entity | undefined;

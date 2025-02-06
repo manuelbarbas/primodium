@@ -1,12 +1,13 @@
-import { Entity } from "@primodiumxyz/reactive-tables";
-
-import { Join } from "@/components/core/Join";
-import { Tabs } from "@/components/core/Tabs";
 import { Hex } from "viem";
-import { ClaimedObjectives } from "./ClaimedObjectives";
-import { UnclaimedObjectives } from "./UnclaimedObjectives";
+
 import { ObjectiveEntityLookup } from "@primodiumxyz/core";
 import { useAccountClient, useCore } from "@primodiumxyz/core/react";
+import { Entity } from "@primodiumxyz/reactive-tables";
+import { Join } from "@/components/core/Join";
+import { Tabs } from "@/components/core/Tabs";
+
+import { ClaimedObjectives } from "./ClaimedObjectives";
+import { UnclaimedObjectives } from "./UnclaimedObjectives";
 
 export const ObjectivesScreen: React.FC<{ highlight?: Entity }> = ({ highlight }) => {
   const {

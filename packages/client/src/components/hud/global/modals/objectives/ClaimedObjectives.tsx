@@ -1,13 +1,14 @@
-import { SecondaryCard } from "@/components/core/Card";
-import { defaultEntity } from "@primodiumxyz/reactive-tables";
-import { useCore } from "@primodiumxyz/core/react";
-
 import { useMemo, useState } from "react";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
-import { Button } from "@/components/core/Button";
 import { Hex } from "viem";
-import { Objective } from "./Objective";
+
 import { ObjectiveEntityLookup } from "@primodiumxyz/core";
+import { useCore } from "@primodiumxyz/core/react";
+import { defaultEntity } from "@primodiumxyz/reactive-tables";
+import { Button } from "@/components/core/Button";
+import { SecondaryCard } from "@/components/core/Card";
+
+import { Objective } from "./Objective";
 
 export const ClaimedObjectives: React.FC = () => {
   const [currentPage, setCurrentPage] = useState(0);

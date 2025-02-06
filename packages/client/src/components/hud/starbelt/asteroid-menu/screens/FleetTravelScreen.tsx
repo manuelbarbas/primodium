@@ -1,15 +1,16 @@
-import { Navigator } from "@/components/core/Navigator";
+import { EFleetStance } from "contracts/config/enums";
+import React, { useMemo } from "react";
+import { FaInfoCircle } from "react-icons/fa";
+
+import { InterfaceIcons } from "@primodiumxyz/assets";
+import { entityToFleetName, entityToRockName, formatTime } from "@primodiumxyz/core";
+import { useCore } from "@primodiumxyz/core/react";
+import { Entity, useQuery } from "@primodiumxyz/reactive-tables";
+import { Button } from "@/components/core/Button";
 import { SecondaryCard } from "@/components/core/Card";
 import { IconLabel } from "@/components/core/IconLabel";
-import { InterfaceIcons } from "@primodiumxyz/assets";
-import React, { useMemo } from "react";
-import { EFleetStance } from "contracts/config/enums";
-import { Button } from "@/components/core/Button";
-import { FaInfoCircle } from "react-icons/fa";
+import { Navigator } from "@/components/core/Navigator";
 import { TransactionQueueMask } from "@/components/shared/TransactionQueueMask";
-import { Entity, useQuery } from "@primodiumxyz/reactive-tables";
-import { useCore } from "@primodiumxyz/core/react";
-import { entityToFleetName, entityToRockName, formatTime } from "@primodiumxyz/core";
 import { useContractCalls } from "@/hooks/useContractCalls";
 
 export const Fleet: React.FC<{ fleetEntity: Entity; playerEntity: Entity; selectedRock: Entity }> = ({
@@ -46,7 +47,7 @@ export const Fleet: React.FC<{ fleetEntity: Entity; playerEntity: Entity; select
       startPos ?? { x: 0, y: 0 },
       destPos ?? { x: 0, y: 0 },
       playerEntity,
-      Object.fromEntries(utils.getFleetUnitCounts(fleetEntity))
+      Object.fromEntries(utils.getFleetUnitCounts(fleetEntity)),
     );
   }, [movement, playerEntity, selectedRock, fleetEntity]);
 
@@ -67,7 +68,7 @@ export const Fleet: React.FC<{ fleetEntity: Entity; playerEntity: Entity; select
         <div>
           <p className="text-sm">{entityToFleetName(fleetEntity)}</p>
           <p className="opacity-75 text-xs">{`${fleetStateText} ${entityToRockName(
-            movement?.destination as Entity
+            movement?.destination as Entity,
           )}`}</p>
         </div>
       </div>
@@ -139,18 +140,18 @@ export const FleetTravelScreen: React.FC<{ selectedRock: Entity }> = ({ selected
             aPos,
             destPos,
             playerEntity,
-            Object.fromEntries(utils.getFleetUnitCounts(a))
+            Object.fromEntries(utils.getFleetUnitCounts(a)),
           );
           const bLen = utils.getMoveLength(
             bPos,
             destPos,
             playerEntity,
-            Object.fromEntries(utils.getFleetUnitCounts(b))
+            Object.fromEntries(utils.getFleetUnitCounts(b)),
           );
 
           return aLen - bLen;
         }),
-    [fleets, playerEntity, selectedRock]
+    [fleets, playerEntity, selectedRock],
   );
 
   const orbitingFleets = useMemo(() => {

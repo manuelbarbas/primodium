@@ -1,9 +1,10 @@
 import { AnimatePresence, motion } from "framer-motion";
-import { Loader } from "@/components/core/Loader";
 import { useEffect } from "react";
 import { toast } from "react-toastify";
-import { Entity } from "@primodiumxyz/reactive-tables";
+
 import { useSyncStatus } from "@primodiumxyz/core/react";
+import { Entity } from "@primodiumxyz/reactive-tables";
+import { Loader } from "@/components/core/Loader";
 
 export const LoadingOverlay = ({
   syncId,

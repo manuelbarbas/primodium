@@ -1,5 +1,5 @@
-import { ChunkCoord, PixelCoord, Scene, TileCoord } from "@primodiumxyz/engine/types";
 import * as Coord from "@primodiumxyz/engine/lib/util/coords";
+import { ChunkCoord, PixelCoord, Scene, TileCoord } from "@primodiumxyz/engine/types";
 
 export const createUtilApi = (scene: Scene) => {
   function pixelCoordToTileCoord(coord: PixelCoord): TileCoord {
@@ -19,7 +19,7 @@ export const createUtilApi = (scene: Scene) => {
       coord,
       scene.config.tilemap.tileWidth,
       scene.config.tilemap.tileHeight,
-      scene.config.cullingChunkSize
+      scene.config.cullingChunkSize,
     );
   }
 
@@ -32,7 +32,7 @@ export const createUtilApi = (scene: Scene) => {
       coord,
       scene.config.tilemap.tileWidth,
       scene.config.tilemap.tileHeight,
-      scene.config.cullingChunkSize
+      scene.config.cullingChunkSize,
     );
   }
 

@@ -1,15 +1,14 @@
-import { useCore } from "@/react/hooks/useCore";
 import { createBurnerAccount, transportObserver } from "@latticexyz/common";
 import { createClient as createFaucetClient } from "@latticexyz/faucet";
-import React, { useCallback, useMemo, useRef, useState } from "react";
-import { createLocalAccount } from "@/account/createLocalAccount";
-import { createExternalAccount } from "@/account/createExternalAccount";
-import { AccountClient, ExternalAccount, LocalAccount } from "@/lib/types";
-import { minEth } from "@/lib/constants";
-import { Address, Hex, createWalletClient, fallback, formatEther, http } from "viem";
-import { storage } from "@/utils/global/storage";
+import React, { createContext, ReactNode, useCallback, useMemo, useRef, useState } from "react";
+import { Address, createWalletClient, fallback, formatEther, Hex, http } from "viem";
 
-import { createContext, ReactNode } from "react";
+import { createExternalAccount } from "@/account/createExternalAccount";
+import { createLocalAccount } from "@/account/createLocalAccount";
+import { minEth } from "@/lib/constants";
+import { AccountClient, ExternalAccount, LocalAccount } from "@/lib/types";
+import { useCore } from "@/react/hooks/useCore";
+import { storage } from "@/utils/global/storage";
 
 type AccountClientOptions = {
   playerAddress?: Address;
@@ -26,8 +25,8 @@ export const AccountClientContext = createContext<AccountClient | undefined>(und
  *
  * @param children - The child components to be wrapped by the account client context.
  * @param options - The options for the account provider.
- * @throws Will throw an error if neither playerAddress nor playerPrivateKey is provided.
  * @returns The account client provider.
+ * @throws Will throw an error if neither playerAddress nor playerPrivateKey is provided.
  */
 export function AccountClientProvider({ children, ...options }: AccountProviderProps) {
   if (!options.playerAddress && !options.playerPrivateKey) throw new Error("Must provide address or private key");
@@ -76,7 +75,7 @@ export function AccountClientProvider({ children, ...options }: AccountProviderP
         console.info(`[Dev Drip] Dripped ${formatEther(amountToDrip)} to ${address}`);
       }
     },
-    [externalWalletClient, faucet, publicClient]
+    [externalWalletClient, faucet, publicClient],
   );
 
   /* ----------------------------- Player Account ----------------------------- */
@@ -85,7 +84,7 @@ export function AccountClientProvider({ children, ...options }: AccountProviderP
 
   const [playerAccount, setPlayerAccount] = useState<LocalAccount | ExternalAccount>(
     // this is a hack to make typescript happy with overloaded function params
-    _updatePlayerAccount(options as { playerAddress: Address })
+    _updatePlayerAccount(options as { playerAddress: Address }),
   );
 
   function _updatePlayerAccount(options: { playerAddress: Address }): ExternalAccount;
@@ -140,11 +139,11 @@ export function AccountClientProvider({ children, ...options }: AccountProviderP
       sessionAccountInterval.current = setInterval(() => requestDrip(account.address), 4000);
       return account;
     },
-    [playerAccount?.address, requestDrip, sessionAccountInterval]
+    [playerAccount?.address, requestDrip, sessionAccountInterval],
   );
 
   const [sessionAccount, setSessionAccount] = useState<LocalAccount | null>(
-    options.sessionPrivateKey ? _updateSessionAccount(options.sessionPrivateKey) : null
+    options.sessionPrivateKey ? _updateSessionAccount(options.sessionPrivateKey) : null,
   );
 
   const updateSessionAccount = useCallback(
@@ -154,7 +153,7 @@ export function AccountClientProvider({ children, ...options }: AccountProviderP
       setSessionAccount(account);
       return account;
     },
-    [_updateSessionAccount]
+    [_updateSessionAccount],
   );
 
   const removeSessionAccount = useCallback(() => {

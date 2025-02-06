@@ -1,19 +1,9 @@
 import { bigIntMax, bigIntMin } from "@latticexyz/common/utils";
-import { Entity } from "@primodiumxyz/reactive-tables";
-import { useEffect, useMemo } from "react";
-import { ResourceIcon } from "./ResourceIcon";
-import { TransferSelect } from "@/components/hud/command/transfer/TransferSelect";
-import { useTransfer } from "@/hooks/providers/TransferProvider";
-import { Card, GlassCard, SecondaryCard } from "@/components/core/Card";
-import { AsteroidCard } from "@/components/hud/command/AsteroidCard";
-import { _FleetCard } from "@/components/hud/command/FleetCard";
-import { cn } from "@/util/client";
-import { Button } from "@/components/core/Button";
-import { TransactionQueueMask } from "@/components/shared/TransactionQueueMask";
 import { EResource } from "contracts/config/enums";
-import { Hex } from "viem";
+import { useEffect, useMemo } from "react";
 import { FaExclamationTriangle } from "react-icons/fa";
-import { useAccountClient, useCore, usePlayerOwner } from "@primodiumxyz/core/react";
+import { Hex } from "viem";
+
 import {
   entityToFleetName,
   getEntityTypeName,
@@ -22,6 +12,18 @@ import {
   UnitStorages,
   UtilityStorages,
 } from "@primodiumxyz/core";
+import { useAccountClient, useCore, usePlayerOwner } from "@primodiumxyz/core/react";
+import { Entity } from "@primodiumxyz/reactive-tables";
+import { Button } from "@/components/core/Button";
+import { Card, GlassCard, SecondaryCard } from "@/components/core/Card";
+import { AsteroidCard } from "@/components/hud/command/AsteroidCard";
+import { _FleetCard } from "@/components/hud/command/FleetCard";
+import { TransferSelect } from "@/components/hud/command/transfer/TransferSelect";
+import { TransactionQueueMask } from "@/components/shared/TransactionQueueMask";
+import { useTransfer } from "@/hooks/providers/TransferProvider";
+import { cn } from "@/util/client";
+
+import { ResourceIcon } from "./ResourceIcon";
 
 export const TransferPane = (props: {
   side: "left" | "right";
@@ -153,26 +155,32 @@ export const _TransferPane = (props: {
     }
 
     // make sure we have enough storage for housing
-    const utilitiesAdded = [...deltas.entries()].reduce((acc, [unit, count]) => {
-      if (!UnitStorages.has(unit)) return acc;
-      const level = tables.UnitLevel.getWithKeys({ unit: unit as Hex, entity: entity as Hex })?.value ?? 0n;
-      const requiredResources = tables.P_RequiredResources.getWithKeys({ prototype: unit as Hex, level });
-      if (!requiredResources) return acc;
-      requiredResources.resources.forEach((rawResource, i) => {
-        const resource = ResourceEntityLookup[rawResource as EResource];
-        if (!UtilityStorages.has(resource)) return;
-        const amount = requiredResources.amounts[i] * (invert ? -count : count);
-        acc[resource] ? (acc[resource] += amount) : (acc[resource] = amount);
-      });
-      return acc;
-    }, {} as Record<Entity, bigint>);
+    const utilitiesAdded = [...deltas.entries()].reduce(
+      (acc, [unit, count]) => {
+        if (!UnitStorages.has(unit)) return acc;
+        const level = tables.UnitLevel.getWithKeys({ unit: unit as Hex, entity: entity as Hex })?.value ?? 0n;
+        const requiredResources = tables.P_RequiredResources.getWithKeys({ prototype: unit as Hex, level });
+        if (!requiredResources) return acc;
+        requiredResources.resources.forEach((rawResource, i) => {
+          const resource = ResourceEntityLookup[rawResource as EResource];
+          if (!UtilityStorages.has(resource)) return;
+          const amount = requiredResources.amounts[i] * (invert ? -count : count);
+          acc[resource] ? (acc[resource] += amount) : (acc[resource] = amount);
+        });
+        return acc;
+      },
+      {} as Record<Entity, bigint>,
+    );
 
     if (!sameOwnerRock) {
-      const notEnoughUtilities = Object.entries(utilitiesAdded).reduce((acc, [resource, count]) => {
-        const { resourceCount } = utils.getResourceCount(resource as Entity, asteroid);
-        if (count <= resourceCount) return acc;
-        return [...acc, { entity: resource as Entity, resourceCount, count }];
-      }, [] as { entity: Entity; resourceCount: bigint; count: bigint }[]);
+      const notEnoughUtilities = Object.entries(utilitiesAdded).reduce(
+        (acc, [resource, count]) => {
+          const { resourceCount } = utils.getResourceCount(resource as Entity, asteroid);
+          if (count <= resourceCount) return acc;
+          return [...acc, { entity: resource as Entity, resourceCount, count }];
+        },
+        [] as { entity: Entity; resourceCount: bigint; count: bigint }[],
+      );
 
       if (notEnoughUtilities.length > 0)
         return {
@@ -184,11 +192,14 @@ export const _TransferPane = (props: {
     }
     if (!isFleet) {
       // make sure we have enough storage for resources
-      const notEnoughResources = [...resourceCounts.entries()].reduce((acc, [resource, count]) => {
-        const { resourceStorage } = utils.getResourceCount(resource as Entity, asteroid);
-        if (count <= resourceStorage) return acc;
-        return [...acc, { entity: resource as Entity, resourceStorage, count }];
-      }, [] as { entity: Entity; resourceStorage: bigint; count: bigint }[]);
+      const notEnoughResources = [...resourceCounts.entries()].reduce(
+        (acc, [resource, count]) => {
+          const { resourceStorage } = utils.getResourceCount(resource as Entity, asteroid);
+          if (count <= resourceStorage) return acc;
+          return [...acc, { entity: resource as Entity, resourceStorage, count }];
+        },
+        [] as { entity: Entity; resourceStorage: bigint; count: bigint }[],
+      );
 
       if (notEnoughResources.length > 0) {
         return {
@@ -233,7 +244,7 @@ export const _TransferPane = (props: {
         className={cn(
           "grid grid-rows-[10rem_1fr] gap-2 h-full overflow-y-auto scrollbar",
           hovering === props.side ? "ring ring-1 ring-accent" : "",
-          flashing === props.side ? "ring ring-1 ring-error" : ""
+          flashing === props.side ? "ring ring-1 ring-error" : "",
         )}
         onMouseLeave={() => setHovering(null)}
         onMouseOver={onMouseOver}

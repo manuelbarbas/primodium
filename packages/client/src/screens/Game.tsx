@@ -1,16 +1,16 @@
 import { memo, useEffect, useRef, useState } from "react";
 
-import { YouDied } from "@/screens/YouDied";
+import { Keys } from "@primodiumxyz/core";
+import { useAccountClient, useCore, usePlayerAsteroids, useSyncStatus } from "@primodiumxyz/core/react";
 import { initGame, PrimodiumGame } from "@primodiumxyz/game";
 import { Progress } from "@/components/core/Progress";
-import { GameProvider } from "@/hooks/providers/GameProvider";
 import { GameHUD } from "@/components/hud";
+import { GameProvider } from "@/hooks/providers/GameProvider";
 import { WidgetProvider } from "@/hooks/providers/WidgetProvider";
-import { CommandBackgroundEffect } from "@/screens/CommandBackgroundEffect";
-import { BackgroundParallaxEffect } from "@/screens/BackgroundParallaxEffect";
-import { useSyncStatus, usePlayerAsteroids, useCore, useAccountClient } from "@primodiumxyz/core/react";
-import { Keys } from "@primodiumxyz/core";
 import { useContractCalls } from "@/hooks/useContractCalls";
+import { BackgroundParallaxEffect } from "@/screens/BackgroundParallaxEffect";
+import { CommandBackgroundEffect } from "@/screens/CommandBackgroundEffect";
+import { YouDied } from "@/screens/YouDied";
 
 const params = new URLSearchParams(window.location.search);
 

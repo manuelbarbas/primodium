@@ -1,7 +1,7 @@
-import { Entity } from "@primodiumxyz/reactive-tables";
-import { IconLabel } from "../core/IconLabel";
 import { formatNumber, getScale, ResourceType } from "@primodiumxyz/core";
 import { useHasEnoughOfResource } from "@primodiumxyz/core/react";
+import { Entity } from "@primodiumxyz/reactive-tables";
+import { IconLabel } from "@/components/core/IconLabel";
 
 type ResourceIconProps<V extends boolean | undefined> = {
   image: string;

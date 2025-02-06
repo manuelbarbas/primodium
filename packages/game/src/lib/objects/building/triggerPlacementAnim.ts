@@ -1,15 +1,14 @@
-import { Coord } from "@primodiumxyz/engine/types";
-import { tileCoordToPixelCoord } from "@primodiumxyz/engine/lib/util/coords";
 import { Dimensions } from "@primodiumxyz/core";
-
-import { PrimodiumScene } from "@game/types";
+import { tileCoordToPixelCoord } from "@primodiumxyz/engine/lib/util/coords";
+import { Coord } from "@primodiumxyz/engine/types";
 import { Entity } from "@primodiumxyz/reactive-tables";
+import { PrimodiumScene } from "@game/types";
 
 export const triggerPlacementAnim = (
   scene: PrimodiumScene,
   entity: Entity,
   mapCoord: Coord,
-  dimensions: Dimensions
+  dimensions: Dimensions,
 ) => {
   const flare = (absoluteCoord: Coord, size = 1) => {
     scene.audio.play("Impact", "sfx");
@@ -43,6 +42,6 @@ export const triggerPlacementAnim = (
       x: pixelCoord.x + (tileWidth * dimensions.width) / 2,
       y: -pixelCoord.y + (tileHeight * dimensions.height) / 2,
     },
-    dimensions.width
+    dimensions.width,
   );
 };

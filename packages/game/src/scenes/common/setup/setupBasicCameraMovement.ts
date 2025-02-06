@@ -16,7 +16,7 @@ export const setupBasicCameraMovement = (
     doubleClickZoom?: boolean;
     wheel?: boolean;
     center?: boolean;
-  } = {}
+  } = {},
 ) => {
   const { maxZoom, minZoom, wheelSpeed } = scene.config.camera;
   const {
@@ -169,9 +169,9 @@ export const setupBasicCameraMovement = (
       // Scroll the camera to keep the pointer under the same world point.
       scene.camera.setScroll(
         camera.scrollX - (newWorldPoint.x - worldPoint.x),
-        camera.scrollY - (newWorldPoint.y - worldPoint.y)
+        camera.scrollY - (newWorldPoint.y - worldPoint.y),
       );
-    }
+    },
   );
 
   world.registerDisposer(() => {

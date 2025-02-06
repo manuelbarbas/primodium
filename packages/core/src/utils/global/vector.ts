@@ -2,6 +2,7 @@ import { Coord } from "@/lib/types";
 
 /**
  * Converts degrees to radians.
+ *
  * @param degrees - The angle in degrees.
  * @returns The angle in radians.
  */
@@ -9,6 +10,7 @@ export const deg2rad = (degrees: number) => degrees * (Math.PI / 180);
 
 /**
  * Calculate the position by vector.
+ *
  * @param distance - The distance.
  * @param direction - The direction.
  * @param origin - The origin.
@@ -32,6 +34,7 @@ export function getPositionByVector(distance: number, direction: number, origin:
 
 /**
  * Calculate the angle between two points.
+ *
  * @param p1 - The first point.
  * @param p2 - The second point.
  * @returns The angle between the points.
@@ -60,6 +63,7 @@ const PI_OVER_TWO: bigint = PI / TWO;
 
 /**
  * Calculate the sine of an angle in degrees.
+ *
  * @param _angle - The angle in degrees.
  * @returns The sine value in radians.
  */
@@ -75,6 +79,7 @@ export function solSinDegrees(_angle: number): bigint {
 
 /**
  * Calculate the cosine of an angle in degrees.
+ *
  * @param _angle - The angle in degrees.
  * @returns The cosine value.
  */
@@ -90,6 +95,7 @@ export function solCosDegrees(_angle: number) {
 
 /**
  * Calculate the sine of an angle in radians.
+ *
  * @param angle - The angle in radians.
  * @returns The sine value.
  */
@@ -114,6 +120,7 @@ export function solSin(angle: bigint): bigint {
 
 /**
  * Calculate the cosine of an angle.
+ *
  * @param _angle - The angle in radians.
  * @returns The cosine value.
  */

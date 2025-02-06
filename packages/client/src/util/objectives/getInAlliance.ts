@@ -1,7 +1,8 @@
-import { Entity } from "@primodiumxyz/reactive-tables";
 import { InterfaceIcons } from "@primodiumxyz/assets";
-import { ObjectiveReq } from "./types";
 import { Core } from "@primodiumxyz/core";
+import { Entity } from "@primodiumxyz/reactive-tables";
+
+import { ObjectiveReq } from "./types";
 
 export function getInAlliance({ tables }: Core, asteroidEntity: Entity): ObjectiveReq {
   const playerEntity = tables.OwnedBy.get(asteroidEntity)?.value as Entity | undefined;

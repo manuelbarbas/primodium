@@ -1,10 +1,11 @@
+import { memo } from "react";
+
+import { EntityType } from "@primodiumxyz/core";
 import { Card, GlassCard } from "@/components/core/Card";
 import { IconLabel } from "@/components/core/IconLabel";
 import { Tabs } from "@/components/core/Tabs";
 import { InventoryPane } from "@/components/hud/asteroid/inventory/InventoryPane";
 import { EntityToResourceImage } from "@/util/image";
-import { EntityType } from "@primodiumxyz/core";
-import { memo } from "react";
 
 export const Inventory = memo(() => {
   return (

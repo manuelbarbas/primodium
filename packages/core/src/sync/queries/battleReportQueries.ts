@@ -1,6 +1,7 @@
+import { Hex } from "viem";
+
 import { ContractTableDefs, Entity } from "@primodiumxyz/reactive-tables";
 import { DecodedIndexerQuery } from "@primodiumxyz/sync-stack/types";
-import { Hex } from "viem";
 
 export const getBattleReportQuery = ({
   tables,

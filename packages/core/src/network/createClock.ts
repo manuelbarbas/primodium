@@ -1,11 +1,12 @@
-import { World } from "@primodiumxyz/reactive-tables";
-import { Observable, ReplaySubject, filter, map } from "rxjs";
+import { filter, map, Observable, ReplaySubject } from "rxjs";
 import { Block } from "viem";
+
+import { World } from "@primodiumxyz/reactive-tables";
 import { Clock } from "@/lib";
 
 /**
- * Create a clock optimistically keeping track of the current chain time.
- * The optimisitic chain time should be synced to the actual chain time in regular intervals using the `update` function.
+ * Create a clock optimistically keeping track of the current chain time. The optimisitic chain time should be synced to
+ * the actual chain time in regular intervals using the `update` function.
  *
  * @param config
  * @returns: {@link Clock}
@@ -18,7 +19,7 @@ export function createClock(
     period: number;
     initialTime: number;
     syncInterval: number;
-  }
+  },
 ): Clock {
   const { initialTime, period } = config;
 
@@ -56,7 +57,7 @@ export function createClock(
     .pipe(
       map((block) => Number(block.timestamp)), // Map to timestamp in ms
       filter((blockTimestamp) => blockTimestamp !== clock.lastUpdateTime), // Ignore if the clock was already refreshed with this block
-      filter((blockTimestamp) => blockTimestamp !== clock.currentTime) // Ignore if the current local timestamp is correct
+      filter((blockTimestamp) => blockTimestamp !== clock.currentTime), // Ignore if the current local timestamp is correct
     )
     .subscribe(clock.update); // Update the local clock
 

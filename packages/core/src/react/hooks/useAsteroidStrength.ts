@@ -1,9 +1,10 @@
-import { Entity } from "@primodiumxyz/reactive-tables";
 import { useMemo } from "react";
-import { useCore } from "@/react/hooks/useCore";
-import { EntityType } from "@/lib/constants";
 import { Hex } from "viem";
-import { useResourceCount } from "./useResourceCount";
+
+import { Entity } from "@primodiumxyz/reactive-tables";
+import { EntityType } from "@/lib/constants";
+import { useCore } from "@/react/hooks/useCore";
+import { useResourceCount } from "@/react/hooks/useResourceCount";
 
 /**
  * Calculates the strength and maximum strength of an asteroid.

@@ -1,5 +1,5 @@
+import { CameraConfig } from "@enginetypes";
 import { BehaviorSubject, share } from "rxjs";
-import { CameraConfig } from "../../types";
 
 export function createCamera(phaserCamera: Phaser.Cameras.Scene2D.Camera, options: CameraConfig) {
   // Stop default gesture events to not collide with use-gesture
@@ -8,7 +8,7 @@ export function createCamera(phaserCamera: Phaser.Cameras.Scene2D.Camera, option
   document.addEventListener("gesturechange", (e) => e.preventDefault());
 
   const worldView$ = new BehaviorSubject<Phaser.Cameras.Scene2D.Camera["worldView"]>(phaserCamera.worldView).pipe(
-    share()
+    share(),
   ) as BehaviorSubject<Phaser.Cameras.Scene2D.Camera["worldView"]>;
   const zoom$ = new BehaviorSubject<number>(phaserCamera.zoom).pipe(share()) as BehaviorSubject<number>;
 

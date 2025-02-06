@@ -1,8 +1,10 @@
-import { Entity } from "@primodiumxyz/reactive-tables";
-import { InterfaceIcons } from "@primodiumxyz/assets";
 import { Hex } from "viem";
-import { ExpandObjective, ObjectiveReq } from "./types";
+
+import { InterfaceIcons } from "@primodiumxyz/assets";
 import { Core } from "@primodiumxyz/core";
+import { Entity } from "@primodiumxyz/reactive-tables";
+
+import { ExpandObjective, ObjectiveReq } from "./types";
 
 export function getHasExpansion({ tables }: Core, asteroid: Entity, objective: ExpandObjective): ObjectiveReq {
   const level = tables.Level.getWithKeys({ entity: asteroid as Hex })?.value ?? 0n;

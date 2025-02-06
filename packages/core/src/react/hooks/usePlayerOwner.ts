@@ -2,9 +2,9 @@ import { Entity } from "@primodiumxyz/reactive-tables";
 import { useCore } from "@/react/hooks/useCore";
 
 /**
- * Retrieves the owner of the given entity.
- * If the entity is a fleet, it returns the owner of the fleet.
- * If the entity is not a fleet, it returns the owner of the entity itself.
+ * Retrieves the owner of the given entity. If the entity is a fleet, it returns the owner of the fleet. If the entity
+ * is not a fleet, it returns the owner of the entity itself.
+ *
  * @param entity - The entity for which to retrieve the owner.
  * @returns The owner of the entity, or undefined if there is no owner.
  */

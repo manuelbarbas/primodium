@@ -1,15 +1,16 @@
-import { Button } from "@/components/core/Button";
-import { CrownRank } from "@/components/hud/global/modals/leaderboard/RankCrown";
-import { Entity } from "@primodiumxyz/reactive-tables";
-import { InterfaceIcons } from "@primodiumxyz/assets";
 import { useEffect, useMemo, useState } from "react";
 import { FaSync } from "react-icons/fa";
 import AutoSizer from "react-virtualized-auto-sizer";
 import { FixedSizeList as List } from "react-window";
-import { SecondaryCard } from "@/components/core/Card";
-import { AccountDisplay } from "@/components/shared/AccountDisplay";
-import { useCore } from "@primodiumxyz/core/react";
+
+import { InterfaceIcons } from "@primodiumxyz/assets";
 import { EntityType, formatNumber, formatResourceCount, rankToScore } from "@primodiumxyz/core";
+import { useCore } from "@primodiumxyz/core/react";
+import { Entity } from "@primodiumxyz/reactive-tables";
+import { Button } from "@/components/core/Button";
+import { SecondaryCard } from "@/components/core/Card";
+import { CrownRank } from "@/components/hud/global/modals/leaderboard/RankCrown";
+import { AccountDisplay } from "@/components/shared/AccountDisplay";
 
 type FormattedPlayerData = {
   player: Entity;

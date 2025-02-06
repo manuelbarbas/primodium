@@ -1,12 +1,14 @@
+import { Hex } from "viem";
+
 import { Entity } from "@primodiumxyz/reactive-tables";
 import { SPEED_SCALE } from "@/lib/constants";
 import { Tables } from "@/lib/types";
-import { Hex } from "viem";
 
 export function createTrainingQueueUtils(tables: Tables) {
   /**
    * Updates training queues for all unit production buildings on a given asteroid
-   * @param asteroid asteroid entity
+   *
+   * @param asteroid Asteroid entity
    */
   function updateTrainingQueues(asteroid: Entity) {
     const buildings = tables.Keys_UnitFactorySet.getWithKeys({ entity: asteroid as Hex })?.value as
@@ -16,9 +18,7 @@ export function createTrainingQueueUtils(tables: Tables) {
     buildings.forEach((building) => updateTrainingQueue(building));
   }
 
-  /**
-   * Gets the training time for a unit based on the player, building, and unit
-   */
+  /** Gets the training time for a unit based on the player, building, and unit */
   function getUnitTrainingTime(player: Entity, building: Entity, unit: Entity) {
     const playerHex = player as Hex;
     const unitEntityHex = unit as Hex;
@@ -39,16 +39,14 @@ export function createTrainingQueueUtils(tables: Tables) {
       },
       {
         value: 100n,
-      }
+      },
     ).value;
 
     const rawTrainingTime = tables.P_Unit.getWithKeys({ entity: unitEntityHex, level: unitLevel })?.trainingTime ?? 0n;
     return (rawTrainingTime * 100n * 100n * SPEED_SCALE) / (multiplier * config.unitProductionRate * config.worldSpeed);
   }
 
-  /**
-   * Updates the training queue for a given building
-   */
+  /** Updates the training queue for a given building */
   function updateTrainingQueue(building: Entity) {
     const { LastClaimedAt, ClaimOffset, OwnedBy, Meta_UnitProductionQueue, Value_UnitProductionQueue, TrainingQueue } =
       tables;

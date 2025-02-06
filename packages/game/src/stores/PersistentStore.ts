@@ -1,9 +1,9 @@
-import { KeybindActionKeys } from "@game/lib/constants/keybinds";
-import { Coord } from "@primodiumxyz/engine/types";
-import { Key } from "@primodiumxyz/engine/types";
 import { mountStoreDevtool } from "simple-zustand-devtools";
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
+
+import { Coord, Key } from "@primodiumxyz/engine/types";
+import { KeybindActionKeys } from "@game/lib/constants/keybinds";
 
 const VERSION = 9;
 
@@ -256,11 +256,12 @@ export const usePersistentStore = create<PersistentState & PersistentActions>()(
 
         return { ...persistedStore!, ...defaults } as PersistentState & PersistentActions;
       },
-    }
-  )
+    },
+  ),
 );
 
-//store dev tools
+// store dev tools
+// @ts-expect-error - env is not available in the browser
 if (import.meta.env.VITE_DEV === "true") {
   mountStoreDevtool("SettingsStore", usePersistentStore);
 }

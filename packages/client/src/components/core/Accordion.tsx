@@ -1,4 +1,5 @@
-import { createContext, useContext, useState, ReactNode, FC } from "react";
+import { createContext, FC, ReactNode, useContext, useState } from "react";
+
 import { SecondaryCard } from "@/components/core/Card";
 
 interface AccordionContextValue {

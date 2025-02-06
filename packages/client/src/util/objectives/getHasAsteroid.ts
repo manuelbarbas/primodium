@@ -5,7 +5,7 @@ import { Entity, query } from "@primodiumxyz/reactive-tables";
 export const getHasAsteroid = (
   { tables }: Core,
   playerEntity: Entity | undefined,
-  type: "common" | "motherlode" | "wormhole" | "shard"
+  type: "common" | "motherlode" | "wormhole" | "shard",
 ) => {
   let currentValue = 0n;
   if (type == "shard") {

@@ -1,7 +1,6 @@
 import { Animations, Sprites } from "@primodiumxyz/assets";
 import { safeIndex } from "@primodiumxyz/core";
 import { Entity } from "@primodiumxyz/reactive-tables";
-
 import { EntityTypeToAnimations, EntityTypetoBuildingSprites } from "@game/lib/mappings";
 
 export function getAnimationAsset(level: bigint, buildingType: Entity) {

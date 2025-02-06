@@ -1,6 +1,7 @@
 import worldsJson from "contracts/worlds.json";
-import { chainConfigs, CoreConfig } from "@primodiumxyz/core";
 import { Address, Hex } from "viem";
+
+import { chainConfigs, CoreConfig } from "@primodiumxyz/core";
 
 const worlds = worldsJson as Partial<Record<string, { address: string; blockNumber?: number }>>;
 
@@ -21,7 +22,7 @@ export const getCoreConfig = (): CoreConfig => {
   }
   const initialBlockNumber = params.has("initialBlockNumber")
     ? Number(params.get("initialBlockNumber"))
-    : world?.blockNumber ?? 0;
+    : (world?.blockNumber ?? 0);
 
   const config: CoreConfig = {
     chain,

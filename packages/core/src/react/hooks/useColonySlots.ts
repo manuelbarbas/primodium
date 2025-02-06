@@ -1,9 +1,10 @@
-import { Entity } from "@primodiumxyz/reactive-tables";
-import { useCore } from "@/react/hooks/useCore";
-import { ResourceEntityLookup } from "@/lib";
 import { EResource } from "contracts/config/enums";
 import { useMemo } from "react";
 import { Hex } from "viem";
+
+import { Entity } from "@primodiumxyz/reactive-tables";
+import { ResourceEntityLookup } from "@/lib";
+import { useCore } from "@/react/hooks/useCore";
 
 /**
  * Calculates colony slot information for a given player entity.
@@ -32,15 +33,18 @@ export const useColonySlots = (playerEntity: Entity) => {
       };
     const occupiedSlots = getColonyShipsPlusAsteroids(playerEntity);
 
-    const resourceCosts = config.resources.reduce((acc, resource, i) => {
-      const paid =
-        tables.ColonySlotsInstallments.getWithKeys({
-          playerEntity: playerEntity as Hex,
-          resourceIndex: BigInt(i),
-        })?.amounts ?? 0n;
-      const cost = config.amounts[i] * costMultiplier;
-      return { ...acc, [ResourceEntityLookup[resource as EResource]]: { paid, cost } };
-    }, {} as Record<Entity, { cost: bigint; paid: bigint }>);
+    const resourceCosts = config.resources.reduce(
+      (acc, resource, i) => {
+        const paid =
+          tables.ColonySlotsInstallments.getWithKeys({
+            playerEntity: playerEntity as Hex,
+            resourceIndex: BigInt(i),
+          })?.amounts ?? 0n;
+        const cost = config.amounts[i] * costMultiplier;
+        return { ...acc, [ResourceEntityLookup[resource as EResource]]: { paid, cost } };
+      },
+      {} as Record<Entity, { cost: bigint; paid: bigint }>,
+    );
 
     return {
       maxSlots,

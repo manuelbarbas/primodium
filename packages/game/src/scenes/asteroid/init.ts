@@ -1,15 +1,14 @@
 // ASTEROID MAP ENTRY POINT
 import { Core } from "@primodiumxyz/core";
 import type { ContractCalls } from "@client/contractCalls/createContractCalls";
-
+import { GlobalApi } from "@game/api/global";
 import { createSceneApi } from "@game/api/scene";
-import { PrimodiumScene } from "@game/types";
 import { asteroidSceneConfig } from "@game/lib/config/asteroidScene";
-import { setupBasicCameraMovement } from "@game/scenes/common/setup/setupBasicCameraMovement";
 import { setupKeybinds } from "@game/scenes/asteroid/setup/setupKeybinds";
 import { setupMouseInputs } from "@game/scenes/asteroid/setup/setupMouseInputs";
 import { runSystems as runAsteroidSystems } from "@game/scenes/asteroid/systems";
-import { GlobalApi } from "@game/api/global";
+import { setupBasicCameraMovement } from "@game/scenes/common/setup/setupBasicCameraMovement";
+import { PrimodiumScene } from "@game/types";
 
 export const initAsteroidScene = async (game: GlobalApi, core: Core, calls: ContractCalls): Promise<PrimodiumScene> => {
   const scene = await game.createScene(asteroidSceneConfig, true);
@@ -29,7 +28,7 @@ export const initAsteroidScene = async (game: GlobalApi, core: Core, calls: Cont
     -11 * scene.tiled.tileHeight + scene.tiled.tileHeight / 2,
     1700,
     0xe0ffff,
-    2
+    2,
   );
 
   scene.phaserScene.add.tween({

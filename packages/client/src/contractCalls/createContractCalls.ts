@@ -1,30 +1,31 @@
-import { createForfeitCalls } from "@/contractCalls/contractCalls/forfeit";
-import { createAllianceCalls } from "@/contractCalls/contractCalls/alliance";
-import { createIncrement } from "@/contractCalls/contractCalls/increment";
-import { createSpawn } from "@/contractCalls/contractCalls/spawn";
-import { AccountClient, Core, createExecute } from "@primodiumxyz/core";
 import { Address } from "viem";
+
+import { AccountClient, Core, createExecute } from "@primodiumxyz/core";
+import { createAccessCalls } from "@/contractCalls/contractCalls/access";
+import { createAllianceCalls } from "@/contractCalls/contractCalls/alliance";
 import { createAttack } from "@/contractCalls/contractCalls/attack";
 import { createBuildingCalls } from "@/contractCalls/contractCalls/building";
-import { createDevCalls } from "@/contractCalls/contractCalls/dev";
-import { createAccessCalls } from "@/contractCalls/contractCalls/access";
-import { createWormholeDeposit } from "@/contractCalls/contractCalls/wormholeDeposit";
-import { createUpgrade } from "@/contractCalls/contractCalls/upgrade";
 import { createClaimObjective } from "@/contractCalls/contractCalls/claimObjective";
 import { createClaimPointsCalls } from "@/contractCalls/contractCalls/claimPrimodium";
 import { createClaimUnits } from "@/contractCalls/contractCalls/claimUnits";
-import { createSwapCalls } from "@/contractCalls/contractCalls/swap";
 import { createColonySlotsCalls } from "@/contractCalls/contractCalls/colonySlot";
-import { createTrainCalls } from "@/contractCalls/contractCalls/train";
+import { createDevCalls } from "@/contractCalls/contractCalls/dev";
 import { createFleetCalls } from "@/contractCalls/contractCalls/fleet";
+import { createForfeitCalls } from "@/contractCalls/contractCalls/forfeit";
+import { createIncrement } from "@/contractCalls/contractCalls/increment";
+import { createSpawn } from "@/contractCalls/contractCalls/spawn";
+import { createSwapCalls } from "@/contractCalls/contractCalls/swap";
+import { createTrainCalls } from "@/contractCalls/contractCalls/train";
 import { createTransferCalls } from "@/contractCalls/contractCalls/transfer";
+import { createUpgrade } from "@/contractCalls/contractCalls/upgrade";
+import { createWormholeDeposit } from "@/contractCalls/contractCalls/wormholeDeposit";
 
 export type ContractCalls = ReturnType<typeof createContractCalls>;
 
 export const createContractCalls = (
   core: Core,
   accountClient: AccountClient,
-  requestDrip?: (address: Address) => void
+  requestDrip?: (address: Address) => void,
 ) => {
   const execute = createExecute(core, accountClient);
 

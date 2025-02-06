@@ -1,8 +1,7 @@
-import { Scene, Coord } from "@primodiumxyz/engine/types";
-import { tileCoordToPixelCoord } from "@primodiumxyz/engine/lib/util/coords";
 import { Assets, Audio } from "@primodiumxyz/assets";
 import { getRandomRange } from "@primodiumxyz/core";
-
+import { tileCoordToPixelCoord } from "@primodiumxyz/engine/lib/util/coords";
+import { Coord, Scene } from "@primodiumxyz/engine/types";
 import { DepthLayers } from "@game/lib/constants/common";
 
 export const createFxApi = (scene: Scene) => {
@@ -12,7 +11,7 @@ export const createFxApi = (scene: Scene) => {
       thickness?: number;
       color?: number;
       knockout?: boolean;
-    } = {}
+    } = {},
   ) {
     const { thickness = 3, color = 0xffff00, knockout } = options;
 

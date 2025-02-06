@@ -1,13 +1,14 @@
-import { ampli } from "@/ampli";
-import { Core, AccountClient, toHex32, entityToAddress, ExecuteFunctions } from "@primodiumxyz/core";
 import { EAllianceInviteMode, EAllianceRole } from "contracts/config/enums";
+
+import { AccountClient, Core, entityToAddress, ExecuteFunctions, toHex32 } from "@primodiumxyz/core";
 import { Entity } from "@primodiumxyz/reactive-tables";
+import { ampli } from "@/ampli";
 import { parseReceipt } from "@/contractCalls/parseReceipt";
 
 export const createAllianceCalls = (
   { tables, utils }: Core,
   { playerAccount }: AccountClient,
-  { execute }: ExecuteFunctions
+  { execute }: ExecuteFunctions,
 ) => {
   const createAlliance = async (name: string, inviteOnly: boolean) => {
     await execute({

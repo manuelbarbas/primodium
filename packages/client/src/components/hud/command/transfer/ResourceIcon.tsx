@@ -1,8 +1,8 @@
-import { cn } from "@/util/client";
-import { EntityToResourceImage, EntityToUnitImage } from "@/util/image";
 import { formatResourceCount, UnitStorages } from "@primodiumxyz/core";
 import { Entity } from "@primodiumxyz/reactive-tables";
 import { Button } from "@/components/core/Button";
+import { cn } from "@/util/client";
+import { EntityToResourceImage, EntityToUnitImage } from "@/util/image";
 
 export const ResourceIcon = ({
   resource,
@@ -34,7 +34,7 @@ export const ResourceIcon = ({
       className={cn(
         "relative flex flex-col gap-1 items-center justify-center cursor-pointer w-full h-full",
         disabled ? "disabled:opacity-100 disabled:text-opacity-100" : "",
-        className
+        className,
       )}
       disabled={disabled}
     >
@@ -45,7 +45,7 @@ export const ResourceIcon = ({
       <p
         className={cn(
           size == "md" ? "text-sm" : formattedResourceCount.length > 8 ? "text-[0.6rem]" : "text-xs",
-          "font-bold"
+          "font-bold",
         )}
       >
         {formatResourceCount(resource, count, { short: false })}

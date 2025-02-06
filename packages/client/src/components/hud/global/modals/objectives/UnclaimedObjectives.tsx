@@ -1,14 +1,14 @@
-import { Entity, defaultEntity } from "@primodiumxyz/reactive-tables";
+import { useMemo, useState } from "react";
+import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
+import { Hex } from "viem";
+
 import { ObjectiveEntityLookup } from "@primodiumxyz/core";
 import { useCore } from "@primodiumxyz/core/react";
-import { useMemo, useState } from "react";
-
-import { SecondaryCard } from "@/components/core/Card";
-
-import { canShowObjective } from "@/util/objectives/objectiveRequirements";
-import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
+import { defaultEntity, Entity } from "@primodiumxyz/reactive-tables";
 import { Button } from "@/components/core/Button";
-import { Hex } from "viem";
+import { SecondaryCard } from "@/components/core/Card";
+import { canShowObjective } from "@/util/objectives/objectiveRequirements";
+
 import { Objective } from "./Objective";
 
 export const UnclaimedObjectives: React.FC<{ highlight?: Entity }> = ({ highlight }) => {

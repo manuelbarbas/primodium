@@ -1,15 +1,17 @@
-import { Entity } from "@primodiumxyz/reactive-tables";
 import { EResource } from "contracts/config/enums";
 import { Hex } from "viem";
-import { distanceBI } from "../global/common";
+
+import { Entity } from "@primodiumxyz/reactive-tables";
 import { ResourceEntityLookup, SPEED_SCALE, UNIT_SPEED_SCALE } from "@/lib";
-import { Tables, Coord } from "@/lib/types";
+import { Coord, Tables } from "@/lib/types";
+import { distanceBI } from "@/utils/global/common";
 
 export function createSendUtils(tables: Tables) {
   /**
    * Converts a map of entities to counts to a contract call-friendly array of unit counts
-   * @param map a map of entities to counts
-   * @returns a contract call-friendly array of unit counts
+   *
+   * @param map A map of entities to counts
+   * @returns A contract call-friendly array of unit counts
    */
   function toUnitCountArray(map: Map<Entity, bigint>): bigint[] {
     const prototypes = tables.P_UnitPrototypes.get()?.value ?? [];
@@ -23,8 +25,9 @@ export function createSendUtils(tables: Tables) {
 
   /**
    * Converts a map of entities to counts to a contract call-friendly array of resource counts
-   * @param map a map of entities to counts
-   * @returns a contract call-friendly array of resource counts
+   *
+   * @param map A map of entities to counts
+   * @returns A contract call-friendly array of resource counts
    */
   function toTransportableResourceArray(map: Map<Entity, bigint>): bigint[] {
     const transportables = tables.P_Transportables.get()?.value ?? [];
@@ -40,16 +43,17 @@ export function createSendUtils(tables: Tables) {
 
   /**
    * Gets the length of a move in seconds
-   * @param origin the origin coordinate of the move
-   * @param destination the destination coordinate of the move
-   * @param playerEntity the player entity
-   * @param units a map of unit entities to counts
+   *
+   * @param origin The origin coordinate of the move
+   * @param destination The destination coordinate of the move
+   * @param playerEntity The player entity
+   * @param units A map of unit entities to counts
    */
   function getMoveLength(
     origin: Coord,
     destination: Coord,
     playerEntity: Entity,
-    units: Record<Entity, bigint>
+    units: Record<Entity, bigint>,
   ): number {
     const arrivalTime = getArrivalTime(origin, destination, playerEntity, units);
     if (arrivalTime == 0n) return 0;
@@ -59,16 +63,17 @@ export function createSendUtils(tables: Tables) {
 
   /**
    * Gets the arrival time of a move
-   * @param origin the origin coordinate of the move
-   * @param destination the destination coordinate of the move
-   * @param playerEntity the player entity
-   * @param units a map of unit entities to counts
+   *
+   * @param origin The origin coordinate of the move
+   * @param destination The destination coordinate of the move
+   * @param playerEntity The player entity
+   * @param units A map of unit entities to counts
    */
   function getArrivalTime(
     origin: Coord,
     destination: Coord,
     playerEntity: Entity,
-    units: Record<Entity, bigint>
+    units: Record<Entity, bigint>,
   ): bigint {
     const config = tables.P_GameConfig.get();
     const unitSpeed = getSlowestUnitSpeed(playerEntity, units);
@@ -85,8 +90,9 @@ export function createSendUtils(tables: Tables) {
 
   /**
    * Gets the slowest unit speed in a map of unit entities to counts
-   * @param playerEntity the player entity
-   * @param unitCounts a map of unit entities to counts
+   *
+   * @param playerEntity The player entity
+   * @param unitCounts A map of unit entities to counts
    */
   function getSlowestUnitSpeed(playerEntity: Entity, unitCounts: Record<Entity, bigint>) {
     let slowestSpeed = -1n;

@@ -1,12 +1,12 @@
 import { useMemo } from "react";
-import { Widget } from "@/components/core/Widget";
-import { useGame } from "@/hooks/useGame";
-import { GlassCard } from "@/components/core/Card";
-import { InterfaceIcons } from "@primodiumxyz/assets";
 
-import { AsteroidMenu } from "@/components/hud/starbelt/asteroid-menu/AsteroidMenu";
-import { useCore } from "@primodiumxyz/core/react";
+import { InterfaceIcons } from "@primodiumxyz/assets";
 import { entityToRockName, Mode } from "@primodiumxyz/core";
+import { useCore } from "@primodiumxyz/core/react";
+import { GlassCard } from "@/components/core/Card";
+import { Widget } from "@/components/core/Widget";
+import { AsteroidMenu } from "@/components/hud/starbelt/asteroid-menu/AsteroidMenu";
+import { useGame } from "@/hooks/useGame";
 
 export const AsteroidMenuPopup = () => {
   const game = useGame();

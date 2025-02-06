@@ -1,12 +1,12 @@
 import Phaser from "phaser";
+
 import { Assets } from "@primodiumxyz/assets";
 import { Coord } from "@primodiumxyz/engine/types";
 import { Entity } from "@primodiumxyz/reactive-tables";
-
-import { PrimodiumScene } from "@game/types";
+import { DepthLayers } from "@game/lib/constants/common";
 import { BuildingDimensions, getConstructionSprite } from "@game/lib/objects/building/helpers";
 import { IPrimodiumGameObject } from "@game/lib/objects/interfaces";
-import { DepthLayers } from "@game/lib/constants/common";
+import { PrimodiumScene } from "@game/types";
 
 export class BuildingConstruction extends Phaser.GameObjects.Container implements IPrimodiumGameObject {
   public readonly id: Entity;
@@ -43,7 +43,7 @@ export class BuildingConstruction extends Phaser.GameObjects.Container implement
         -(scene.tiled.tileHeight * buildingDimensions.height) / 2,
         "teletactile",
         queueText ?? undefined,
-        14
+        14,
       )
       .setTintFill(0x34d399)
       .setDepth(DepthLayers.Marker)

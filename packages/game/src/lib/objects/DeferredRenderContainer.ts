@@ -1,8 +1,8 @@
-import { Entity } from "@primodiumxyz/reactive-tables";
-import { Coord } from "@primodiumxyz/engine/types";
-import { PrimodiumScene } from "@game/types";
-import { PrimodiumObjectApi, PrimodiumObjectApiMap } from "@game/api/objects";
 import { PrimodiumGameObject } from "@primodiumxyz/engine/lib/core/StaticObjectManager";
+import { Coord } from "@primodiumxyz/engine/types";
+import { Entity } from "@primodiumxyz/reactive-tables";
+import { PrimodiumObjectApi, PrimodiumObjectApiMap } from "@game/api/objects";
+import { PrimodiumScene } from "@game/types";
 
 export type BaseSpawnArgs = {
   scene: PrimodiumScene;
@@ -11,6 +11,13 @@ export type BaseSpawnArgs = {
 };
 
 /**
+ * @param args.id A unique id for the container
+ * @param args.scene The Primodium scene object
+ * @param args.objectApiType The key in the {@link PrimodiumObjectApiMap} to redirect to the associated
+ *   {@link PrimodiumScene.objects}
+ * @param args.spawnCallback The callback to run when each object is spawned (gets visible for the first time)
+ * @param args.register Whether to register the object on creation (can be useful to delay registration, for instance
+ *   after intializing the superclass)
  * @notice Create a wrapper for spawning future objects only when they enter visible chunks, to prevent creating objects + rendering them on launch/init and causing stutter
  *
  * This is useful for objects rendered inside an enter system (probably on initial load), at is will create this basic object containing their info & callback when spawning, which when
@@ -18,16 +25,10 @@ export type BaseSpawnArgs = {
  *
  * Note: it's good practice to always try to interact with the container if an object _could_ have been deferred; it will redirect either to the object directly if it exists, or perform the operation
  * on the container if it doesn't. Even if the object was directly rendered and has absolutely no knowledge of the container.
- *
- * @param args.id A unique id for the container
- * @param args.scene The Primodium scene object
- * @param args.objectApiType The key in the {@link PrimodiumObjectApiMap} to redirect to the associated {@link PrimodiumScene.objects}
- * @param args.spawnCallback The callback to run when each object is spawned (gets visible for the first time)
- * @param args.register Whether to register the object on creation (can be useful to delay registration, for instance after intializing the superclass)
  */
 export class DeferredRenderContainer<
   SpawnedObject extends PrimodiumGameObject = PrimodiumGameObject,
-  SpawnArgs extends BaseSpawnArgs = BaseSpawnArgs
+  SpawnArgs extends BaseSpawnArgs = BaseSpawnArgs,
 > {
   protected id: Entity;
   // entity -> spawn callback args

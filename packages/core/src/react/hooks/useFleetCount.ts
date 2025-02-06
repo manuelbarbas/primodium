@@ -1,11 +1,13 @@
-import { Entity } from "@primodiumxyz/reactive-tables";
 import { useMemo } from "react";
-import { useCore } from "@/react/hooks/useCore";
+
+import { Entity } from "@primodiumxyz/reactive-tables";
 import { EntityType } from "@/lib/constants";
-import { useResourceCount } from "./useResourceCount";
+import { useCore } from "@/react/hooks/useCore";
+import { useResourceCount } from "@/react/hooks/useResourceCount";
 
 /**
  * Gets the fleet count for a given asteroid.
+ *
  * @param {Object} options - The options object.
  * @param {Entity} options.asteroid - The asteroid entity.
  * @returns {number} - The fleet count for the asteroid.
@@ -15,6 +17,7 @@ export const useFleetCount = ({ asteroid }: { asteroid: Entity }) =>
 
 /**
  * Retrieves fleet statistics for a given entity.
+ *
  * @param entity - The entity for which to retrieve fleet statistics.
  * @param force - Optional parameter to force the recalculation of fleet statistics.
  * @returns The fleet statistics for the given entity.

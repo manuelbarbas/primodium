@@ -1,9 +1,9 @@
-import { namespaceWorld, query } from "@primodiumxyz/reactive-tables";
-import { AccountClient, Core, entityToAddress } from "@primodiumxyz/core";
-
-import { getPrivateKey } from "@/util/localStorage";
-import { decodeEntity } from "@primodiumxyz/reactive-tables/utils";
 import { Address } from "viem";
+
+import { AccountClient, Core, entityToAddress } from "@primodiumxyz/core";
+import { namespaceWorld, query } from "@primodiumxyz/reactive-tables";
+import { decodeEntity } from "@primodiumxyz/reactive-tables/utils";
+import { getPrivateKey } from "@/util/localStorage";
 
 export const setupSessionAccount = async (core: Core, account: AccountClient) => {
   const {
@@ -51,6 +51,6 @@ export const setupSessionAccount = async (core: Core, account: AccountClient) =>
         setAuthorized(newAuthorized as string);
       },
     },
-    { runOnInit: false }
+    { runOnInit: false },
   );
 };

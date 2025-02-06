@@ -1,15 +1,15 @@
 import Phaser from "phaser";
-import { Coord } from "@primodiumxyz/engine/types";
-import { Assets } from "@primodiumxyz/assets";
-import { Entity } from "@primodiumxyz/reactive-tables";
-import { Dimensions } from "@primodiumxyz/core";
 
-import { PrimodiumScene } from "@game/types";
-import { triggerPlacementAnim } from "@game/lib/objects/building/triggerPlacementAnim";
-import { getAssetKeyPair, getUpgradeAnimation } from "@game/lib/objects/building/helpers";
+import { Assets } from "@primodiumxyz/assets";
+import { Dimensions } from "@primodiumxyz/core";
+import { Coord } from "@primodiumxyz/engine/types";
+import { Entity } from "@primodiumxyz/reactive-tables";
 import { DepthLayers } from "@game/lib/constants/common";
-import { IPrimodiumGameObject } from "@game/lib/objects/interfaces";
+import { getAssetKeyPair, getUpgradeAnimation } from "@game/lib/objects/building/helpers";
+import { triggerPlacementAnim } from "@game/lib/objects/building/triggerPlacementAnim";
 import { isValidClick, isValidHover } from "@game/lib/objects/inputGuards";
+import { IPrimodiumGameObject } from "@game/lib/objects/interfaces";
+import { PrimodiumScene } from "@game/types";
 
 export class Building extends Phaser.GameObjects.Sprite implements IPrimodiumGameObject {
   public readonly id: Entity;
@@ -30,7 +30,7 @@ export class Building extends Phaser.GameObjects.Sprite implements IPrimodiumGam
       pixelCoord.x,
       -pixelCoord.y + scene.tiled.tileHeight,
       Assets.SpriteAtlas,
-      assetPair.sprite
+      assetPair.sprite,
     );
 
     this.id = id;
@@ -133,7 +133,7 @@ export class Building extends Phaser.GameObjects.Sprite implements IPrimodiumGam
             this.x - animation.offset.x,
             this.y + animation.offset.y,
             Assets.SpriteAtlas,
-            oldAssetPair.sprite
+            oldAssetPair.sprite,
           );
           this._scene.audio.play("Upgrade", "sfx");
           overlay.setOrigin(0, 1);
@@ -144,7 +144,7 @@ export class Building extends Phaser.GameObjects.Sprite implements IPrimodiumGam
 
           const updateCallback = (
             phaserAnimation: Phaser.Animations.Animation,
-            frame: Phaser.Animations.AnimationFrame
+            frame: Phaser.Animations.AnimationFrame,
           ) => {
             if (phaserAnimation.key === animation.animation && frame.index === animation.changeFrame) setNewAssets();
           };

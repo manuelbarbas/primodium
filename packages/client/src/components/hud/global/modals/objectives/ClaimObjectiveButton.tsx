@@ -1,15 +1,13 @@
-import { defaultEntity, Entity } from "@primodiumxyz/reactive-tables";
-
 import { useMemo } from "react";
-
 import { FaCheck } from "react-icons/fa";
+import { Hex } from "viem";
+
+import { useCore } from "@primodiumxyz/core/react";
+import { defaultEntity, Entity } from "@primodiumxyz/reactive-tables";
 import { Button } from "@/components/core/Button";
 import { TransactionQueueMask } from "@/components/shared/TransactionQueueMask";
-
-import { getCanClaimObjective } from "@/util/objectives/objectiveRequirements";
-import { Hex } from "viem";
-import { useCore } from "@primodiumxyz/core/react";
 import { useContractCalls } from "@/hooks/useContractCalls";
+import { getCanClaimObjective } from "@/util/objectives/objectiveRequirements";
 
 export const ClaimObjectiveButton: React.FC<{
   objectiveEntity: Entity;

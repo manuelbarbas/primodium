@@ -1,19 +1,20 @@
-import { SecondaryCard } from "@/components/core/Card";
-import { List } from "@/components/core/List";
-import { Modal } from "@/components/core/Modal";
-import { ObjectivesScreen } from "@/components/hud/global/modals/objectives/ObjectivesScreen";
-import { usePersistentStore } from "@primodiumxyz/game/src/stores/PersistentStore";
-import { cn } from "@/util/client";
-import { canShowObjective, getCanClaimObjective } from "@/util/objectives/objectiveRequirements";
-import { Objectives } from "@/util/objectives/objectives";
-import { Entity } from "@primodiumxyz/reactive-tables";
-import { InterfaceIcons } from "@primodiumxyz/assets";
 import { useEffect, useMemo, useState } from "react";
 import { FaExclamationCircle } from "react-icons/fa";
 import { Hex } from "viem";
 import { useShallow } from "zustand/react/shallow";
+
+import { InterfaceIcons } from "@primodiumxyz/assets";
 import { getEntityTypeName, ObjectiveEntityLookup } from "@primodiumxyz/core";
 import { useAccountClient, useCore } from "@primodiumxyz/core/react";
+import { usePersistentStore } from "@primodiumxyz/game/src/stores/PersistentStore";
+import { Entity } from "@primodiumxyz/reactive-tables";
+import { SecondaryCard } from "@/components/core/Card";
+import { List } from "@/components/core/List";
+import { Modal } from "@/components/core/Modal";
+import { ObjectivesScreen } from "@/components/hud/global/modals/objectives/ObjectivesScreen";
+import { cn } from "@/util/client";
+import { canShowObjective, getCanClaimObjective } from "@/util/objectives/objectiveRequirements";
+import { Objectives } from "@/util/objectives/objectives";
 
 export const AvailableObjectives = () => {
   const [timeoutId, setTimeoutId] = useState<NodeJS.Timeout | null>(null);
@@ -25,7 +26,7 @@ export const AvailableObjectives = () => {
 
   const time = tables.Time.use()?.value;
   const { showObjectives, setShowObjectives } = usePersistentStore(
-    useShallow((state) => ({ setShowObjectives: state.setShowObjectives, showObjectives: state.showObjectives }))
+    useShallow((state) => ({ setShowObjectives: state.setShowObjectives, showObjectives: state.showObjectives })),
   );
   const availableObjectives = useMemo(() => {
     return [...Objectives.entries()].filter(([key]) => {
@@ -69,7 +70,7 @@ export const AvailableObjectives = () => {
     setTimeoutId(
       setTimeout(() => {
         setShowObjectives(false);
-      }, 1000)
+      }, 1000),
     );
   };
 
@@ -78,7 +79,7 @@ export const AvailableObjectives = () => {
       <div
         className={cn(
           "pointer-events-auto flex flex-row gap-1 items-center justify-center pr-2",
-          showObjectives && "opacity-0"
+          showObjectives && "opacity-0",
         )}
         style={{ writingMode: "vertical-lr" }}
         onMouseEnter={handleHover}
@@ -90,7 +91,7 @@ export const AvailableObjectives = () => {
         onMouseEnter={handleHover}
         className={cn(
           "absolute right-0 top-0 transition-transform duration-150 ease-in-out",
-          !showObjectives && "translate-x-full"
+          !showObjectives && "translate-x-full",
         )}
       >
         <SecondaryCard className="w-72 relative bg-gradient-to-br from-neutral to-neutral/25 border-r-0 p-3">
@@ -140,7 +141,7 @@ const AvailableObjectiveItem = ({
   const time = tables.Time.use()?.value;
   const claimable: boolean = useMemo(
     () => getCanClaimObjective(core, playerEntity, asteroidEntity, objectiveEntity),
-    [time, asteroidEntity]
+    [time, asteroidEntity],
   );
 
   const claimed =

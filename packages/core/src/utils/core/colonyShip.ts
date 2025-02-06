@@ -1,8 +1,9 @@
+import { Hex } from "viem";
+
+import { Entity, query } from "@primodiumxyz/reactive-tables";
 import { EntityType } from "@/lib/constants";
 import { Tables } from "@/lib/types";
 import { createTrainingQueueUtils } from "@/utils/core/trainingQueue";
-import { Entity, query } from "@primodiumxyz/reactive-tables";
-import { Hex } from "viem";
 
 type ColonyShipType =
   | { type: "asteroid"; asteroidEntity: Entity }
@@ -11,9 +12,7 @@ type ColonyShipType =
 
 export function createColonyShipUtils(tables: Tables) {
   const { updateTrainingQueue } = createTrainingQueueUtils(tables);
-  /**
-   * Gets all colony ships and asteroids owned by a player
-   */
+  /** Gets all colony ships and asteroids owned by a player */
   function getColonyShipsPlusAsteroids(playerEntity: Entity): Array<ColonyShipType> {
     const ownedAsteroids = query({
       withProperties: [{ table: tables.OwnedBy, properties: { value: playerEntity } }],

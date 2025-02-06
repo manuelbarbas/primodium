@@ -4,24 +4,24 @@ import { Subject } from "rxjs";
 import {
   Account,
   Address,
-  Hex,
   createPublicClient,
   createWalletClient,
   custom,
   fallback,
   getContract,
+  Hex,
   http,
 } from "viem";
 import { toAccount } from "viem/accounts";
+
 import { CoreConfig, ExternalAccount } from "@/lib/types";
 import { WorldAbi } from "@/lib/WorldAbi";
 import { normalizeAddress } from "@/utils/global/common";
 import { addressToEntity } from "@/utils/global/encode";
 
 /**
- *
- * @param coreConfig configuration of core object
- * @param address address of the account
+ * @param coreConfig Configuration of core object
+ * @param address Address of the account
  * @returns: {@link ExternalAccount}
  */
 export function createExternalAccount(coreConfig: CoreConfig, address: Address): ExternalAccount {

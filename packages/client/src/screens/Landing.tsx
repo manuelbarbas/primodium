@@ -1,9 +1,10 @@
-import { EntityToUnitImage } from "@/util/image";
-import { InterfaceIcons, ResourceImages } from "@primodiumxyz/assets";
 import { AnimatePresence, motion } from "framer-motion";
 import React from "react";
 import { FaRegCopyright } from "react-icons/fa";
+
+import { InterfaceIcons, ResourceImages } from "@primodiumxyz/assets";
 import { EntityType } from "@primodiumxyz/core";
+import { EntityToUnitImage } from "@/util/image";
 
 const params = new URLSearchParams(window.location.search);
 export const Landing: React.FC<{ children: React.ReactNode }> = ({ children }) => {

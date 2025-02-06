@@ -1,7 +1,8 @@
-import { cn } from "@/util/client";
-import { lerp } from "@primodiumxyz/core";
-import { VariantProps, cva } from "class-variance-authority";
+import { cva, VariantProps } from "class-variance-authority";
 import { forwardRef, useCallback, useRef } from "react";
+
+import { lerp } from "@primodiumxyz/core";
+import { cn } from "@/util/client";
 
 interface CardProps extends React.HTMLAttributes<HTMLDivElement> {
   children: React.ReactNode;
@@ -86,7 +87,7 @@ export const Card = forwardRef<HTMLDivElement, CardProps>(
           className={cn(
             "card bg-neutral pixel-border p-3 bg-opacity-90 relative transition-all duration-100 ease-linear",
             props.noPointerEvents ? "pointer-events-none" : "pointer-events-auto",
-            className
+            className,
           )}
         >
           <div className="absolute inset-0 bg-gradient-to-br from-transparent to-neutral" />
@@ -106,7 +107,7 @@ export const Card = forwardRef<HTMLDivElement, CardProps>(
         </div>
       </div>
     );
-  }
+  },
 );
 
 const secondaryCardVariants = cva("card p-2", {
@@ -140,7 +141,7 @@ export const SecondaryCard = forwardRef<HTMLDivElement, SecondaryCardProps>(
         {children}
       </div>
     );
-  }
+  },
 );
 
 const glassProps = cva("card border border-secondary/50 heropattern-topography-slate-500/10 backdrop-blur-md p-3", {
@@ -169,11 +170,11 @@ export const GlassCard = forwardRef<HTMLDivElement, GlassProps>(
         <div
           className={cn(
             "absolute inset-0 !bg-gradient-to-br !border-none from-secondary/25 to-secondary/15",
-            glassProps({ direction })
+            glassProps({ direction }),
           )}
         />
         {children}
       </div>
     );
-  }
+  },
 );

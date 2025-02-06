@@ -4,6 +4,10 @@
     "blockNumber": 8283703
   },
   "31337": {
-    "address": "0xcdde8dc29bcb7a7b30e22318746dfd81f0510b43"
+    "address": "0xd7117ee1d4563a596d3d06e68ef8e12d8fb83ccd"
+  },
+  "84532": {
+    "address": "0x6eda5e0ce08c96cee26b4ff16462bef938789495",
+    "blockNumber": 21417424
   }
 }

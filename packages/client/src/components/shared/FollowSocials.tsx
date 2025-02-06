@@ -1,10 +1,11 @@
-import { Button } from "@/components/core/Button";
-import { ObjectiveEntityLookup } from "@primodiumxyz/core";
-import { makeObjectiveClaimable } from "@/util/objectives/makeObjectiveClaimable";
 import { EObjectives } from "contracts/config/enums";
 import { FaDiscord, FaXTwitter } from "react-icons/fa6";
 import { Hex } from "viem";
+
+import { ObjectiveEntityLookup } from "@primodiumxyz/core";
 import { useAccountClient, useCore } from "@primodiumxyz/core/react";
+import { Button } from "@/components/core/Button";
+import { makeObjectiveClaimable } from "@/util/objectives/makeObjectiveClaimable";
 
 export const FollowSocials = () => {
   const playerEntity = useAccountClient().playerAccount.entity;

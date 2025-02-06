@@ -1,19 +1,19 @@
-import { defaultEntity, Entity } from "@primodiumxyz/reactive-tables";
-import { InterfaceIcons } from "@primodiumxyz/assets";
-import { Navigator } from "@/components/core/Navigator";
-import { IconLabel } from "@/components/core/IconLabel";
-import { Button } from "@/components/core/Button";
-import { Tabs } from "@/components/core/Tabs";
-
-import { useCallback, useMemo } from "react";
 import { EFleetStance } from "contracts/config/enums";
+import { useCallback, useMemo } from "react";
+
+import { InterfaceIcons } from "@primodiumxyz/assets";
+import { formatTime } from "@primodiumxyz/core";
+import { useCore } from "@primodiumxyz/core/react";
+import { defaultEntity, Entity } from "@primodiumxyz/reactive-tables";
+import { Button } from "@/components/core/Button";
+import { IconLabel } from "@/components/core/IconLabel";
+import { Navigator } from "@/components/core/Navigator";
+import { Tabs } from "@/components/core/Tabs";
 import { TransactionQueueMask } from "@/components/shared/TransactionQueueMask";
+import { useContractCalls } from "@/hooks/useContractCalls";
+import { useGame } from "@/hooks/useGame";
 import { alert } from "@/util/alert";
 import { cn } from "@/util/client";
-import { useGame } from "@/hooks/useGame";
-import { useCore } from "@primodiumxyz/core/react";
-import { useContractCalls } from "@/hooks/useContractCalls";
-import { formatTime } from "@primodiumxyz/core";
 
 export const FleetManageButtons = ({ fleet }: { fleet: Entity }) => {
   const { tables } = useCore();
@@ -31,7 +31,7 @@ export const FleetManageButtons = ({ fleet }: { fleet: Entity }) => {
 
       setFleetStance(fleet, stance, target as Entity);
     },
-    [fleetStance, fleet, target]
+    [fleetStance, fleet, target],
   );
 
   return (
@@ -76,7 +76,7 @@ export const FleetManageButtons = ({ fleet }: { fleet: Entity }) => {
           onClick={() =>
             alert(
               "Are you sure you want to change fleet ownership? All resources and units will be transferred to the current asteroid!",
-              () => landFleet(fleet, (target ?? defaultEntity) as Entity)
+              () => landFleet(fleet, (target ?? defaultEntity) as Entity),
             )
           }
         >
@@ -100,7 +100,7 @@ export const FleetManageButtons = ({ fleet }: { fleet: Entity }) => {
               alert(
                 "Are you sure you want to clear fleet? All resources and units will be lost forever!",
                 () => clearFleet(fleet),
-                game
+                game,
               )
             }
           >

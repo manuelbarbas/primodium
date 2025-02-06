@@ -1,12 +1,12 @@
-import { Core } from "@primodiumxyz/core";
-import { defaultEntity, Entity, namespaceWorld } from "@primodiumxyz/reactive-tables";
 import { EFleetStance } from "contracts/config/enums";
 
-import { renderAsteroid } from "@game/lib/render/renderAsteroid";
-import { renderShardAsteroid } from "@game/lib/render/renderShardAsteroid";
-import { renderFleet } from "@game/lib/render/renderFleet";
-import { PrimodiumScene } from "@game/types";
+import { Core } from "@primodiumxyz/core";
+import { defaultEntity, Entity, namespaceWorld } from "@primodiumxyz/reactive-tables";
 import { StanceToIcon } from "@game/lib/mappings";
+import { renderAsteroid } from "@game/lib/render/renderAsteroid";
+import { renderFleet } from "@game/lib/render/renderFleet";
+import { renderShardAsteroid } from "@game/lib/render/renderShardAsteroid";
+import { PrimodiumScene } from "@game/types";
 
 export const renderOverview = (scene: PrimodiumScene, core: Core) => {
   const {
@@ -97,8 +97,8 @@ export const renderOverview = (scene: PrimodiumScene, core: Core) => {
       const prevObj = tables.IsFleet.get(prevEntity)
         ? objects.fleet.get(prevEntity ?? defaultEntity)
         : prevEntity
-        ? asteroidObj
-        : null;
+          ? asteroidObj
+          : null;
 
       obj?.setOutline(0xff0000);
       prevObj?.removeOutline();

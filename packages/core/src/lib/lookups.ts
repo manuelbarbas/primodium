@@ -1,8 +1,9 @@
+import { EBuilding, EMap, EObjectives, EPointType, EResource, EUnit } from "contracts/config/enums";
+
 import { Entity } from "@primodiumxyz/reactive-tables";
 import { EntityType } from "@/lib/constants";
 import { reverseRecord } from "@/utils/global/common";
 import { toHex32 } from "@/utils/global/encode";
-import { EBuilding, EUnit, EMap, EObjectives, EPointType, EResource } from "contracts/config/enums";
 
 export const MapEntityLookup: Record<number, Entity> = {
   [EMap.Common]: EntityType.Common,
@@ -88,13 +89,16 @@ export const UnitEntityLookup = reverseRecord(UnitEnumLookup);
 
 /** Maps objective entities to EObjective enums used in contracts. */
 export const ObjectiveEnumLookup: Record<Entity, EObjectives> = {
-  ...Object.keys(EObjectives).reduce((acc, key) => {
-    const elem = EObjectives[key as keyof typeof EObjectives];
-    if (typeof elem === "number") {
-      return { ...acc, [toHex32(key)]: elem };
-    }
-    return acc;
-  }, {} as Record<string, EObjectives>),
+  ...Object.keys(EObjectives).reduce(
+    (acc, key) => {
+      const elem = EObjectives[key as keyof typeof EObjectives];
+      if (typeof elem === "number") {
+        return { ...acc, [toHex32(key)]: elem };
+      }
+      return acc;
+    },
+    {} as Record<string, EObjectives>,
+  ),
 };
 
 /** Maps objective enums used in contracts to entities. */

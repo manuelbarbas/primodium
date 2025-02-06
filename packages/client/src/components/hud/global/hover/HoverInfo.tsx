@@ -1,10 +1,11 @@
+import { useCore } from "@primodiumxyz/core/react";
 import { Entity } from "@primodiumxyz/reactive-tables";
-import { Card } from "../../../core/Card";
 import { BlueprintInfo } from "@/components/hud/asteroid/blueprints/BlueprintInfo";
+
+import { Card } from "../../../core/Card";
 import { AsteroidHover } from "./AsteroidHover";
 import { FleetHover } from "./FleetHover";
 import { ShardAsteroidHover } from "./ShardAsteroidHover";
-import { useCore } from "@primodiumxyz/core/react";
 
 export const HoverInfo = () => {
   const { tables, utils } = useCore();

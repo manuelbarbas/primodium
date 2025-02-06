@@ -1,5 +1,5 @@
+import { useAccountClient, useCore } from "@primodiumxyz/core/react";
 import { useContractCalls } from "@/hooks/useContractCalls";
-import { useCore, useAccountClient } from "@primodiumxyz/core/react";
 
 export function Increment() {
   const { tables } = useCore();

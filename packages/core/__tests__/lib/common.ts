@@ -1,14 +1,15 @@
-import { createCore } from "@/createCore";
-import { chainConfigs } from "@/network/config/chainConfigs";
-import { beforeAll, describe, expect, test } from "vitest";
-import worldsJson from "contracts/worlds.json";
 import { worldInput } from "contracts/mud.config";
+import worldsJson from "contracts/worlds.json";
 import { Address, Hex, TransactionReceipt } from "viem";
-import { otherTableDefs } from "@/network/otherTableDefs";
 import { generatePrivateKey, privateKeyToAccount } from "viem/accounts";
+import { beforeAll, describe, expect, test } from "vitest";
+
 import { Entity } from "@primodiumxyz/reactive-tables";
-import { Core, CoreConfig, SyncStep } from "@/index";
 import { createLocalAccount } from "@/account/createLocalAccount";
+import { createCore } from "@/createCore";
+import { Core, CoreConfig, SyncStep } from "@/index";
+import { chainConfigs } from "@/network/config/chainConfigs";
+import { otherTableDefs } from "@/network/otherTableDefs";
 
 export const createTestConfig = () => {
   const isAnvilRunning = false;
@@ -26,7 +27,6 @@ export const createTestConfig = () => {
     chain: chainConfigs.dev,
     worldAddress,
     initialBlockNumber: BigInt(0),
-    playerAddress: address,
     runSync: true,
     runSystems: true,
   };

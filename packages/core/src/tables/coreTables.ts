@@ -1,15 +1,16 @@
-import { createBattleTables } from "./customTables/BattleTables";
 import {
-  createLocalTable,
   createLocalBigIntTable,
   createLocalBoolTable,
   createLocalCoordTable,
   createLocalEntityTable,
   createLocalNumberTable,
+  createLocalTable,
   Type,
 } from "@primodiumxyz/reactive-tables";
-import { createTransactionQueueTable } from "./customTables/TransactionQueueTable";
 import { CreateNetworkResult } from "@/lib/types";
+
+import { createBattleTables } from "./customTables/BattleTables";
+import { createTransactionQueueTable } from "./customTables/TransactionQueueTable";
 
 export default function setupCoreTables(network: CreateNetworkResult) {
   const world = network.world;
@@ -24,7 +25,7 @@ export default function setupCoreTables(network: CreateNetworkResult) {
     },
     {
       id: "BlockNumber",
-    }
+    },
   );
 
   const Time = createLocalBigIntTable(world, { id: "Time" });
@@ -48,7 +49,7 @@ export default function setupCoreTables(network: CreateNetworkResult) {
       nextResource: Type.Entity,
       resource: Type.Entity,
     },
-    { id: "WormholeData" }
+    { id: "WormholeData" },
   );
 
   const ReverseBuildingPosition = createLocalEntityTable(world, { id: "ReverseBuildingPosition" });
@@ -63,7 +64,7 @@ export default function setupCoreTables(network: CreateNetworkResult) {
     },
     {
       id: "TrainingQueue",
-    }
+    },
   );
 
   const Hangar = createLocalTable(
@@ -74,7 +75,7 @@ export default function setupCoreTables(network: CreateNetworkResult) {
     },
     {
       id: "Hangar",
-    }
+    },
   );
 
   const SelectedFleet = createLocalEntityTable(world, { id: "SelectedFleet" });
@@ -95,7 +96,7 @@ export default function setupCoreTables(network: CreateNetworkResult) {
     },
     {
       id: "PlayerInvites",
-    }
+    },
   );
 
   const AllianceRequest = createLocalTable(
@@ -107,7 +108,7 @@ export default function setupCoreTables(network: CreateNetworkResult) {
     },
     {
       id: "AllianceRequests",
-    }
+    },
   );
 
   const TransactionQueue = createTransactionQueueTable(network, { id: "TransactionQueue" });
@@ -127,7 +128,7 @@ export default function setupCoreTables(network: CreateNetworkResult) {
     },
     {
       id: "Leaderboard",
-    }
+    },
   );
 
   return {

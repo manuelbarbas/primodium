@@ -1,5 +1,6 @@
+import React, { createContext, ReactNode, useCallback, useContext, useMemo, useState } from "react";
+
 import { KeybindActions } from "@/game/lib/mappings";
-import React, { ReactNode, createContext, useCallback, useContext, useMemo, useState } from "react";
 
 interface Widget {
   visible: boolean;
@@ -33,14 +34,14 @@ export const WidgetProvider: React.FC<{ children: ReactNode }> = ({ children }) 
       if (widgetExists) return;
       setWidgets((prevWidgets) => [...prevWidgets, widget]);
     },
-    [widgets]
+    [widgets],
   );
 
   const updateWidget = useCallback(
     (name: string, update: Partial<Widget>) => {
       setWidgets((prevWidgets) => prevWidgets.map((w) => (w.name === name ? { ...w, ...update } : w)));
     },
-    [setWidgets]
+    [setWidgets],
   );
 
   const removeWidget = useCallback((widgetName: string) => {

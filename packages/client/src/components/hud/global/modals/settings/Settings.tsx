@@ -1,13 +1,15 @@
 import { ReactNode, useState } from "react";
 import { FaDiscord, FaExclamationTriangle } from "react-icons/fa";
+import { FaXTwitter } from "react-icons/fa6";
 import { toast } from "react-toastify";
+
 import { Button } from "@/components/core/Button";
 import { Navigator } from "@/components/core/Navigator";
+import { useContractCalls } from "@/hooks/useContractCalls";
+
 import { AccountSettings } from "./AccountSettings";
 import { AudioSettings } from "./AudioSettings";
 import { GeneralSettings } from "./GeneralSettings";
-import { FaXTwitter } from "react-icons/fa6";
-import { useContractCalls } from "@/hooks/useContractCalls";
 
 const params = new URLSearchParams(window.location.search);
 
@@ -57,7 +59,7 @@ export const Settings = () => {
         draggable: false,
         closeButton: false,
         hideProgressBar: true,
-      }
+      },
     );
   };
   return (

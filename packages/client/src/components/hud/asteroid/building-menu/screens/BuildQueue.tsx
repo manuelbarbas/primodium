@@ -1,10 +1,10 @@
-import { Entity } from "@primodiumxyz/reactive-tables";
 import { InterfaceIcons } from "@primodiumxyz/assets";
+import { getEntityTypeName } from "@primodiumxyz/core";
+import { useCore } from "@primodiumxyz/core/react";
+import { Entity } from "@primodiumxyz/reactive-tables";
 import { SecondaryCard } from "@/components/core/Card";
 import { Navigator } from "@/components/core/Navigator";
 import { TransactionQueueMask } from "@/components/shared/TransactionQueueMask";
-import { useCore } from "@primodiumxyz/core/react";
-import { getEntityTypeName } from "@primodiumxyz/core";
 import { EntityToUnitImage } from "@/util/image";
 
 export const BuildQueue: React.FC<{ building: Entity }> = ({ building }) => {

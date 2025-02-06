@@ -1,14 +1,15 @@
-import { useContractCalls } from "@/hooks/useContractCalls";
-import { useGame } from "@/hooks/useGame";
-import { EntityToResourceImage } from "@/util/image";
+import { useMemo } from "react";
+
 import { ResourceType } from "@primodiumxyz/core";
 import { useBuildingInfo, useBuildingName, useCore } from "@primodiumxyz/core/react";
 import { Entity } from "@primodiumxyz/reactive-tables";
-import { useMemo } from "react";
 import { Button } from "@/components/core/Button";
 import { SecondaryCard } from "@/components/core/Card";
 import { IconLabel } from "@/components/core/IconLabel";
 import { Navigator } from "@/components/core/Navigator";
+import { useContractCalls } from "@/hooks/useContractCalls";
+import { useGame } from "@/hooks/useGame";
+import { EntityToResourceImage } from "@/util/image";
 
 export const Demolish: React.FC<{ building: Entity }> = ({ building }) => {
   const { tables, utils } = useCore();
@@ -65,7 +66,7 @@ export const Demolish: React.FC<{ building: Entity }> = ({ building }) => {
           will drop below zero.
         </div>
       ),
-    [name, blockingResource]
+    [name, blockingResource],
   );
   return (
     <Navigator.Screen title="Demolish">

@@ -1,5 +1,6 @@
-import { cn } from "@/util/client";
 import React from "react";
+
+import { cn } from "@/util/client";
 
 // A single radio button created from `RadioGroup` below
 const RadioButton: React.FC<{
@@ -22,7 +23,7 @@ const RadioButton: React.FC<{
         <div
           className={cn(
             "w-6 h-6 border border-primary border-2 aspect-square flex justify-center items-center",
-            className
+            className,
           )}
         >
           {/* Render a filled square inside if it's checked */}

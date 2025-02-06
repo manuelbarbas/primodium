@@ -1,8 +1,10 @@
-import { Entity } from "@primodiumxyz/reactive-tables";
 import dayjs from "dayjs";
 import duration from "dayjs/plugin/duration";
 import { useMemo } from "react";
+
+import { Entity } from "@primodiumxyz/reactive-tables";
 import { useCore } from "@/react/hooks/useCore";
+
 dayjs.extend(duration);
 
 /**

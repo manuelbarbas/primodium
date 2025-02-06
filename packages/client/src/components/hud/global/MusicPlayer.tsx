@@ -1,10 +1,11 @@
 import { useEffect, useRef, useState } from "react";
-import { getNextSong, getPrevSong, getRandomSong } from "@/util/soundtrack";
 import { FaMusic, FaPause, FaPlay, FaStepBackward, FaStepForward } from "react-icons/fa";
+
 import { usePersistentStore } from "@primodiumxyz/game/src/stores/PersistentStore";
+import { Button } from "@/components/core/Button";
 import { SecondaryCard } from "@/components/core/Card";
 import { cn } from "@/util/client";
-import { Button } from "@/components/core/Button";
+import { getNextSong, getPrevSong, getRandomSong } from "@/util/soundtrack";
 
 export const AudioPlayer = () => {
   const audioRef = useRef<HTMLAudioElement>(null);
@@ -107,7 +108,7 @@ export const AudioPlayer = () => {
       <div
         className={cn(
           "absolute inset-0 w-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all",
-          !isPlaying && "opacity-100"
+          !isPlaying && "opacity-100",
         )}
       >
         <div className="flex">

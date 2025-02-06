@@ -1,6 +1,6 @@
-import { PrimodiumScene } from "@game/types";
 import { Core } from "@primodiumxyz/core";
-import { namespaceWorld, Entity } from "@primodiumxyz/reactive-tables";
+import { Entity, namespaceWorld } from "@primodiumxyz/reactive-tables";
+import { PrimodiumScene } from "@game/types";
 
 export function setupMoveNotifications(scene: PrimodiumScene, core: Core) {
   const {

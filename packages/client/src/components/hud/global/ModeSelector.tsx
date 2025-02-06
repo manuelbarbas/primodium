@@ -1,11 +1,11 @@
+import { FaMagnifyingGlassMinus, FaMagnifyingGlassPlus } from "react-icons/fa6";
+
+import { InterfaceIcons } from "@primodiumxyz/assets";
+import { Mode } from "@primodiumxyz/core";
+import { useCore } from "@primodiumxyz/core/react";
+import { Entity } from "@primodiumxyz/reactive-tables";
 import { Button } from "@/components/core/Button";
 import { IconLabel } from "@/components/core/IconLabel";
-
-import { Entity } from "@primodiumxyz/reactive-tables";
-import { InterfaceIcons } from "@primodiumxyz/assets";
-import { FaMagnifyingGlassMinus, FaMagnifyingGlassPlus } from "react-icons/fa6";
-import { useCore } from "@primodiumxyz/core/react";
-import { Mode } from "@primodiumxyz/core";
 
 export const ModeSelector = () => {
   const { tables } = useCore();

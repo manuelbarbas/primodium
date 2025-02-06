@@ -1,5 +1,6 @@
-import { Cheatcode, CheatcodeParam, Cheatcodes, CheatcodeSection } from "@/components/hud/global/modals/dev/types";
 import { useMemo, useState } from "react";
+
+import { Cheatcode, CheatcodeParam, Cheatcodes, CheatcodeSection } from "@/components/hud/global/modals/dev/types";
 
 export const CheatcodesList = ({ cheatcodes, className = "" }: { cheatcodes: Cheatcodes; className?: string }) => {
   const [params, setParams] = useState<Record<string, Record<string, unknown>>>({});
@@ -25,23 +26,26 @@ export const CheatcodesList = ({ cheatcodes, className = "" }: { cheatcodes: Che
 
   const flatCheatcodes = useMemo(
     () =>
-      Object.entries(cheatcodes).reduce((acc, [, section]: [string, CheatcodeSection]) => {
-        return {
-          ...acc,
-          ...section.content,
-        };
-      }, {} as Record<string, Cheatcode>),
-    [cheatcodes]
+      Object.entries(cheatcodes).reduce(
+        (acc, [, section]: [string, CheatcodeSection]) => {
+          return {
+            ...acc,
+            ...section.content,
+          };
+        },
+        {} as Record<string, Cheatcode>,
+      ),
+    [cheatcodes],
   );
 
   const filteredCheatcodes = useMemo(
     () =>
       Object.fromEntries(
         Object.entries(flatCheatcodes).filter(([funcName]) =>
-          funcName.toLowerCase().includes(search.toLowerCase().replace(/\s/g, ""))
-        )
+          funcName.toLowerCase().includes(search.toLowerCase().replace(/\s/g, "")),
+        ),
       ),
-    [flatCheatcodes, search]
+    [flatCheatcodes, search],
   );
 
   const executeFunction = (funcName: string) => {
@@ -134,7 +138,7 @@ export const CheatcodesList = ({ cheatcodes, className = "" }: { cheatcodes: Che
                                   <select
                                     value={
                                       params
-                                        ? (params[funcName]?.[param.name] as string) ?? ""
+                                        ? ((params[funcName]?.[param.name] as string) ?? "")
                                         : param.dropdownOptions[0]
                                     }
                                     onChange={(e) => handleParamChange(funcName, param.name, e.target.value)}
@@ -154,12 +158,12 @@ export const CheatcodesList = ({ cheatcodes, className = "" }: { cheatcodes: Che
                                   <input
                                     type={getTypeInput(param.type)}
                                     placeholder={param.type}
-                                    value={params ? (params[funcName]?.[param.name] as string) ?? "" : ""}
+                                    value={params ? ((params[funcName]?.[param.name] as string) ?? "") : ""}
                                     onChange={(e) =>
                                       handleParamChange(
                                         funcName,
                                         param.name,
-                                        e.target.type === "checkbox" ? e.target.checked : e.target.value
+                                        e.target.type === "checkbox" ? e.target.checked : e.target.value,
                                       )
                                     }
                                     className="border rounded-sm p-1 w-full text-xs text-black bg-slate-200"

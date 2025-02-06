@@ -1,6 +1,7 @@
-import { EntityToUnitImage } from "@/util/image";
-import { InterfaceIcons } from "@primodiumxyz/assets";
 import React from "react";
+
+import { InterfaceIcons } from "@primodiumxyz/assets";
+import { EntityToUnitImage } from "@/util/image";
 
 interface UnitData {
   level: bigint;

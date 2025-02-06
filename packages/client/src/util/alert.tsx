@@ -1,6 +1,7 @@
-import { AlertContent } from "@/components/shared/AlertContent";
-import { PrimodiumGame } from "@/game/api";
 import { toast } from "react-toastify";
+
+import { PrimodiumGame } from "@primodiumxyz/game";
+import { AlertContent } from "@/components/shared/AlertContent";
 
 export const alert = async (message: string, onConfirm?: () => void, game?: PrimodiumGame) => {
   toast(() => <AlertContent message={message} onConfirm={onConfirm} />, {

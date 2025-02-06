@@ -1,13 +1,12 @@
-import { Entity, useQuery } from "@primodiumxyz/reactive-tables";
 import { useMemo } from "react";
+
+import { Entity, useQuery } from "@primodiumxyz/reactive-tables";
 import { useCore } from "@/react/hooks/useCore";
 
 /**
- *
- * @param spaceRock the space rock to check for orbiting fleets
- * @param ownedBy  if provided, only return fleets owned by this entity
- *
- * @returns an array of fleet entities orbiting the space rock
+ * @param spaceRock The space rock to check for orbiting fleets
+ * @param ownedBy If provided, only return fleets owned by this entity
+ * @returns An array of fleet entities orbiting the space rock
  */
 export const useOrbitingFleets = (spaceRock: Entity, ownedBy?: Entity) => {
   const { tables } = useCore();
@@ -30,6 +29,6 @@ export const useOrbitingFleets = (spaceRock: Entity, ownedBy?: Entity) => {
         const rockOwner = tables.OwnedBy.get(fleetOwnerRock as Entity)?.value;
         return rockOwner === ownedBy;
       }),
-    [entities, ownedBy, time]
+    [entities, ownedBy, time],
   );
 };

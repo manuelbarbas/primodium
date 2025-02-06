@@ -1,17 +1,21 @@
-import { Entity } from "@primodiumxyz/reactive-tables";
 import dayjs from "dayjs";
 import duration from "dayjs/plugin/duration";
 import { useMemo } from "react";
+
+import { Entity } from "@primodiumxyz/reactive-tables";
 import { useCore } from "@/react/hooks/useCore";
+
 dayjs.extend(duration);
 
 /**
  * Checks if an entity is in the grace period.
+ *
  * @param entity - The entity to check.
  * @param force - Optional parameter to force the recalculation of the grace period.
  * @returns An object with the following properties:
- *   - inGracePeriod: A boolean indicating if the entity is in the grace period.
- *   - duration: The remaining duration of the grace period in milliseconds.
+ *
+ *   - InGracePeriod: A boolean indicating if the entity is in the grace period.
+ *   - Duration: The remaining duration of the grace period in milliseconds.
  */
 export const useInGracePeriod = (entity: Entity, force = false) => {
   const { tables } = useCore();

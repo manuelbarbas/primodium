@@ -1,3 +1,10 @@
+import { FaCheck, FaCopy, FaTimes } from "react-icons/fa";
+import AutoSizer from "react-virtualized-auto-sizer";
+import { FixedSizeList as List } from "react-window";
+
+import { entityToAddress } from "@primodiumxyz/core";
+import { useAccountClient, useCore } from "@primodiumxyz/core/react";
+import { Entity } from "@primodiumxyz/reactive-tables";
 import { Button } from "@/components/core/Button";
 import { SecondaryCard } from "@/components/core/Card";
 import { Navigator } from "@/components/core/Navigator";
@@ -5,12 +12,6 @@ import { Tooltip } from "@/components/core/Tooltip";
 import { TransactionQueueMask } from "@/components/shared/TransactionQueueMask";
 import { useContractCalls } from "@/hooks/useContractCalls";
 import { copyToClipboard } from "@/util/clipboard";
-import { entityToAddress } from "@primodiumxyz/core";
-import { useAccountClient, useCore } from "@primodiumxyz/core/react";
-import { Entity } from "@primodiumxyz/reactive-tables";
-import { FaCheck, FaCopy, FaTimes } from "react-icons/fa";
-import AutoSizer from "react-virtualized-auto-sizer";
-import { FixedSizeList as List } from "react-window";
 
 // This screen is only accessible to players who are not in an alliance
 export const InvitesScreen: React.FC = () => {

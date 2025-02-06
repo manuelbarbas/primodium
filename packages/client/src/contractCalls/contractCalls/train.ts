@@ -1,7 +1,8 @@
 import { EUnit } from "contracts/config/enums";
-import { ampli } from "@/ampli";
-import { Core, getEntityTypeName, bigintToNumber, UnitEntityLookup, ExecuteFunctions } from "@primodiumxyz/core";
+
+import { bigintToNumber, Core, ExecuteFunctions, getEntityTypeName, UnitEntityLookup } from "@primodiumxyz/core";
 import { Entity } from "@primodiumxyz/reactive-tables";
+import { ampli } from "@/ampli";
 import { parseReceipt } from "@/contractCalls/parseReceipt";
 
 export const createTrainCalls =

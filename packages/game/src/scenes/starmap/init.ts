@@ -1,10 +1,9 @@
 // STAR MAP ENTRY POINT
 import { Core } from "@primodiumxyz/core";
-
-import { starmapSceneConfig } from "@game/lib/config/starmapScene";
-import { createSceneApi } from "@game/api/scene";
-import { setupBasicCameraMovement } from "@game/scenes/common/setup/setupBasicCameraMovement";
 import { GlobalApi } from "@game/api/global";
+import { createSceneApi } from "@game/api/scene";
+import { starmapSceneConfig } from "@game/lib/config/starmapScene";
+import { setupBasicCameraMovement } from "@game/scenes/common/setup/setupBasicCameraMovement";
 import { runSystems as runStarmapSystems } from "@game/scenes/starmap/systems";
 import { PrimodiumScene } from "@game/types";
 

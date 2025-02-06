@@ -1,8 +1,8 @@
+import { EntityType, formatResourceCount } from "@primodiumxyz/core";
+import { useAsteroidStrength, useCore } from "@primodiumxyz/core/react";
 import { defaultEntity, Entity } from "@primodiumxyz/reactive-tables";
 import { Badge } from "@/components/core/Badge";
 import { IconLabel } from "@/components/core/IconLabel";
-import { useCore, useAsteroidStrength } from "@primodiumxyz/core/react";
-import { EntityType, formatResourceCount } from "@primodiumxyz/core";
 import { EntityToResourceImage } from "@/util/image";
 
 export const StrengthLabel = ({ player }: { player?: Entity }) => {

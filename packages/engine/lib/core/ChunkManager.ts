@@ -1,6 +1,6 @@
-import { Coord } from "../../types";
-import { BoundingBox } from "./StaticObjectManager";
-import type { createCamera } from "./createCamera";
+import type { createCamera } from "@enginelib/core/createCamera";
+import { BoundingBox } from "@enginelib/core/StaticObjectManager";
+import { Coord } from "@enginetypes";
 
 const MARGIN = 5;
 export class ChunkManager {
@@ -17,7 +17,7 @@ export class ChunkManager {
     camera: ReturnType<typeof createCamera>,
     chunkSize: number,
     onEnterChunk: (chunkCoord: Coord) => void,
-    onExitChunk: (chunkCoord: Coord) => void
+    onExitChunk: (chunkCoord: Coord) => void,
   ) {
     this.camera = camera;
     this.chunkSize = chunkSize;
@@ -54,6 +54,11 @@ export class ChunkManager {
 
   decodeKeyFromChunk(key: string): Coord {
     const [x, y] = key.split(":").map(Number);
+    if (x === undefined || y === undefined) {
+      console.error(`Invalid chunk key: ${key}`);
+      return { x: 0, y: 0 };
+    }
+
     return { x, y };
   }
 
@@ -99,7 +104,7 @@ export class ChunkManager {
       startX * this.chunkSize,
       startY * this.chunkSize,
       (endX - startX) * this.chunkSize,
-      (endY - startY) * this.chunkSize
+      (endY - startY) * this.chunkSize,
     );
 
     return { chunks, area };

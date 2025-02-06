@@ -1,6 +1,7 @@
-import { cn } from "@/util/client";
-import { VariantProps, cva } from "class-variance-authority";
+import { cva, VariantProps } from "class-variance-authority";
 import { forwardRef } from "react";
+
+import { cn } from "@/util/client";
 
 const loaderSizes = cva("loading loading-dots", {
   variants: {

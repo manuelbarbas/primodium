@@ -1,10 +1,10 @@
 import Phaser from "phaser";
-import { PixelCoord } from "@primodiumxyz/engine/types";
-import { Assets, Sprites } from "@primodiumxyz/assets";
 
+import { Assets, Sprites } from "@primodiumxyz/assets";
+import { PixelCoord } from "@primodiumxyz/engine/types";
+import { DepthLayers } from "@game/lib/constants/common";
 import { MainbaseLevelToEmblem } from "@game/lib/mappings";
 import { PrimodiumScene } from "@game/types";
-import { DepthLayers } from "@game/lib/constants/common";
 
 const MARGIN = 2;
 
@@ -34,7 +34,7 @@ export class AsteroidLabel extends Phaser.GameObjects.Container {
       scene: PrimodiumScene;
       coord: PixelCoord;
       asteroidLevel?: number;
-    } & Partial<LabelArgs>
+    } & Partial<LabelArgs>,
   ) {
     const {
       scene,
@@ -56,13 +56,13 @@ export class AsteroidLabel extends Phaser.GameObjects.Container {
       0,
       0,
       Assets.SpriteAtlas,
-      MainbaseLevelToEmblem[asteroidLevel - 1]
+      MainbaseLevelToEmblem[asteroidLevel - 1],
     ).setScale(1.5);
 
     this.labelContainer = new Phaser.GameObjects.Container(
       scene.phaserScene,
       this.emblemSprite.width + MARGIN,
-      -this.emblemSprite.height / 2
+      -this.emblemSprite.height / 2,
     );
 
     this.asteroidLabel = new Phaser.GameObjects.BitmapText(scene.phaserScene, 0, 0, "teletactile", asteroidName, 16)

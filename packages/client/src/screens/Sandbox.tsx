@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
 
-import { GameProvider } from "@/hooks/providers/GameProvider";
-import { PrimodiumGame, initGame } from "@primodiumxyz/game";
-import { Progress } from "@/components/core/Progress";
-import { _Sandbox } from "../components/_Sandbox";
 import { useCore } from "@primodiumxyz/core/react";
+import { initGame, PrimodiumGame } from "@primodiumxyz/game";
+import { _Sandbox } from "@/components/_Sandbox";
+import { Progress } from "@/components/core/Progress";
+import { GameProvider } from "@/hooks/providers/GameProvider";
 
 const params = new URLSearchParams(window.location.search);
 

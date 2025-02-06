@@ -1,7 +1,8 @@
-import { shortenAddress } from "@primodiumxyz/core";
-import { useCore } from "@primodiumxyz/core/react";
 import { useEffect, useState } from "react";
 import { Hex } from "viem";
+
+import { shortenAddress } from "@primodiumxyz/core";
+import { useCore } from "@primodiumxyz/core/react";
 
 const ensNames: Record<Hex, string | null> = {};
 export const AddressDisplay = ({

@@ -1,18 +1,19 @@
-import { Navigator } from "@/components/core/Navigator";
+import { EFleetStance } from "contracts/config/enums";
+import React, { useMemo } from "react";
+import { FaInfoCircle } from "react-icons/fa";
+
+import { InterfaceIcons } from "@primodiumxyz/assets";
+import { entityToFleetName, entityToRockName, formatTime } from "@primodiumxyz/core";
+import { useCore, useOrbitingFleets } from "@primodiumxyz/core/react";
 import { Entity } from "@primodiumxyz/reactive-tables";
+import { Button } from "@/components/core/Button";
 import { SecondaryCard } from "@/components/core/Card";
 import { IconLabel } from "@/components/core/IconLabel";
-import { InterfaceIcons } from "@primodiumxyz/assets";
-import React, { useMemo } from "react";
-import { EFleetStance } from "contracts/config/enums";
-import { Button } from "@/components/core/Button";
-import { FaInfoCircle } from "react-icons/fa";
+import { Navigator } from "@/components/core/Navigator";
 import { TransactionQueueMask } from "@/components/shared/TransactionQueueMask";
-import { alert } from "@/util/alert";
-import { useGame } from "@/hooks/useGame";
-import { useCore, useOrbitingFleets } from "@primodiumxyz/core/react";
-import { entityToFleetName, entityToRockName, formatTime } from "@primodiumxyz/core";
 import { useContractCalls } from "@/hooks/useContractCalls";
+import { useGame } from "@/hooks/useGame";
+import { alert } from "@/util/alert";
 
 export const Fleet: React.FC<{ fleetEntity: Entity; target: Entity; willFriendlyFire: boolean }> = ({
   fleetEntity,
@@ -52,7 +53,7 @@ export const Fleet: React.FC<{ fleetEntity: Entity; target: Entity; willFriendly
         <div>
           <p className="text-sm">{entityToFleetName(fleetEntity)}</p>
           <p className="opacity-75 text-xs">{`${fleetStateText} ${entityToRockName(
-            movement?.destination as Entity
+            movement?.destination as Entity,
           )}`}</p>
         </div>
       </div>
@@ -84,7 +85,7 @@ export const Fleet: React.FC<{ fleetEntity: Entity; target: Entity; willFriendly
                   ? alert(
                       "You have defending fleets protecting this asteroid. Attacking this asteroid fleet will initiate friendly fire! Are you sure you want to proceed?",
                       () => attack(fleetEntity, target),
-                      game
+                      game,
                     )
                   : attack(fleetEntity, target)
               }

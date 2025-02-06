@@ -1,6 +1,6 @@
 import { useCallback, useLayoutEffect, useState } from "react";
 
-import { useEventListener } from "../useEventListener";
+import { useEventListener } from "@/hooks/useEventListener";
 
 interface Size {
   width: number;

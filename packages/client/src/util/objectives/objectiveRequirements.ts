@@ -1,5 +1,7 @@
-import { getHasAnyRequiredBuilding } from "@/util/objectives/getHasAnyRequiredBuilding";
+import { Core } from "@primodiumxyz/core";
 import { Entity } from "@primodiumxyz/reactive-tables";
+import { getHasAnyRequiredBuilding } from "@/util/objectives/getHasAnyRequiredBuilding";
+
 import { getHasAsteroid } from "./getHasAsteroid";
 import { getHasClaimableObjective } from "./getHasClaimableObjective";
 import { getHasExpansion } from "./getHasExpansion";
@@ -12,7 +14,6 @@ import { getHasRequiredBuildingUpgrade } from "./getHasRequiredUpgrade";
 import { getInAlliance } from "./getInAlliance";
 import { getObjective } from "./objectives";
 import { ObjectiveReq } from "./types";
-import { Core } from "@primodiumxyz/core";
 
 export const isRequirementMet = (requirement: ObjectiveReq) =>
   !requirement || requirement.currentValue >= requirement.requiredValue;
@@ -31,7 +32,7 @@ export function getCanClaimObjective(
   core: Core,
   playerEntity: Entity,
   asteroidEntity: Entity,
-  objectiveEntity: Entity
+  objectiveEntity: Entity,
 ): boolean {
   const hasRequiredRewards = getHasRequiredRewards(core, asteroidEntity, objectiveEntity);
   const allObjectiveRequirements = getAllObjectiveRequirements(core, playerEntity, asteroidEntity, objectiveEntity);
@@ -42,7 +43,7 @@ export function getAllObjectiveRequirements(
   core: Core,
   playerEntity: Entity,
   asteroidEntity: Entity,
-  objectiveEntity: Entity
+  objectiveEntity: Entity,
 ): ObjectiveReq[] {
   const objective = getObjective(objectiveEntity);
   if (!objective) return [];

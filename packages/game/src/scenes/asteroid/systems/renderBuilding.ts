@@ -1,12 +1,12 @@
-import { Entity, namespaceWorld, query, $query } from "@primodiumxyz/reactive-tables";
-import { Action, Core, EntityType, hashEntities } from "@primodiumxyz/core";
 import { EMap } from "contracts/config/enums";
 
-import { Building } from "@game/lib/objects/building";
-import { removeRaidableAsteroid } from "@game/scenes/starmap/systems/utils/initializeSecondaryAsteroids";
+import { Action, Core, EntityType, hashEntities } from "@primodiumxyz/core";
+import { $query, Entity, namespaceWorld, query } from "@primodiumxyz/reactive-tables";
 import { DepthLayers } from "@game/lib/constants/common";
-import { PrimodiumScene } from "@game/types";
+import { Building } from "@game/lib/objects/building";
 import { WormholeBase } from "@game/lib/objects/building/Wormhole";
+import { removeRaidableAsteroid } from "@game/scenes/starmap/systems/utils/initializeSecondaryAsteroids";
+import { PrimodiumScene } from "@game/types";
 
 export const renderBuilding = (scene: PrimodiumScene, core: Core) => {
   const {

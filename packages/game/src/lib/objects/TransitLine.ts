@@ -1,11 +1,11 @@
 import Phaser from "phaser";
-import { BoundingBox } from "@primodiumxyz/engine/lib/core/StaticObjectManager";
-import { Entity } from "@primodiumxyz/reactive-tables";
-import { PixelCoord } from "@primodiumxyz/engine/types";
 
+import { BoundingBox } from "@primodiumxyz/engine/lib/core/StaticObjectManager";
+import { PixelCoord } from "@primodiumxyz/engine/types";
+import { Entity } from "@primodiumxyz/reactive-tables";
+import { TargetLine } from "@game/lib/objects/TargetLine";
 import { PrimodiumScene } from "@game/types";
 import { Fleet } from "./Fleet";
-import { TargetLine } from "@game/lib/objects/TargetLine";
 
 // These boxes are rendered around the line to check for collisions
 // This is a rough approximation of the line's bounding box, because we don't want to render too many boxes,
@@ -62,7 +62,7 @@ export class TransitLine extends TargetLine {
     if (progress === 1 || !this.active) {
       this.fleet.setPosition(
         this.start.x + (this.end.x - this.start.x) * progress,
-        this.start.y + (this.end.y - this.start.y) * progress
+        this.start.y + (this.end.y - this.start.y) * progress,
       );
       return;
     }
@@ -118,7 +118,7 @@ export class TransitLine extends TargetLine {
 // This is an approximation but more than enough for this purpose
 const generateBoundingBoxes = (
   lineData: Phaser.GameObjects.Line["geom"],
-  camera: PrimodiumScene["camera"]
+  camera: PrimodiumScene["camera"],
 ): BoundingBox[] => {
   const { x1, y1, x2, y2 } = lineData;
   // this is an arbitrary value that seems reasonable

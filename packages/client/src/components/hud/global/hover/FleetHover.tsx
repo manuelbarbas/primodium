@@ -1,20 +1,7 @@
-import { SecondaryCard } from "@/components/core/Card";
-import { Entity } from "@primodiumxyz/reactive-tables";
-import { InterfaceIcons } from "@primodiumxyz/assets";
 import { EFleetStance } from "contracts/config/enums";
 import { useMemo } from "react";
-import { IconLabel } from "@/components/core/IconLabel";
-import { Loader } from "@/components/core/Loader";
-import {
-  useAccountClient,
-  useCore,
-  useInCooldown,
-  useInGracePeriod,
-  usePlayerOwner,
-  useResourceCounts,
-  useSyncStatus,
-  useUnitCounts,
-} from "@primodiumxyz/core/react";
+
+import { InterfaceIcons } from "@primodiumxyz/assets";
 import {
   entityToFleetName,
   entityToRockName,
@@ -25,6 +12,20 @@ import {
   formatTimeShort,
   ResourceStorages,
 } from "@primodiumxyz/core";
+import {
+  useAccountClient,
+  useCore,
+  useInCooldown,
+  useInGracePeriod,
+  usePlayerOwner,
+  useResourceCounts,
+  useSyncStatus,
+  useUnitCounts,
+} from "@primodiumxyz/core/react";
+import { Entity } from "@primodiumxyz/reactive-tables";
+import { SecondaryCard } from "@/components/core/Card";
+import { IconLabel } from "@/components/core/IconLabel";
+import { Loader } from "@/components/core/Loader";
 import { EntityToResourceImage, EntityToUnitImage } from "@/util/image";
 
 export const FleetHover: React.FC<{ entity: Entity }> = ({ entity }) => {

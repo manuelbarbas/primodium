@@ -1,14 +1,15 @@
+import React from "react";
+
+import { InterfaceIcons } from "@primodiumxyz/assets";
+import { entityToRockName, EntityType, formatTime } from "@primodiumxyz/core";
+import { useAccountClient, useColonySlots, useCore } from "@primodiumxyz/core/react";
+import { Entity } from "@primodiumxyz/reactive-tables";
 import { Button } from "@/components/core/Button";
 import { SecondaryCard } from "@/components/core/Card";
+import { Navigator } from "@/components/core/Navigator";
 import { TrainColonyShip } from "@/components/hud/global/modals/colony-ships/TrainColonyShip";
 import { UnlockSlot } from "@/components/hud/global/modals/colony-ships/UnlockSlot";
-import { Entity } from "@primodiumxyz/reactive-tables";
-import { InterfaceIcons } from "@primodiumxyz/assets";
-import React from "react";
-import { Navigator } from "@/components/core/Navigator";
-import { useAccountClient, useCore, useColonySlots } from "@primodiumxyz/core/react";
 import { EntityToUnitImage } from "@/util/image";
-import { entityToRockName, EntityType, formatTime } from "@primodiumxyz/core";
 
 type Tile =
   | { type: "training"; unit: Entity; progress: bigint; timeRemaining: bigint; count: bigint }
@@ -27,7 +28,7 @@ export const CommissionColonyShips: React.FC<{ buildingEntity: Entity }> = ({ bu
   const colonySlotsData = useColonySlots(playerEntity);
 
   const trainingShips = colonySlotsData.occupiedSlots.filter(
-    (slot): slot is typeof slot & { type: "training" } => slot.type === "training"
+    (slot): slot is typeof slot & { type: "training" } => slot.type === "training",
   );
   const rawQueue = tables.TrainingQueue.use(buildingEntity);
 

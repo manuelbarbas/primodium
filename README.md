@@ -1,6 +1,6 @@
 # Primodium v0.11.1
 
-A fully onchain space-based resource management game, built with MUD & Phaser.
+A fully onchain space-based factory-building game, built with MUD & Phaser.
 
 - [Introduction](#introduction)
   - [Overview](#overview)
@@ -78,11 +78,11 @@ echo "PRIVATE_KEY=0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2
 examples - "Examples and boilerplate for adding extensions to the game"
 packages - "Components of the entire stack for running Primodium"
 ├── assets - "All ingame assets and atlas"
-└── client - "React client that integrates other components and supercharges with a browser UI"
+├── client - "React client that integrates other components and supercharges with a browser UI"
 ├── contracts - "MUD contracts, configuration and infrastructure—basically the whole state and conditions of the game"
 ├── core - "Core logic, systems, hooks and utilities for the client"
 ├── engine - "Game engine for managing Phaser scenes and user inputs"
-├── game - "Core Phaser infrastructure for the game; objects, scenes, systems, input controls, etc."
+└── game - "Core Phaser infrastructure for the game; objects, scenes, systems, input controls, etc."
 ```
 
 ## Development
@@ -109,8 +109,6 @@ pnpm build
 
 This will build the client and core packages, and compile the contracts as well as generate the ABIs and TypeScript bindings.
 
-To clean `types/` and `abis/` in `packages/contracts`, run `pnpm clean` in the top level directory.
-
 ### Testing
 
 To run the tests for every package, run the following:
@@ -120,14 +118,6 @@ pnpm test
 ```
 
 Or if you want to run the tests for a specific package, navigate to that package directory and run the same command.
-
-For contracts specifically, a specific test contract can be ran individually from the `packages/contracts` directory with the following command:
-
-```bash
-pnpm mud test --skipBuild --forgeOptions='--mc <contract_name>'
-```
-
-This will incidentally skip rebuilding the contracts and run the test directly.
 
 ## Deployment
 

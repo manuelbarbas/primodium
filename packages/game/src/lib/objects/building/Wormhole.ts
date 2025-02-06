@@ -1,16 +1,15 @@
 import Phaser from "phaser";
-import { Coord } from "@primodiumxyz/engine/types";
+
 import { Assets } from "@primodiumxyz/assets";
 import { Dimensions, EntityType } from "@primodiumxyz/core";
-
-import { PrimodiumScene } from "@game/types";
-import { DepthLayers } from "@game/lib/constants/common";
-import { IPrimodiumGameObject } from "@game/lib/objects/interfaces";
-import { Building } from "@game/lib/objects/building";
-import { EntityTypeToResourceSprites } from "@game/lib/mappings";
-import { getWormholeAssetKeyPair } from "@game/lib/objects/building/wormholeAnimations";
-import { WormholeStates } from "@game/lib/objects/building/wormholeAnimations";
+import { Coord } from "@primodiumxyz/engine/types";
 import { Entity } from "@primodiumxyz/reactive-tables";
+import { DepthLayers } from "@game/lib/constants/common";
+import { EntityTypeToResourceSprites } from "@game/lib/mappings";
+import { Building } from "@game/lib/objects/building";
+import { getWormholeAssetKeyPair, WormholeStates } from "@game/lib/objects/building/wormholeAnimations";
+import { IPrimodiumGameObject } from "@game/lib/objects/interfaces";
+import { PrimodiumScene } from "@game/types";
 
 export class WormholeBase extends Building implements IPrimodiumGameObject {
   private resourceSpriteTop: Phaser.GameObjects.Image;
@@ -44,7 +43,7 @@ export class WormholeBase extends Building implements IPrimodiumGameObject {
       pixelCoord.x + this.width / 2,
       -pixelCoord.y + scene.tiled.tileHeight - this.height + 40 + bob,
       Assets.SpriteAtlas,
-      EntityTypeToResourceSprites[args.resource]
+      EntityTypeToResourceSprites[args.resource],
     )
       .setAlpha(this.bottomAlpha)
       .setBlendMode(Phaser.BlendModes.NORMAL)
@@ -57,7 +56,7 @@ export class WormholeBase extends Building implements IPrimodiumGameObject {
       pixelCoord.x + this.width / 2,
       -pixelCoord.y + scene.tiled.tileHeight - this.height + 40 + bob,
       Assets.SpriteAtlas,
-      EntityTypeToResourceSprites[args.resource]
+      EntityTypeToResourceSprites[args.resource],
     )
       .setAlpha(this.topAlpha)
       .setBlendMode(Phaser.BlendModes.ADD)
@@ -68,7 +67,7 @@ export class WormholeBase extends Building implements IPrimodiumGameObject {
       pixelCoord.x + this.width / 2,
       -pixelCoord.y + scene.tiled.tileHeight - this.height + 40 + bob,
       Assets.SpriteAtlas,
-      EntityTypeToResourceSprites[args.resource]
+      EntityTypeToResourceSprites[args.resource],
     )
       .setTint(0x00ffff)
       .setAlpha(this.tintAlpha)

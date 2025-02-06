@@ -1,8 +1,8 @@
 import Phaser from "phaser";
-import { Animations, Assets, Sprites, Tilesets } from "@primodiumxyz/assets";
 
-import { Bounds, Dimensions, getRelativeCoord } from "@game/lib/objects/asteroid-map/helpers";
+import { Animations, Assets, Sprites, Tilesets } from "@primodiumxyz/assets";
 import { DepthLayers } from "@game/lib/constants/common";
+import { Bounds, Dimensions, getRelativeCoord } from "@game/lib/objects/asteroid-map/helpers";
 import { PrimodiumScene } from "@game/types";
 
 export class AsteroidBounds {
@@ -21,10 +21,10 @@ export class AsteroidBounds {
         .setFlipX(true)
         .play(Animations.DroneTop),
       new Phaser.GameObjects.Sprite(scene.phaserScene, 0, 0, Assets.SpriteAtlas, Sprites.DroneTop).play(
-        Animations.DroneTop
+        Animations.DroneTop,
       ),
       new Phaser.GameObjects.Sprite(scene.phaserScene, 0, 0, Assets.SpriteAtlas, Sprites.DroneBottom).play(
-        Animations.DroneBottom
+        Animations.DroneBottom,
       ),
       new Phaser.GameObjects.Sprite(scene.phaserScene, 0, 0, Assets.SpriteAtlas, Sprites.DroneBottom)
         .setFlipX(true)
@@ -51,7 +51,7 @@ export class AsteroidBounds {
         tileWidth,
         tileHeight,
         this.asteroidDimensions.xBounds,
-        this.asteroidDimensions.yBounds
+        this.asteroidDimensions.yBounds,
       );
     }
 
@@ -62,7 +62,7 @@ export class AsteroidBounds {
       tileWidth,
       tileHeight,
       1,
-      2
+      2,
     );
 
     const innerBorderTileset = this.boundsMap.addTilesetImage(
@@ -71,7 +71,7 @@ export class AsteroidBounds {
       tileWidth,
       tileHeight,
       1,
-      2
+      2,
     );
 
     const nonBuildableTileset = this.boundsMap.addTilesetImage(
@@ -80,7 +80,7 @@ export class AsteroidBounds {
       tileWidth,
       tileHeight,
       1,
-      2
+      2,
     );
 
     if (!outerBorderTileset || !nonBuildableTileset || !innerBorderTileset) return this;
@@ -92,11 +92,11 @@ export class AsteroidBounds {
     const maxBoundsEnd = getRelativeCoord({ x: this.maxBounds.maxX, y: this.maxBounds.maxY }, this.maxBounds);
     const currentBoundsStart = getRelativeCoord(
       { x: this.currentBounds.minX, y: this.currentBounds.minY },
-      this.maxBounds
+      this.maxBounds,
     );
     const currentBoundsEnd = getRelativeCoord(
       { x: this.currentBounds.maxX, y: this.currentBounds.maxY },
-      this.maxBounds
+      this.maxBounds,
     );
     const layerX = maxBounds.minX * this.scene.tiled.tileWidth;
     const layerY = (-maxBounds.maxY + 1) * this.scene.tiled.tileHeight;

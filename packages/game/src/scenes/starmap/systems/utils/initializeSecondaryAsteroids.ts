@@ -1,3 +1,7 @@
+import { EMap, EResource } from "contracts/config/enums";
+import { storageUnitStorageUpgrades } from "contracts/config/storageUpgrades";
+import { Hex } from "viem";
+
 import {
   Core,
   EntityType,
@@ -10,9 +14,6 @@ import {
 } from "@primodiumxyz/core";
 import { Coord } from "@primodiumxyz/engine/types";
 import { Entity, Properties } from "@primodiumxyz/reactive-tables";
-import { EResource, EMap } from "contracts/config/enums";
-import { storageUnitStorageUpgrades } from "contracts/config/storageUpgrades";
-import { Hex } from "viem";
 
 const emptyData = {
   __staticData: "0x" as Entity,
@@ -26,7 +27,7 @@ const spawnDroidBase = (asteroidEntity: Entity, tables: Tables) => {
   const droidBaseEntity = hashEntities(asteroidEntity, EntityType.DroidBase);
   tables.Position.set(
     { ...emptyData, x: mainBaseCoord.x, y: mainBaseCoord.y, parentEntity: asteroidEntity },
-    droidBaseEntity
+    droidBaseEntity,
   );
 
   tables.BuildingType.set({ ...emptyData, value: EntityType.DroidBase }, droidBaseEntity);
@@ -38,7 +39,7 @@ const spawnDroidBase = (asteroidEntity: Entity, tables: Tables) => {
 
   tables.P_Blueprint.set(
     { ...emptyData, value: tables.P_Blueprint.get(EntityType.MainBase)?.value ?? [] },
-    EntityType.DroidBase
+    EntityType.DroidBase,
   );
 };
 
@@ -47,7 +48,7 @@ const spawnWormholeBase = (asteroidEntity: Entity, tables: Tables) => {
   const wormholeBaseEntity = hashEntities(asteroidEntity, EntityType.WormholeBase);
   tables.Position.set(
     { ...emptyData, x: mainBaseCoord.x, y: mainBaseCoord.y, parentEntity: asteroidEntity },
-    wormholeBaseEntity
+    wormholeBaseEntity,
   );
   tables.BuildingType.set({ ...emptyData, value: EntityType.WormholeBase }, wormholeBaseEntity);
   tables.Level.set({ ...emptyData, value: 1n }, wormholeBaseEntity);
@@ -58,7 +59,7 @@ const spawnWormholeBase = (asteroidEntity: Entity, tables: Tables) => {
 
   tables.P_Blueprint.set(
     { ...emptyData, value: tables.P_Blueprint.get(EntityType.MainBase)?.value ?? [] },
-    EntityType.WormholeBase
+    EntityType.WormholeBase,
   );
 };
 
@@ -75,7 +76,7 @@ export function initializeSecondaryAsteroids(sourceEntity: Entity, source: Coord
   for (let i = 0; i < config.maxAsteroidsPerPlayer; i++) {
     const asteroidPositionRelative = getPositionByVector(
       Number(config.asteroidDistance),
-      Math.floor((i * 360) / Number(config.maxAsteroidsPerPlayer))
+      Math.floor((i * 360) / Number(config.maxAsteroidsPerPlayer)),
     );
     const asteroidPosition = {
       x: source.x - asteroidPositionRelative.x,
@@ -104,16 +105,16 @@ export function initializeSecondaryAsteroids(sourceEntity: Entity, source: Coord
     const defenseData = getSecondaryAsteroidUnitsAndEncryption(asteroidEntity, asteroidData.maxLevel);
     tables.UnitCount.setWithKeys(
       { ...emptyData, value: defenseData.droidCount },
-      { entity: asteroidEntity as Hex, unit: EntityType.Droid as Hex }
+      { entity: asteroidEntity as Hex, unit: EntityType.Droid as Hex },
     );
 
     tables.ResourceCount.setWithKeys(
       { ...emptyData, value: defenseData.encryption },
-      { entity: asteroidEntity as Hex, resource: EResource.R_Encryption }
+      { entity: asteroidEntity as Hex, resource: EResource.R_Encryption },
     );
     tables.MaxResourceCount.setWithKeys(
       { ...emptyData, value: defenseData.encryption },
-      { entity: asteroidEntity as Hex, resource: EResource.R_Encryption }
+      { entity: asteroidEntity as Hex, resource: EResource.R_Encryption },
     );
 
     if (asteroidData.mapId == EMap.Common && !tables.OwnedBy.get(asteroidEntity)) {
@@ -140,7 +141,7 @@ export function getSecondaryAsteroidUnitsAndEncryption(asteroidEntity: Entity, l
 function getAsteroidData(
   asteroidEntity: Entity,
   wormholeAsteroid: boolean,
-  tables: Tables
+  tables: Tables,
 ): Properties<Tables["Asteroid"]["propertiesSchema"]> {
   const wormholeAsteroidConfig = tables.P_WormholeAsteroidConfig.get();
   if (!wormholeAsteroidConfig) throw new Error("wormholeAsteroidConfig not found");
@@ -271,7 +272,7 @@ function anticipateBuilding(
   coord: Coord,
   asteroidEntity: Entity,
   level: bigint,
-  tables: Tables
+  tables: Tables,
 ) {
   const buildingEntity = hashEntities(asteroidEntity, buildingPrototype);
   tables.BuildingType.set({ ...emptyData, value: buildingPrototype }, buildingEntity);
@@ -293,11 +294,11 @@ function removeAnticipatedBuilding(buildingPrototype: Entity, asteroidEntity: En
 function anticipateStorage(resource: EResource, amount: number, asteroidEntity: Entity, tables: Tables) {
   tables.ResourceCount.setWithKeys(
     { ...emptyData, value: BigInt(amount) * RESOURCE_SCALE },
-    { entity: asteroidEntity as Hex, resource: resource }
+    { entity: asteroidEntity as Hex, resource: resource },
   );
   tables.MaxResourceCount.setWithKeys(
     { ...emptyData, value: BigInt(amount) * RESOURCE_SCALE },
-    { entity: asteroidEntity as Hex, resource: resource }
+    { entity: asteroidEntity as Hex, resource: resource },
   );
 }
 

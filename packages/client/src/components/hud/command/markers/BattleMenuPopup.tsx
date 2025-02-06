@@ -1,10 +1,11 @@
 import { useMemo } from "react";
-import { Widget } from "@/components/core/Widget";
-import { useGame } from "@/hooks/useGame";
+
 import { InterfaceIcons } from "@primodiumxyz/assets";
-import { BattleMenu } from "@/components/hud/command/battle-menu/BattleMenu";
 import { entityToFleetName, entityToRockName } from "@primodiumxyz/core";
 import { useCore } from "@primodiumxyz/core/react";
+import { Widget } from "@/components/core/Widget";
+import { BattleMenu } from "@/components/hud/command/battle-menu/BattleMenu";
+import { useGame } from "@/hooks/useGame";
 
 export const BattleMenuPopup = () => {
   const game = useGame();

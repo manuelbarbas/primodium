@@ -16,6 +16,7 @@
     "build:mud": "pnpm run build:prototype && pnpm mud build",
     "build:prototype": "tsx ./ts/prototypes/commands/prototypegen.ts",
     "build:terrain": "tsx ./ts/terrain/commands/terraingen.ts",
+    "deploy:base-sepolia": "pnpm mud deploy --profile=base-sepolia",
     "deploy:caldera": "pnpm mud deploy --profile=caldera",
     "deploy:caldera-sepolia": "pnpm mud deploy --profile=caldera-sepolia",
     "deploy:local": "pnpm mud deploy --skipBuild",

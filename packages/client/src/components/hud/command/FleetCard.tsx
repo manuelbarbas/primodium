@@ -1,12 +1,7 @@
-import { Tooltip } from "@/components/core/Tooltip";
-import { Entity } from "@primodiumxyz/reactive-tables";
-import { InterfaceIcons } from "@primodiumxyz/assets";
 import { EFleetStance } from "contracts/config/enums";
 import { useMemo } from "react";
-import { Card, SecondaryCard } from "@/components/core/Card";
-import { IconLabel } from "@/components/core/IconLabel";
-import { Loader } from "@/components/core/Loader";
-import { useAccountClient, useCore, useInCooldown, useInGracePeriod, useSyncStatus } from "@primodiumxyz/core/react";
+
+import { InterfaceIcons } from "@primodiumxyz/assets";
 import {
   entityToFleetName,
   entityToRockName,
@@ -16,6 +11,12 @@ import {
   formatTime,
   formatTimeShort,
 } from "@primodiumxyz/core";
+import { useAccountClient, useCore, useInCooldown, useInGracePeriod, useSyncStatus } from "@primodiumxyz/core/react";
+import { Entity } from "@primodiumxyz/reactive-tables";
+import { Card, SecondaryCard } from "@/components/core/Card";
+import { IconLabel } from "@/components/core/IconLabel";
+import { Loader } from "@/components/core/Loader";
+import { Tooltip } from "@/components/core/Tooltip";
 
 type FleetCardProps = {
   stance?: string;

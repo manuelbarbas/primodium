@@ -1,10 +1,10 @@
 import Phaser from "phaser";
-import { Tilesets } from "@primodiumxyz/assets";
 
-import { PrimodiumScene } from "@game/types";
-import { Bounds, Dimensions, ResourceTile, isOutOfBounds } from "@game/lib/objects/asteroid-map/helpers";
-import { EntityTypeToResourceTilekey } from "@game/lib/mappings";
+import { Tilesets } from "@primodiumxyz/assets";
 import { DepthLayers } from "@game/lib/constants/common";
+import { EntityTypeToResourceTilekey } from "@game/lib/mappings";
+import { Bounds, Dimensions, isOutOfBounds, ResourceTile } from "@game/lib/objects/asteroid-map/helpers";
+import { PrimodiumScene } from "@game/types";
 
 export class AsteroidResources {
   private scene: PrimodiumScene;
@@ -24,7 +24,7 @@ export class AsteroidResources {
         this.scene.tiled.tileWidth,
         this.scene.tiled.tileHeight,
         this.asteroidDimensions.xBounds,
-        this.asteroidDimensions.yBounds
+        this.asteroidDimensions.yBounds,
       );
     }
 

@@ -1,6 +1,7 @@
 import { memo } from "react";
-import { useCore, useOrbitingFleets } from "@primodiumxyz/core/react";
+
 import { Mode } from "@primodiumxyz/core";
+import { useCore, useOrbitingFleets } from "@primodiumxyz/core/react";
 import { defaultEntity } from "@primodiumxyz/reactive-tables";
 
 export const CommandBackgroundEffect = memo(() => {

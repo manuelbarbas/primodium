@@ -1,5 +1,5 @@
 import { formatNumber } from "@primodiumxyz/core";
-import { Tooltip } from "../core/Tooltip";
+import { Tooltip } from "@/components/core/Tooltip";
 
 type Props = {
   imgUrl?: string;

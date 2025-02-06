@@ -1,13 +1,12 @@
-import { createTables } from "@/tables/createTables";
+import { Core, CoreConfig } from "@/lib/types";
 import { createNetwork } from "@/network/createNetwork";
-import { runInitialSync } from "@/sync/runInitialSync";
-import { CoreConfig, Core } from "@/lib/types";
-import { createUtils } from "@/utils/core/createUtils";
 import { createSync } from "@/sync";
+import { runInitialSync } from "@/sync/runInitialSync";
 import { runCoreSystems } from "@/systems";
+import { createTables } from "@/tables/createTables";
+import { createUtils } from "@/utils/core/createUtils";
 
 /**
- *
  * @param config {@link CoreConfig}
  * @returns: {@link Core}
  */

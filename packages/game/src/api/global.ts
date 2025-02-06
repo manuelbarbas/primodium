@@ -1,5 +1,5 @@
-import { SceneKeys } from "@game/lib/constants/common";
 import { Game, Scene } from "@primodiumxyz/engine/types";
+import { SceneKeys } from "@game/lib/constants/common";
 
 export type GlobalApi = ReturnType<typeof createGlobalApi>;
 
@@ -54,7 +54,7 @@ export function createGlobalApi(game: Game) {
     target: SceneKeys,
     duration = 0,
     onTransitionStart?: (originScene: Scene, targetScene: Scene) => undefined,
-    onTransitionEnd?: (originScene: Scene, targetScene: Scene) => undefined
+    onTransitionEnd?: (originScene: Scene, targetScene: Scene) => undefined,
   ) {
     if (origin === target) return;
 

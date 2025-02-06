@@ -1,14 +1,15 @@
+import { EFleetStance } from "contracts/config/enums";
+import { useMemo } from "react";
+
+import { InterfaceIcons } from "@primodiumxyz/assets";
+import { entityToFleetName, entityToRockName, EntityType, formatTime } from "@primodiumxyz/core";
+import { useAccountClient, useCore } from "@primodiumxyz/core/react";
+import { Entity, useQuery } from "@primodiumxyz/reactive-tables";
 import { Badge } from "@/components/core/Badge";
 import { Button } from "@/components/core/Button";
 import { Card } from "@/components/core/Card";
 import { DeferredAsteroidsRenderContainer } from "@/game/lib/objects/Asteroid/DeferredAsteroidsRenderContainer";
 import { useGame } from "@/hooks/useGame";
-import { InterfaceIcons } from "@primodiumxyz/assets";
-import { entityToFleetName, entityToRockName, EntityType, formatTime } from "@primodiumxyz/core";
-import { useAccountClient, useCore } from "@primodiumxyz/core/react";
-import { Entity, useQuery } from "@primodiumxyz/reactive-tables";
-import { EFleetStance } from "contracts/config/enums";
-import { useMemo } from "react";
 
 export const OwnedFleet: React.FC<{ fleet: Entity; onClick?: () => void }> = ({ fleet, onClick }) => {
   const { tables } = useCore();
@@ -72,7 +73,7 @@ export const OwnedFleets: React.FC<{ className?: string }> = ({ className }) => 
     if (!position) {
       // the fleet might be around a non-spawned asteroid, so we need to check if it's registered
       const deferredRenderContainer = objects.deferredRenderContainer.getContainer(
-        EntityType.Asteroid
+        EntityType.Asteroid,
       ) as DeferredAsteroidsRenderContainer;
       const asteroidPosition = deferredRenderContainer.getFleetCoord(entity);
 

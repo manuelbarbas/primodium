@@ -1,3 +1,7 @@
+import { useState } from "react";
+import { FaPlus } from "react-icons/fa";
+
+import { useAccountClient } from "@primodiumxyz/core/react";
 import { Button } from "@/components/core/Button";
 import { SecondaryCard } from "@/components/core/Card";
 import { Navigator } from "@/components/core/Navigator";
@@ -5,9 +9,6 @@ import { RadioGroup } from "@/components/core/Radio";
 import { TextInput } from "@/components/core/TextInput";
 import { TransactionQueueMask } from "@/components/shared/TransactionQueueMask";
 import { useContractCalls } from "@/hooks/useContractCalls";
-import { useAccountClient } from "@primodiumxyz/core/react";
-import { useState } from "react";
-import { FaPlus } from "react-icons/fa";
 
 export const ALLIANCE_TAG_SIZE = 6;
 

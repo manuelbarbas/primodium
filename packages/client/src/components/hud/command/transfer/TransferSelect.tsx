@@ -1,13 +1,14 @@
+import { useEffect } from "react";
+
 import { InterfaceIcons } from "@primodiumxyz/assets";
+import { entityToFleetName, entityToRockName, EntityType } from "@primodiumxyz/core";
+import { useAccountClient, useCore, usePlayerOwner, useResourceCount } from "@primodiumxyz/core/react";
+import { defaultEntity, Entity, useQuery } from "@primodiumxyz/reactive-tables";
 import { Button } from "@/components/core/Button";
+import { Card } from "@/components/core/Card";
+import { useAsteroidImage } from "@/hooks/image/useAsteroidImage";
 import { useTransfer } from "@/hooks/providers/TransferProvider";
 import { cn } from "@/util/client";
-import { Card } from "@/components/core/Card";
-import { useEffect } from "react";
-import { useAccountClient, useCore, usePlayerOwner, useResourceCount } from "@primodiumxyz/core/react";
-import { entityToFleetName, entityToRockName, EntityType } from "@primodiumxyz/core";
-import { defaultEntity, Entity, useQuery } from "@primodiumxyz/reactive-tables";
-import { useAsteroidImage } from "@/hooks/image/useAsteroidImage";
 
 export const TransferSelect = ({ side }: { side: "left" | "right" }) => {
   const { left, right, setLeft, setRight } = useTransfer();
@@ -58,7 +59,7 @@ export const TransferSelect = ({ side }: { side: "left" | "right" }) => {
         <div
           className={cn(
             "grid grid-cols-3 gap-2 w-full overflow-y-auto scrollbar auto-rows-max",
-            showNewFleet ? "max-h-[calc(100%-5.5rem)]" : "max-h-full"
+            showNewFleet ? "max-h-[calc(100%-5.5rem)]" : "max-h-full",
           )}
         >
           <SelectOption entity={asteroid} disabled={disabledAsteroidButton} onSelect={() => handleSelect(asteroid)} />

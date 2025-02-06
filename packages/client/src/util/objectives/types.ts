@@ -1,5 +1,6 @@
-import { Entity } from "@primodiumxyz/reactive-tables";
 import { EObjectives } from "contracts/config/enums";
+
+import { Entity } from "@primodiumxyz/reactive-tables";
 
 export type ObjectiveType =
   | "Build"

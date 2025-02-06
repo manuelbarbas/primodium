@@ -1,14 +1,15 @@
-import { Entity } from "@primodiumxyz/reactive-tables";
-import { InterfaceIcons, ResourceImages } from "@primodiumxyz/assets";
-import { Navigator } from "@/components/core/Navigator";
-import { IconLabel } from "@/components/core/IconLabel";
-import { Button } from "@/components/core/Button";
-import { TransactionQueueMask } from "@/components/shared/TransactionQueueMask";
-import { SecondaryCard } from "@/components/core/Card";
-import { FaMinus, FaPlus } from "react-icons/fa";
 import { useState } from "react";
-import { useClaimPrimodium, useCore, useShardAsteroid } from "@primodiumxyz/core/react";
+import { FaMinus, FaPlus } from "react-icons/fa";
+
+import { InterfaceIcons, ResourceImages } from "@primodiumxyz/assets";
 import { EntityType, formatResourceCount, formatTime, Mode } from "@primodiumxyz/core";
+import { useClaimPrimodium, useCore, useShardAsteroid } from "@primodiumxyz/core/react";
+import { Entity } from "@primodiumxyz/reactive-tables";
+import { Button } from "@/components/core/Button";
+import { SecondaryCard } from "@/components/core/Card";
+import { IconLabel } from "@/components/core/IconLabel";
+import { Navigator } from "@/components/core/Navigator";
+import { TransactionQueueMask } from "@/components/shared/TransactionQueueMask";
 import { useContractCalls } from "@/hooks/useContractCalls";
 
 export const ShardButton: React.FC<{ shardEntity: Entity }> = ({ shardEntity }) => {

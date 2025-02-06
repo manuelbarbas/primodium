@@ -1,4 +1,4 @@
-import { Progress } from "../core/Progress";
+import { Progress } from "@/components/core/Progress";
 
 export const Initializing = () => (
   <>

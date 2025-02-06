@@ -1,7 +1,8 @@
 import { useMemo } from "react";
+
 import { createLocalTable, Entity, Type } from "@primodiumxyz/reactive-tables";
-import { CreateNetworkResult } from "@/lib/types";
 import { ResourceEnumLookup } from "@/lib/lookups";
+import { CreateNetworkResult } from "@/lib/types";
 
 export const createBattleTables = ({ world, tables }: CreateNetworkResult) => {
   const RawBattleParticipants = createLocalTable(
@@ -9,7 +10,7 @@ export const createBattleTables = ({ world, tables }: CreateNetworkResult) => {
     {
       value: Type.EntityArray,
     },
-    { id: "RawBattleParticipants" }
+    { id: "RawBattleParticipants" },
   );
 
   const RawBattle = createLocalTable(
@@ -27,7 +28,7 @@ export const createBattleTables = ({ world, tables }: CreateNetworkResult) => {
       aggressorAllies: Type.EntityArray,
       targetAllies: Type.EntityArray,
     },
-    { id: "RawBattle" }
+    { id: "RawBattle" },
   );
 
   const RawBattleParticipant = createLocalTable(
@@ -44,7 +45,7 @@ export const createBattleTables = ({ world, tables }: CreateNetworkResult) => {
       encryptionAtStart: Type.OptionalBigInt,
       encryptionAtEnd: Type.OptionalBigInt,
     },
-    { id: "RawBattleParticipant" }
+    { id: "RawBattleParticipant" },
   );
 
   const getParticipant = (participantEntity: Entity) => {
@@ -52,29 +53,35 @@ export const createBattleTables = ({ world, tables }: CreateNetworkResult) => {
     if (!participant) return;
     const { participantEntity: entity } = tables.BattleDamageDealtResult.getEntityKeys(participantEntity);
     const unitPrototypes = tables.P_UnitPrototypes.get()?.value ?? [];
-    const units = unitPrototypes.reduce((acc, entity, index) => {
-      const level = participant.unitLevels ? participant.unitLevels[index] : 0n;
-      const unitsAtStart = participant.unitsAtStart ? participant.unitsAtStart[index] : 0n;
-      const casualties = participant.casualties ? participant.casualties[index] : 0n;
-      if (unitsAtStart === 0n) return acc;
-      acc[entity] = {
-        level,
-        unitsAtStart,
-        casualties,
-      };
-      return acc;
-    }, {} as Record<string, { level: bigint; unitsAtStart: bigint; casualties: bigint }>);
+    const units = unitPrototypes.reduce(
+      (acc, entity, index) => {
+        const level = participant.unitLevels ? participant.unitLevels[index] : 0n;
+        const unitsAtStart = participant.unitsAtStart ? participant.unitsAtStart[index] : 0n;
+        const casualties = participant.casualties ? participant.casualties[index] : 0n;
+        if (unitsAtStart === 0n) return acc;
+        acc[entity] = {
+          level,
+          unitsAtStart,
+          casualties,
+        };
+        return acc;
+      },
+      {} as Record<string, { level: bigint; unitsAtStart: bigint; casualties: bigint }>,
+    );
 
-    const resources = Object.entries(ResourceEnumLookup).reduce((acc, [entity, index]) => {
-      const resourcesAtStart = participant.resourcesAtStart ? participant.resourcesAtStart[index - 1] : 0n;
-      const resourcesAtEnd = participant.resourcesAtEnd ? participant.resourcesAtEnd[index - 1] : 0n;
-      if (resourcesAtStart === resourcesAtEnd) return acc;
-      acc[entity] = {
-        resourcesAtStart,
-        resourcesAtEnd,
-      };
-      return acc;
-    }, {} as Record<string, { resourcesAtStart: bigint; resourcesAtEnd: bigint }>);
+    const resources = Object.entries(ResourceEnumLookup).reduce(
+      (acc, [entity, index]) => {
+        const resourcesAtStart = participant.resourcesAtStart ? participant.resourcesAtStart[index - 1] : 0n;
+        const resourcesAtEnd = participant.resourcesAtEnd ? participant.resourcesAtEnd[index - 1] : 0n;
+        if (resourcesAtStart === resourcesAtEnd) return acc;
+        acc[entity] = {
+          resourcesAtStart,
+          resourcesAtEnd,
+        };
+        return acc;
+      },
+      {} as Record<string, { resourcesAtStart: bigint; resourcesAtEnd: bigint }>,
+    );
     return {
       ...participant,
       entity,
@@ -88,12 +95,15 @@ export const createBattleTables = ({ world, tables }: CreateNetworkResult) => {
 
     const participants = RawBattleParticipants.get(battleEntity)?.value ?? [];
     if (!battle) return undefined;
-    const battleParticipants = participants.reduce((acc, participant) => {
-      const data = getParticipant(participant);
-      if (!data) return acc;
-      acc[participant] = data;
-      return acc;
-    }, {} as Record<string, Exclude<ReturnType<typeof getParticipant>, undefined>>);
+    const battleParticipants = participants.reduce(
+      (acc, participant) => {
+        const data = getParticipant(participant);
+        if (!data) return acc;
+        acc[participant] = data;
+        return acc;
+      },
+      {} as Record<string, Exclude<ReturnType<typeof getParticipant>, undefined>>,
+    );
     return {
       ...battle,
       participants: battleParticipants,

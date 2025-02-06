@@ -1,4 +1,4 @@
-import { MUDChain, mudFoundry, garnet, redstone } from "@latticexyz/common/chains";
+import { garnet, MUDChain, mudFoundry, redstone } from "@latticexyz/common/chains";
 
 const dev: ChainConfig = {
   ...mudFoundry,
@@ -52,9 +52,30 @@ const calderaSepolia: ChainConfig = {
   },
 };
 
+const baseSepolia: ChainConfig = {
+  name: "Base Sepolia",
+  id: 84532,
+  nativeCurrency: { decimals: 18, name: "Ether", symbol: "ETH" },
+  rpcUrls: {
+    default: {
+      http: ["https://sepolia.base.org"],
+    },
+    public: {
+      http: ["https://sepolia.base.org"],
+    },
+  },
+  blockExplorers: {
+    default: {
+      name: "BaseScan",
+      url: "https://sepolia.basescan.org",
+    },
+  },
+};
+
 export type ChainConfig = MUDChain & { indexerUrl?: string };
 
 export const chainConfigs = {
+  baseSepolia,
   caldera,
   calderaSepolia,
   dev,

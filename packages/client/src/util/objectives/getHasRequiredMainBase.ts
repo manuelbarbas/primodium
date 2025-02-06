@@ -1,7 +1,9 @@
-import { Entity } from "@primodiumxyz/reactive-tables";
 import { Hex } from "viem";
-import { getObjective } from "./objectives";
+
 import { Core } from "@primodiumxyz/core";
+import { Entity } from "@primodiumxyz/reactive-tables";
+
+import { getObjective } from "./objectives";
 
 export function getHasRequiredMainBase({ tables }: Core, playerEntity: Entity, objectiveEntity: Entity): boolean {
   const requirement = getObjective(objectiveEntity)?.requiredMainBase;

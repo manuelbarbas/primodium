@@ -1,12 +1,12 @@
+import { entityToRockName, EntityType, formatResourceCount } from "@primodiumxyz/core";
+import { useAccountClient, useAsteroidStrength, useCore, useResourceCount } from "@primodiumxyz/core/react";
+import { Entity, useQuery } from "@primodiumxyz/reactive-tables";
+import { Badge } from "@/components/core/Badge";
 import { Button } from "@/components/core/Button";
 import { Card } from "@/components/core/Card";
-import { Badge } from "@/components/core/Badge";
-import { Entity, useQuery } from "@primodiumxyz/reactive-tables";
-import { useAccountClient, useAsteroidStrength, useCore, useResourceCount } from "@primodiumxyz/core/react";
 import { useAsteroidImage } from "@/hooks/image/useAsteroidImage";
-import { entityToRockName, EntityType, formatResourceCount } from "@primodiumxyz/core";
-import { EntityToResourceImage } from "@/util/image";
 import { useGame } from "@/hooks/useGame";
+import { EntityToResourceImage } from "@/util/image";
 
 export const OwnedAsteroid: React.FC<{ className?: string; asteroid: Entity; onClick?: () => void }> = ({
   className,
@@ -18,7 +18,7 @@ export const OwnedAsteroid: React.FC<{ className?: string; asteroid: Entity; onC
   const selected = tables.SelectedRock.use()?.value === asteroid;
   const { resourceCount: encryption, resourceStorage: maxEncryption } = useResourceCount(
     EntityType.Encryption,
-    asteroid
+    asteroid,
   );
   const { strength, maxStrength } = useAsteroidStrength(asteroid);
 

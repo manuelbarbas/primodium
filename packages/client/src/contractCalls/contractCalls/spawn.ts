@@ -1,8 +1,7 @@
-import { ampli } from "@/ampli";
-import { defaultEntity } from "@primodiumxyz/reactive-tables";
-
-import { parseReceipt } from "@/contractCalls/parseReceipt";
 import { ExecuteFunctions } from "@primodiumxyz/core";
+import { defaultEntity } from "@primodiumxyz/reactive-tables";
+import { ampli } from "@/ampli";
+import { parseReceipt } from "@/contractCalls/parseReceipt";
 
 export const createSpawn = ({ execute }: ExecuteFunctions) => {
   return async () =>

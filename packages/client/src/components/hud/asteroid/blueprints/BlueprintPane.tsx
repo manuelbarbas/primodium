@@ -1,11 +1,12 @@
-import { Button } from "@/components/core/Button";
-import { BuildingBlueprints } from "@/components/hud/asteroid/blueprints/BuildingBlueprints";
-import { usePersistentStore } from "@primodiumxyz/game/src/stores/PersistentStore";
-import { useGame } from "@/hooks/useGame";
-import { InterfaceIcons } from "@primodiumxyz/assets";
 import { useEffect, useRef, useState } from "react";
 import { useShallow } from "zustand/react/shallow";
+
+import { InterfaceIcons } from "@primodiumxyz/assets";
+import { usePersistentStore } from "@primodiumxyz/game/src/stores/PersistentStore";
+import { Button } from "@/components/core/Button";
 import { IconLabel } from "@/components/core/IconLabel";
+import { BuildingBlueprints } from "@/components/hud/asteroid/blueprints/BuildingBlueprints";
+import { useGame } from "@/hooks/useGame";
 
 export const BlueprintPane = () => {
   const [visibleDiv, setVisibleDiv] = useState(0);
@@ -71,12 +72,12 @@ export const BlueprintPane = () => {
                         label === "Production"
                           ? "text-yellow-500"
                           : label === "Military"
-                          ? "text-lime-600"
-                          : label === "Storage"
-                          ? "text-violet-400"
-                          : label === "Infrastructure"
-                          ? "text-sky-500"
-                          : ""
+                            ? "text-lime-600"
+                            : label === "Storage"
+                              ? "text-violet-400"
+                              : label === "Infrastructure"
+                                ? "text-sky-500"
+                                : ""
                       }`}
                       style={{ writingMode: "vertical-lr" }}
                     >
@@ -84,7 +85,7 @@ export const BlueprintPane = () => {
                     </span>
                   )}
                 </div>
-              )
+              ),
           )}
         </div>
 
@@ -115,12 +116,12 @@ export const BlueprintPane = () => {
                   label === "Production"
                     ? "text-yellow-500"
                     : label === "Military"
-                    ? "text-lime-600"
-                    : label === "Storage"
-                    ? "text-violet-400"
-                    : label === "Infrastructure"
-                    ? "text-sky-500"
-                    : ""
+                      ? "text-lime-600"
+                      : label === "Storage"
+                        ? "text-violet-400"
+                        : label === "Infrastructure"
+                          ? "text-sky-500"
+                          : ""
                 }`}
                 style={{
                   writingMode: "vertical-lr",

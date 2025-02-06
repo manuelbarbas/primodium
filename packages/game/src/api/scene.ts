@@ -1,13 +1,12 @@
 import { Scene } from "@primodiumxyz/engine/types";
-
 import { createAudioApi } from "@game/api/audio";
 import { createCameraApi } from "@game/api/camera";
 import { createFxApi } from "@game/api/fx";
 import { createHooksApi } from "@game/api/hooks";
 import { createInputApi } from "@game/api/input";
-import { createSpriteApi } from "@game/api/sprite";
-import { createObjectApi } from "@game/api/objects";
 import { createNotificationApi } from "@game/api/notification";
+import { createObjectApi } from "@game/api/objects";
+import { createSpriteApi } from "@game/api/sprite";
 import { createUtilApi } from "@game/api/utils";
 
 export function createSceneApi(scene: Scene) {

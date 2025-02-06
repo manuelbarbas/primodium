@@ -1,12 +1,13 @@
 import { InterfaceIcons } from "@primodiumxyz/assets";
-import { BuildAnyObjective, ObjectiveReq } from "./types";
-import { Entity, query } from "@primodiumxyz/reactive-tables";
 import { Core, getEntityTypeName } from "@primodiumxyz/core";
+import { Entity, query } from "@primodiumxyz/reactive-tables";
+
+import { BuildAnyObjective, ObjectiveReq } from "./types";
 
 export function getHasAnyRequiredBuilding(
   { tables }: Core,
   asteroid: Entity,
-  objective: BuildAnyObjective
+  objective: BuildAnyObjective,
 ): ObjectiveReq {
   const complete = objective.buildingTypes.some((buildingType) => {
     const buildings = query({
@@ -20,7 +21,8 @@ export function getHasAnyRequiredBuilding(
 
   const message = objective.buildingTypes
     .map(
-      (buildingType, i) => `${getEntityTypeName(buildingType)}  ${i == objective.buildingTypes.length - 1 ? "or " : ""}`
+      (buildingType, i) =>
+        `${getEntityTypeName(buildingType)}  ${i == objective.buildingTypes.length - 1 ? "or " : ""}`,
     )
     .join(", ");
   return {

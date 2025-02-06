@@ -1,9 +1,9 @@
+import { Assets, Sprites } from "@primodiumxyz/assets";
+import { clampedIndex } from "@primodiumxyz/core";
 import { Scene } from "@primodiumxyz/engine/types";
-import { Sprites, Assets } from "@primodiumxyz/assets";
-import { getPrimarySprite, getSecondarySprite } from "@game/lib/objects/asteroid/helpers";
 import { Entity } from "@primodiumxyz/reactive-tables";
 import { EntityTypetoBuildingSprites, MainbaseLevelToEmblem } from "@game/lib/mappings";
-import { clampedIndex } from "@primodiumxyz/core";
+import { getPrimarySprite, getSecondarySprite } from "@game/lib/objects/asteroid/helpers";
 
 const cache = new Map<Sprites, string>();
 
@@ -40,7 +40,7 @@ export const createSpriteApi = (scene: Scene) => {
 
   function getEmblemSprite(level: bigint) {
     return getSpriteBase64(
-      MainbaseLevelToEmblem[clampedIndex(Number(level - 1n), MainbaseLevelToEmblem.length)] ?? Sprites.Emblem1
+      MainbaseLevelToEmblem[clampedIndex(Number(level - 1n), MainbaseLevelToEmblem.length)] ?? Sprites.Emblem1,
     );
   }
 

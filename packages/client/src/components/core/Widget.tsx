@@ -1,15 +1,16 @@
-import { Card } from "@/components/core/Card";
-import { useWidgets } from "@/hooks/providers/WidgetProvider";
-import { useGame } from "@/hooks/useGame";
-import { KeybindActionKeys } from "@primodiumxyz/game/src/lib/constants/keybinds";
-import { SceneKeys } from "@primodiumxyz/game/src/lib/constants/common";
-import { usePersistentStore } from "@primodiumxyz/game/src/stores/PersistentStore";
-import { useCore } from "@primodiumxyz/core/react";
-import { Coord } from "@primodiumxyz/engine/types";
-import { ReactNode, memo, useCallback, useEffect, useMemo, useState } from "react";
+import { memo, ReactNode, useCallback, useEffect, useMemo, useState } from "react";
 import ReactDOM from "react-dom";
 import { FaMinus, FaRegWindowMaximize, FaRegWindowRestore } from "react-icons/fa";
 import { RiPushpinFill, RiUnpinFill } from "react-icons/ri";
+
+import { useCore } from "@primodiumxyz/core/react";
+import { Coord } from "@primodiumxyz/engine/types";
+import { SceneKeys } from "@primodiumxyz/game/src/lib/constants/common";
+import { KeybindActionKeys } from "@primodiumxyz/game/src/lib/constants/keybinds";
+import { usePersistentStore } from "@primodiumxyz/game/src/stores/PersistentStore";
+import { Card } from "@/components/core/Card";
+import { useWidgets } from "@/hooks/providers/WidgetProvider";
+import { useGame } from "@/hooks/useGame";
 
 type WidgetProps = {
   title: string;
@@ -218,7 +219,7 @@ export const Content: React.FC<WidgetContentProps> = memo(
         )}
       </div>
     );
-  }
+  },
 );
 
 export const Widget: React.FC<WidgetProps> = memo(
@@ -291,7 +292,7 @@ export const Widget: React.FC<WidgetProps> = memo(
         setContainerRef(_container);
         return obj;
       },
-      [container, id, minOpacity, pinned, defaultPinned]
+      [container, id, minOpacity, pinned, defaultPinned],
     );
 
     // reset on double click to default
@@ -342,7 +343,7 @@ export const Widget: React.FC<WidgetProps> = memo(
         }
         setDragging(true);
       },
-      [setDragOffset, container, pinned, uiCamera, camera, setDragging]
+      [setDragOffset, container, pinned, uiCamera, camera, setDragging],
     );
 
     const handlePin = useCallback(() => {
@@ -633,7 +634,7 @@ export const Widget: React.FC<WidgetProps> = memo(
           </div>
         )}
       </>,
-      containerRef ?? document.body
+      containerRef ?? document.body,
     );
-  }
+  },
 );

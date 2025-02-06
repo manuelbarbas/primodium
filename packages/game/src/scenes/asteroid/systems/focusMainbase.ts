@@ -1,5 +1,5 @@
-import { namespaceWorld } from "@primodiumxyz/reactive-tables";
 import { Core, EntityType } from "@primodiumxyz/core";
+import { namespaceWorld } from "@primodiumxyz/reactive-tables";
 import { PrimodiumScene } from "@game/types";
 
 export const focusMainbase = (scene: PrimodiumScene, core: Core) => {

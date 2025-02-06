@@ -1,10 +1,11 @@
 import { useCallback } from "react";
+
+import { Channel } from "@primodiumxyz/game";
+import { usePersistentStore } from "@primodiumxyz/game/src/stores/PersistentStore";
 import { SecondaryCard } from "@/components/core/Card";
 import { Navigator } from "@/components/core/Navigator";
 import { Range } from "@/components/core/Range";
-import { usePersistentStore } from "@primodiumxyz/game/src/stores/PersistentStore";
 import { useGame } from "@/hooks/useGame";
-import { Channel } from "@primodiumxyz/game";
 
 export const AudioSettings = () => {
   const { master, sfx, ui, music } = usePersistentStore((state) => state.volume);
@@ -18,7 +19,7 @@ export const AudioSettings = () => {
       game.COMMAND_CENTER.audio.setVolume(amount, channel);
       game.ROOT.audio.setVolume(amount, channel);
     },
-    [game]
+    [game],
   );
 
   return (

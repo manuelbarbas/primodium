@@ -1,3 +1,11 @@
+import { EAllianceInviteMode } from "contracts/config/enums";
+import { useMemo, useState } from "react";
+import { FaCheck, FaEnvelope, FaLock, FaPlus, FaSearch } from "react-icons/fa";
+import AutoSizer from "react-virtualized-auto-sizer";
+import { FixedSizeList as List } from "react-window";
+
+import { useAccountClient, useCore } from "@primodiumxyz/core/react";
+import { Entity } from "@primodiumxyz/reactive-tables";
 import { Button } from "@/components/core/Button";
 import { SecondaryCard } from "@/components/core/Card";
 import { Navigator } from "@/components/core/Navigator";
@@ -6,13 +14,6 @@ import { ALLIANCE_TAG_SIZE } from "@/components/hud/global/modals/alliance-mgmt/
 import { TransactionQueueMask } from "@/components/shared/TransactionQueueMask";
 import { useContractCalls } from "@/hooks/useContractCalls";
 import { cn } from "@/util/client";
-import { useAccountClient, useCore } from "@primodiumxyz/core/react";
-import { Entity } from "@primodiumxyz/reactive-tables";
-import { EAllianceInviteMode } from "contracts/config/enums";
-import { useMemo, useState } from "react";
-import { FaCheck, FaEnvelope, FaLock, FaPlus, FaSearch } from "react-icons/fa";
-import AutoSizer from "react-virtualized-auto-sizer";
-import { FixedSizeList as List } from "react-window";
 
 // This screen is the home interface for searching alliances, and accessing both the "create" and "invites" screens
 // It is only accessible to players who are not in an alliance
@@ -48,7 +49,7 @@ export const IndexScreen = () => {
   // Check if the player is not already in an alliance (for disabling buttons & custom display)
   // const playerAlliance = components.PlayerAlliance.use(playerEntity)?.alliance;
   const playerAlliance = alliances?.find((alliance) =>
-    alliance.members.some((member) => member === playerEntity)
+    alliance.members.some((member) => member === playerEntity),
   )?.entity;
 
   const allianceLength = alliances?.length ?? 0;

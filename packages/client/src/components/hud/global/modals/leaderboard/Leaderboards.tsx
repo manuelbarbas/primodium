@@ -1,9 +1,11 @@
 import { useMemo } from "react";
-import { Button } from "@/components/core/Button";
-import { GrandLeaderboard } from "./GrandLeaderboard";
-import { SubLeaderboard } from "./SubLeaderboard";
+
 import { InterfaceIcons, ResourceImages } from "@primodiumxyz/assets";
 import { EntityType } from "@primodiumxyz/core";
+import { Button } from "@/components/core/Button";
+
+import { GrandLeaderboard } from "./GrandLeaderboard";
+import { SubLeaderboard } from "./SubLeaderboard";
 
 export const Leaderboards = ({
   activeTab,
@@ -47,7 +49,7 @@ export const Leaderboards = ({
         ),
       },
     ],
-    [alliance]
+    [alliance],
   );
 
   return (

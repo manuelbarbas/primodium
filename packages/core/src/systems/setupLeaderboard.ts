@@ -1,8 +1,9 @@
-import { Entity, namespaceWorld } from "@primodiumxyz/reactive-tables";
 import { EPointType } from "contracts/config/enums";
-import { isPlayer } from "@/utils/global/common";
+
+import { Entity, namespaceWorld } from "@primodiumxyz/reactive-tables";
 import { EntityType, LeaderboardEntityLookup } from "@/lib";
 import { Core } from "@/lib/types";
+import { isPlayer } from "@/utils/global/common";
 
 export const setupLeaderboard = (core: Core) => {
   const {
@@ -34,7 +35,7 @@ export const setupLeaderboard = (core: Core) => {
         players,
         ranks,
       },
-      leaderboardEntity
+      leaderboardEntity,
     );
   }
 

@@ -1,5 +1,5 @@
-import { coordEq, tileCoordToPixelCoord, pixelCoordToTileCoord } from "@primodiumxyz/engine/lib/util/coords";
-import { Scene, Coord } from "@primodiumxyz/engine/types";
+import { coordEq, pixelCoordToTileCoord, tileCoordToPixelCoord } from "@primodiumxyz/engine/lib/util/coords";
+import { Coord, Scene } from "@primodiumxyz/engine/types";
 
 // const anchorMap =
 export const createCameraApi = (targetScene: Scene) => {
@@ -9,7 +9,7 @@ export const createCameraApi = (targetScene: Scene) => {
       duration?: number;
       pixel?: boolean;
       ease?: string;
-    } = {}
+    } = {},
   ) {
     const { phaserScene, camera, tiled: tilemap } = targetScene;
     const { pixel = false, ease = "Power2", duration = 1000 } = options;
@@ -24,10 +24,10 @@ export const createCameraApi = (targetScene: Scene) => {
 
       const endCoord = {
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        //@ts-expect-error
+        // @ts-expect-error
         x: currentTween.data[0]?.end ?? 0,
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        //@ts-expect-error
+        // @ts-expect-error
         y: currentTween.data[1]?.end ?? 0,
       };
 

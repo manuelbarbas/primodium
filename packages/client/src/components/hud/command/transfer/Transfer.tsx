@@ -1,17 +1,19 @@
 import { bigIntMax, bigIntMin } from "@latticexyz/common/utils";
-import { defaultEntity, Entity } from "@primodiumxyz/reactive-tables";
 import { EResource } from "contracts/config/enums";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import ReactDOM from "react-dom";
+import { FaInfoCircle } from "react-icons/fa";
+
+import { parseResourceCount, ResourceEntityLookup, UnitStorages } from "@primodiumxyz/core";
+import { useCore, useResourceCounts, useUnitCounts } from "@primodiumxyz/core/react";
+import { defaultEntity, Entity } from "@primodiumxyz/reactive-tables";
+import { Button } from "@/components/core/Button";
+import { useTransfer } from "@/hooks/providers/TransferProvider";
+import { useGame } from "@/hooks/useGame";
+
 import { ResourceIcon } from "./ResourceIcon";
 import { TransferConfirm } from "./TransferConfirm";
 import { TransferPane } from "./TransferPane";
-import { useTransfer } from "@/hooks/providers/TransferProvider";
-import { Button } from "@/components/core/Button";
-import { useGame } from "@/hooks/useGame";
-import { FaInfoCircle } from "react-icons/fa";
-import { useCore, useResourceCounts, useUnitCounts } from "@primodiumxyz/core/react";
-import { parseResourceCount, ResourceEntityLookup, UnitStorages } from "@primodiumxyz/core";
 
 const Transfer: React.FC = () => {
   const { left, right, hovering, setHovering, flash, deltas, setDeltas, moving, setMoving } = useTransfer();
@@ -44,7 +46,7 @@ const Transfer: React.FC = () => {
         acc.set(entity, total);
         return acc;
       }, new Map<Entity, bigint>()),
-    [rightInitialResourceCounts, deltas, moving]
+    [rightInitialResourceCounts, deltas, moving],
   );
 
   const leftInitialResourceCounts = useResourceCounts(left ?? defaultEntity);
@@ -67,7 +69,7 @@ const Transfer: React.FC = () => {
         acc.set(entity, total);
         return acc;
       }, new Map<Entity, bigint>()),
-    [leftInitialResourceCounts, deltas, moving]
+    [leftInitialResourceCounts, deltas, moving],
   );
   // Units
 
@@ -174,15 +176,15 @@ const Transfer: React.FC = () => {
         });
       }
     },
-    [hovering, moving, right, rightUnitCounts, rightResourceCounts, deltas]
+    [hovering, moving, right, rightUnitCounts, rightResourceCounts, deltas],
   );
 
   const handleKeyDown = useCallback(
     (change: number) => {
       if (!moving) return;
       const initial = UnitStorages.has(moving.entity)
-        ? (moving.side === "left" ? leftUnitCounts : rightUnitCounts).get(moving.entity) ?? 0n
-        : (moving.side === "left" ? leftResourceCounts : rightResourceCounts).get(moving.entity) ?? 0n;
+        ? ((moving.side === "left" ? leftUnitCounts : rightUnitCounts).get(moving.entity) ?? 0n)
+        : ((moving.side === "left" ? leftResourceCounts : rightResourceCounts).get(moving.entity) ?? 0n);
 
       const negative = change < 0;
       const delta = parseResourceCount(moving.entity, `${Math.abs(change)}`);
@@ -193,7 +195,7 @@ const Transfer: React.FC = () => {
           : bigIntMax(1n, moving.count - delta),
       });
     },
-    [moving, leftResourceCounts, leftUnitCounts]
+    [moving, leftResourceCounts, leftUnitCounts],
   );
   const api = useGame().COMMAND_CENTER;
   useEffect(() => {
@@ -282,7 +284,7 @@ const Moving = ({ entity, count }: { entity?: Entity; count?: bigint }) => {
     >
       <ResourceIcon resource={entity} count={count} />
     </div>,
-    document.body
+    document.body,
   );
 };
 

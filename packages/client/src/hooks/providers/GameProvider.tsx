@@ -1,5 +1,6 @@
+import { createContext, ReactNode } from "react";
+
 import { PrimodiumGame } from "@primodiumxyz/game";
-import { ReactNode, createContext } from "react";
 
 // Create a context
 export const GameContext = createContext<PrimodiumGame | null>(null);

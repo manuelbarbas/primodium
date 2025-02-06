@@ -1,11 +1,10 @@
 import { Animations, Assets, Sprites } from "@primodiumxyz/assets";
 import { Coord } from "@primodiumxyz/engine/types";
 import { Entity } from "@primodiumxyz/reactive-tables";
-
-import { PrimodiumScene } from "@game/types";
-import { BaseAsteroid } from "@game/lib/objects/asteroid/BaseAsteroid";
 import { DepthLayers } from "@game/lib/constants/common";
+import { BaseAsteroid } from "@game/lib/objects/asteroid/BaseAsteroid";
 import { LODs } from "@game/lib/objects/asteroid/helpers";
+import { PrimodiumScene } from "@game/types";
 
 export class ShardAsteroid extends BaseAsteroid {
   constructor(args: { id: Entity; scene: PrimodiumScene; coord: Coord }) {
@@ -57,7 +56,7 @@ export class ShardAsteroid extends BaseAsteroid {
             this.asteroidSprite.x,
             this.asteroidSprite.y,
             Assets.SpriteAtlas,
-            Sprites.Shard
+            Sprites.Shard,
           );
 
           overlay.setTintFill(0xff0000);

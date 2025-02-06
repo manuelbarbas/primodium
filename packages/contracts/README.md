@@ -12,6 +12,7 @@ The Solidity contracts that define all the game's state and conditions, as well 
   - [Building](#building)
   - [Testing](#testing)
 - [Usage](#usage)
+- [Deployment](#deployment)
 
 ## Introduction
 
@@ -47,7 +48,7 @@ cache - "Foundry cache (ignored by git)"
 config - "Prototype and terrain configuration for initial game state"
 deploys - "History of deployments (ignored by git)"
 out - "Built ABIs for all systems (ignored by git)"
-scripts - "Additional scripts for after-deployment setup"
+script - "Additional scripts for after-deployment setup"
 src - "Source files"
 ├── codegen - "MUD-generated Solidity files"
 ├── hooks - "Hooks for internal logic"
@@ -111,3 +112,7 @@ DevSystem.devSetRecord(tableId, key, data, valueSchema);
 // To remove a record:
 DevSystem.devDeleteRecord(tableId, key, valueSchema);
 ```
+
+## Deployment
+
+For deployment instructions, see the [README](../../README.md#deployment) in the root of the monorepo.

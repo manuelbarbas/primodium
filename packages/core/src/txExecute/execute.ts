@@ -1,9 +1,10 @@
 import { Abi, ContractFunctionName, Hex, TransactionReceipt } from "viem";
-import { encodeSystemCall, encodeSystemCallFrom, SystemCall } from "@/txExecute/encodeSystemCall";
-import { TxQueueOptions } from "@/tables/types";
-import { _execute } from "@/txExecute/_execute";
+
 import { AccountClient, Core, WorldAbiType } from "@/lib/types";
 import { WorldAbi } from "@/lib/WorldAbi";
+import { TxQueueOptions } from "@/tables/types";
+import { _execute } from "@/txExecute/_execute";
+import { encodeSystemCall, encodeSystemCallFrom, SystemCall } from "@/txExecute/encodeSystemCall";
 import { functionSystemIds } from "@/txExecute/functionSystemIds";
 
 export type ExecuteCallOptions<abi extends Abi, functionName extends ContractFunctionName<abi>> = Omit<
@@ -29,13 +30,13 @@ export function execute<functionName extends ContractFunctionName<WorldAbiType>>
   core: Core;
   accountClient: AccountClient;
 }) {
-  const account = withSession ? sessionAccount ?? playerAccount : playerAccount;
+  const account = withSession ? (sessionAccount ?? playerAccount) : playerAccount;
   const authorizing = account == sessionAccount;
 
   console.info(
     `[Tx] Executing ${functionName} with address ${account.address.slice(0, 6)} ${
       authorizing ? "(with session acct)" : ""
-    }`
+    }`,
   );
 
   const run = async () => {

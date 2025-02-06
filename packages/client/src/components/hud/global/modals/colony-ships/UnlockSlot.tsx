@@ -1,3 +1,10 @@
+import { bigIntMin } from "@latticexyz/common/utils";
+import React, { useEffect, useMemo, useState } from "react";
+import { Hex } from "viem";
+
+import { formatResourceCount, parseResourceCount, ResourceEnumLookup } from "@primodiumxyz/core";
+import { useColonySlots, useColonySlotsCostMultiplier, useCore, useResourceCount } from "@primodiumxyz/core/react";
+import { Entity } from "@primodiumxyz/reactive-tables";
 import { Button } from "@/components/core/Button";
 import { CapacityBar } from "@/components/core/CapacityBar";
 import { SecondaryCard } from "@/components/core/Card";
@@ -6,12 +13,6 @@ import { NumberInput } from "@/components/core/NumberInput";
 import { TransactionQueueMask } from "@/components/shared/TransactionQueueMask";
 import { useContractCalls } from "@/hooks/useContractCalls";
 import { EntityToResourceImage } from "@/util/image";
-import { bigIntMin } from "@latticexyz/common/utils";
-import { formatResourceCount, parseResourceCount, ResourceEnumLookup } from "@primodiumxyz/core";
-import { useCore, useColonySlots, useResourceCount, useColonySlotsCostMultiplier } from "@primodiumxyz/core/react";
-import { Entity } from "@primodiumxyz/reactive-tables";
-import React, { useEffect, useMemo, useState } from "react";
-import { Hex } from "viem";
 
 export const UnlockSlot: React.FC<{
   playerEntity: Entity;

@@ -1,6 +1,7 @@
-import { Entity } from "@primodiumxyz/reactive-tables";
 import { bigIntMax } from "@latticexyz/common/utils";
 import { useMemo } from "react";
+
+import { Entity } from "@primodiumxyz/reactive-tables";
 import { SPEED_SCALE } from "@/lib/constants";
 import { useCore } from "@/react/hooks/useCore";
 
@@ -41,6 +42,7 @@ export const usePlayerUnclaimedShardAsteroidPoints = (playerEntity: Entity) => {
 
 /**
  * Calculates the unclaimed shard asteroid points for each owner.
+ *
  * @returns A map containing the unclaimed points for each owner.
  */
 export const useAllUnclaimedShardAsteroidPts = () => {

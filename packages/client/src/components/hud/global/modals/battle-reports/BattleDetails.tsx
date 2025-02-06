@@ -1,16 +1,17 @@
+import { EObjectives } from "contracts/config/enums";
+import React, { useEffect } from "react";
+
+import { InterfaceIcons } from "@primodiumxyz/assets";
+import { entityToFleetName, entityToRockName, EntityType, formatResourceCount } from "@primodiumxyz/core";
+import { useAccountClient, useCore } from "@primodiumxyz/core/react";
+import { Entity } from "@primodiumxyz/reactive-tables";
 import { SecondaryCard } from "@/components/core/Card";
+import { Navigator } from "@/components/core/Navigator";
 import { BattleAllies } from "@/components/hud/global/modals/battle-reports/BattleAllies";
 import { ResourceStatus } from "@/components/hud/global/modals/battle-reports/ResourceStatus";
 import { UnitStatus } from "@/components/hud/global/modals/battle-reports/UnitStatus";
 import { AccountDisplay } from "@/components/shared/AccountDisplay";
-import { Entity } from "@primodiumxyz/reactive-tables";
-import { InterfaceIcons } from "@primodiumxyz/assets";
-import { EObjectives } from "contracts/config/enums";
-import React, { useEffect } from "react";
-import { Navigator } from "@/components/core/Navigator";
 import { makeObjectiveClaimable } from "@/util/objectives/makeObjectiveClaimable";
-import { useAccountClient, useCore } from "@primodiumxyz/core/react";
-import { entityToFleetName, entityToRockName, formatResourceCount, EntityType } from "@primodiumxyz/core";
 
 export const BattleDetails: React.FC<{
   battleEntity: Entity;
@@ -39,10 +40,10 @@ export const BattleDetails: React.FC<{
   const defenderDetails = Object.values(battle.participants).find((p) => p.entity === battle.defender);
 
   const attackerAllyDetails = battle.aggressorAllies.map((ally) =>
-    Object.values(battle.participants).find((p) => p.entity === ally)
+    Object.values(battle.participants).find((p) => p.entity === ally),
   );
   const defenderAllyDetails = battle.targetAllies.map((ally) =>
-    Object.values(battle.participants).find((p) => p.entity === ally)
+    Object.values(battle.participants).find((p) => p.entity === ally),
   );
 
   return (
@@ -128,7 +129,7 @@ export const BattleDetails: React.FC<{
                         LOST{" "}
                         {formatResourceCount(
                           EntityType.Encryption,
-                          defenderDetails.encryptionAtStart - defenderDetails.encryptionAtEnd
+                          defenderDetails.encryptionAtStart - defenderDetails.encryptionAtEnd,
                         )}{" "}
                         ENCRYPTION
                       </p>

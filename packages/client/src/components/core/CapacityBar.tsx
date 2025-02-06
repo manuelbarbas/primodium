@@ -1,6 +1,7 @@
-import { Entity } from "@primodiumxyz/reactive-tables";
 import { FC } from "react";
+
 import { EntityType } from "@primodiumxyz/core";
+import { Entity } from "@primodiumxyz/reactive-tables";
 
 type SegmentedCapacityBarProps = {
   current: bigint;

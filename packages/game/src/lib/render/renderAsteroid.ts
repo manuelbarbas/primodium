@@ -1,3 +1,5 @@
+import { EMap } from "contracts/config/enums";
+
 import {
   Core,
   entityToPlayerName,
@@ -8,14 +10,12 @@ import {
   MapEntityLookup,
   Mode,
 } from "@primodiumxyz/core";
-import { Entity } from "@primodiumxyz/reactive-tables";
-import { EMap } from "contracts/config/enums";
-
 import { Coord } from "@primodiumxyz/engine/types";
-import { PrimodiumScene } from "@game/types";
+import { Entity } from "@primodiumxyz/reactive-tables";
 import { MainbaseLevelToEmblem } from "@game/lib/mappings";
 import { PrimaryAsteroid, SecondaryAsteroid } from "@game/lib/objects/asteroid";
 import { BaseAsteroid } from "@game/lib/objects/asteroid/BaseAsteroid";
+import { PrimodiumScene } from "@game/types";
 
 export const renderAsteroid = (args: {
   scene: PrimodiumScene;

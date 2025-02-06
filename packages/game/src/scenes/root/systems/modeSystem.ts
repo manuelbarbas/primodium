@@ -1,6 +1,5 @@
 import { Core, Mode } from "@primodiumxyz/core";
 import { defaultEntity, Entity, namespaceWorld } from "@primodiumxyz/reactive-tables";
-
 import { createCameraApi } from "@game/api/camera";
 import { GlobalApi } from "@game/api/global";
 import { ModeToSceneKey } from "@game/lib/mappings";
@@ -87,7 +86,7 @@ export const modeSystem = (game: GlobalApi, core: Core) => {
             },
           });
           targetScene.camera.phaserCamera.fadeIn(500, 0, 0, 0);
-        }
+        },
       );
 
       tables.SelectedBuilding.remove();

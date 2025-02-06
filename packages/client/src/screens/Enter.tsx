@@ -1,17 +1,18 @@
-import { generatePrivateKey, privateKeyToAccount } from "viem/accounts";
-
-import { Tooltip } from "@/components/core/Tooltip";
-import { findEntriesWithPrefix } from "@/util/localStorage";
 import { useEffect, useState } from "react";
 import { FaExclamationTriangle, FaInfoCircle } from "react-icons/fa";
 import { useLocation, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import { Landing } from "./Landing";
-import { useAccountClient, useCore } from "@primodiumxyz/core/react";
-import { TransactionQueueMask } from "@/components/shared/TransactionQueueMask";
-import { defaultEntity } from "@primodiumxyz/reactive-tables";
+import { generatePrivateKey, privateKeyToAccount } from "viem/accounts";
+
 import { STORAGE_PREFIX } from "@primodiumxyz/core";
+import { useAccountClient, useCore } from "@primodiumxyz/core/react";
+import { defaultEntity } from "@primodiumxyz/reactive-tables";
+import { Tooltip } from "@/components/core/Tooltip";
+import { TransactionQueueMask } from "@/components/shared/TransactionQueueMask";
 import { useContractCalls } from "@/hooks/useContractCalls";
+import { findEntriesWithPrefix } from "@/util/localStorage";
+
+import { Landing } from "./Landing";
 
 export const Enter: React.FC = () => {
   const { tables } = useCore();
@@ -68,7 +69,7 @@ export const Enter: React.FC = () => {
         draggable: false,
         closeButton: false,
         hideProgressBar: true,
-      }
+      },
     );
   };
   useEffect(() => {

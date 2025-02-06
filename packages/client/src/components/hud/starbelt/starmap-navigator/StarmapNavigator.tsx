@@ -1,9 +1,10 @@
+import { memo } from "react";
+
+import { InterfaceIcons } from "@primodiumxyz/assets";
 import { Card, GlassCard } from "@/components/core/Card";
 import { IconLabel } from "@/components/core/IconLabel";
 import { Tabs } from "@/components/core/Tabs";
 import { StarmapNavigatorPane } from "@/components/hud/starbelt/starmap-navigator/StarmapNavigatorPane";
-import { InterfaceIcons } from "@primodiumxyz/assets";
-import { memo } from "react";
 
 export const StarmapNavigator = memo(() => {
   return (

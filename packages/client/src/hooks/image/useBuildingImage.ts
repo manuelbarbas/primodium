@@ -1,6 +1,6 @@
-import { useGame } from "@/hooks/useGame";
 import { useCore } from "@primodiumxyz/core/react";
 import { Entity } from "@primodiumxyz/reactive-tables";
+import { useGame } from "@/hooks/useGame";
 
 export const useBuildingImage = (building: Entity) => {
   const { tables } = useCore();

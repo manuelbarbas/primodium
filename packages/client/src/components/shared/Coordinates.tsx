@@ -1,15 +1,15 @@
 import { useEffect, useState } from "react";
-import { FaSquare, FaLocationArrow } from "react-icons/fa";
+import { FaLocationArrow, FaSquare } from "react-icons/fa";
 import { FaCropSimple, FaSquareXmark } from "react-icons/fa6";
-import { Coord } from "@primodiumxyz/game";
-import { useGame } from "@/hooks/useGame";
-import { usePersistentStore } from "@primodiumxyz/game/src/stores/PersistentStore";
-import { cn } from "@/util/client";
-import { SecondaryCard } from "@/components/core/Card";
-import { useCore } from "@primodiumxyz/core/react";
+
 import { Mode } from "@primodiumxyz/core";
-import { DepthLayers } from "@primodiumxyz/game";
+import { useCore } from "@primodiumxyz/core/react";
+import { Coord, DepthLayers } from "@primodiumxyz/game";
 import { Tile } from "@primodiumxyz/game/src/lib/objects/Tile";
+import { usePersistentStore } from "@primodiumxyz/game/src/stores/PersistentStore";
+import { SecondaryCard } from "@/components/core/Card";
+import { useGame } from "@/hooks/useGame";
+import { cn } from "@/util/client";
 
 // This will show tile and region coordinates in the starmap, and tile coordinates when hovering a tile in asteroid
 // In dev mode, this will be slightly above the "MUD Dev Tools" button, and be clickable in starmap for more info (pixel coordinates as well)
@@ -28,7 +28,7 @@ export const Coordinates = () => {
       className={cn(
         "flex flex-col gap-1 min-h-9 justify-center text-xs bg-secondary/15 p-0",
         DEV ? "pointer-events-auto" : "bottom-2 pointer-events-none",
-        uiScale < 0.7 && "text-[10px]"
+        uiScale < 0.7 && "text-[10px]",
       )}
     >
       {asteroidMode ? DEV ? <CoordsAsteroidDev /> : <CoordsAsteroid /> : <CoordsStarmap DEV={DEV} />}

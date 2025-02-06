@@ -1,9 +1,10 @@
-import { Entity, namespaceWorld } from "@primodiumxyz/reactive-tables";
-import { Core } from "@/lib/types";
-import { EResource } from "contracts/config/enums";
-import { EntityType, ResourceEntityLookup, SPEED_SCALE } from "@/lib";
-import { encodeAbiParameters, Hex, keccak256 } from "viem";
 import { bigIntMin } from "@latticexyz/common/utils";
+import { EResource } from "contracts/config/enums";
+import { encodeAbiParameters, Hex, keccak256 } from "viem";
+
+import { Entity, namespaceWorld } from "@primodiumxyz/reactive-tables";
+import { EntityType, ResourceEntityLookup, SPEED_SCALE } from "@/lib";
+import { Core } from "@/lib/types";
 
 export const setupWormholeResource = async (core: Core) => {
   const {
@@ -22,8 +23,8 @@ export const setupWormholeResource = async (core: Core) => {
             { name: "seed", type: "bytes32" },
             { name: "turn", type: "uint256" },
           ],
-          [seed as Hex, turn]
-        )
+          [seed as Hex, turn],
+        ),
       ) as Entity;
 
       const resourceIndex = Number(BigInt(seed) % BigInt(transportableLength)) + 1;

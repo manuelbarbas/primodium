@@ -1,3 +1,8 @@
+import { ContractWrite } from "@latticexyz/common";
+import type CallWithSignatureAbi from "@latticexyz/world-modules/out/Unstable_CallWithSignatureSystem.sol/Unstable_CallWithSignatureSystem.abi.json.d.ts";
+import mudConfig from "contracts/mud.config";
+import type IWorldAbi from "contracts/out/IWorld.sol/IWorld.abi.json.d.ts";
+import { ReplaySubject, Subject } from "rxjs";
 import {
   Account,
   Address,
@@ -8,28 +13,19 @@ import {
   PublicClient,
   WalletClient,
 } from "viem";
-import { createUtils } from "@/utils";
-import { createSync } from "@/sync";
-import { ContractWrite } from "@latticexyz/common";
-import { ReplaySubject, Subject } from "rxjs";
-import { AllTableDefs, ContractTables, Entity, World, WrapperResult } from "@primodiumxyz/reactive-tables";
 
-import type CallWithSignatureAbi from "@latticexyz/world-modules/out/Unstable_CallWithSignatureSystem.sol/Unstable_CallWithSignatureSystem.abi.json.d.ts";
-import type IWorldAbi from "contracts/out/IWorld.sol/IWorld.abi.json.d.ts";
+import { AllTableDefs, ContractTables, Entity, World, WrapperResult } from "@primodiumxyz/reactive-tables";
+import { ChainConfig } from "@/network/config/chainConfigs";
+import { otherTableDefs } from "@/network/otherTableDefs";
+import { Recs } from "@/recs/setupRecs";
+import { createSync } from "@/sync";
 import setupCoreTables from "@/tables/coreTables";
 import { SyncTables } from "@/tables/syncTables";
-import { ChainConfig } from "@/network/config/chainConfigs";
-import { Recs } from "@/recs/setupRecs";
-import { otherTableDefs } from "@/network/otherTableDefs";
-import mudConfig from "contracts/mud.config";
+import { createUtils } from "@/utils";
 
-/**
- * Core configuration
- */
+/** Core configuration */
 export type CoreConfig = {
-  /**
-   * Chain configuration. Default configurations can be found in the {@link chainConfigs object chainConfigs} object
-   */
+  /** Chain configuration. Default configurations can be found in the {@link chainConfigs object chainConfigs} object */
   chain: ChainConfig;
   worldAddress: Address;
   initialBlockNumber?: bigint;
@@ -40,16 +36,14 @@ export type CoreConfig = {
    * If using anvil, this value is 0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80
    */
   devPrivateKey?: Hex;
-  /**
-   * Used to fetch player ens names
-   */
+  /** Used to fetch player ens names */
   accountLinkUrl?: string;
 
   /**
    * Run the default initial sync? (default: false)
    *
-   * If using RPC, will hydrate full game state.
-   * If using indexer, default sync only fetches prototype data and player data (if playerAddress is set)
+   * If using RPC, will hydrate full game state. If using indexer, default sync only fetches prototype data and player
+   * data (if playerAddress is set)
    */
   runSync?: boolean;
   /**
@@ -68,11 +62,12 @@ type MudConfig = typeof mudConfig;
  * @property {MudConfig} mudConfig - Configuration for MUD.
  * @property {PublicClient<FallbackTransport, ChainConfig, undefined>} publicClient - The public client.
  * @property {Clock} clock - The clock instance.
- * @property {WrapperResult<MudConfig, typeof otherTableDefs>} - The wrapper result containing all tables and their definitions and the storage adapter.
+ * @property {WrapperResult<MudConfig, typeof otherTableDefs>} - The wrapper result containing all tables and their
+ *   definitions and the storage adapter.
  *
- * Contains contract table metadata.
+ *   Contains contract table metadata.
  *
- * See [mud.config.ts](https://github.com/primodiumxyz/contracts/blob/main/mud.config.ts#L85-L97) for more details.
+ *   See [mud.config.ts](https://github.com/primodiumxyz/contracts/blob/main/mud.config.ts#L85-L97) for more details.
  */
 
 export type CreateNetworkResult = Omit<Recs<MudConfig, typeof otherTableDefs>, "tables"> & {
@@ -91,8 +86,10 @@ export type Sync = ReturnType<typeof createSync>;
 
 /**
  * Core object
+ *
  * @typedef {Object} Core
- * @property {CoreConfig} config - Chain configuration. Default configurations can be found in the {@link chainConfigs object chainConfigs} object
+ * @property {CoreConfig} config - Chain configuration. Default configurations can be found in the
+ *   {@link chainConfigs object chainConfigs} object
  * @property {CreateNetworkResult} network - Network configuration
  * @property {Tables} tables - Tables contain data and methods to interact with game state. See [reactive tables](
  * @property {Utils} utils - Utility functions
@@ -100,12 +97,13 @@ export type Sync = ReturnType<typeof createSync>;
  */
 
 export type Core = {
-  /**
-   * Chain configuration. Default configurations can be found in the {@link chainConfigs object chainConfigs} object
-   */
+  /** Chain configuration. Default configurations can be found in the {@link chainConfigs object chainConfigs} object */
   config: CoreConfig;
   network: CreateNetworkResult;
-  /** Tables contain data and methods to interact with game state. See [reactive tables](https://github.com/primodiumxyz/reactive-tables) */
+  /**
+   * Tables contain data and methods to interact with game state. See [reactive
+   * tables](https://github.com/primodiumxyz/reactive-tables)
+   */
   tables: Tables;
   utils: Utils;
   sync: Sync;
@@ -119,9 +117,7 @@ export type Clock = {
   update: (time: number) => void;
 };
 
-/**
- * World Abi. Combination of IWorld abi and CallWithSignature abi.
- */
+/** World Abi. Combination of IWorld abi and CallWithSignature abi. */
 
 export type WorldAbiType = typeof IWorldAbi | typeof CallWithSignatureAbi;
 
@@ -130,7 +126,7 @@ type _Account<
   TPublicClient extends PublicClient = PublicClient<FallbackTransport, ChainConfig>,
   TWalletClient extends WalletClient = IsLocalAccount extends true
     ? WalletClient<FallbackTransport, ChainConfig, Account>
-    : WalletClient<CustomTransport, ChainConfig, Account>
+    : WalletClient<CustomTransport, ChainConfig, Account>,
 > = {
   worldContract: GetContractReturnType<
     WorldAbiType,
