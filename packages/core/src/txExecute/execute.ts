@@ -71,33 +71,13 @@ export function execute<functionName extends ContractFunctionName<WorldAbiType>>
       params_ = params;
     }
 
-    let receipt;
+    let isBiteProtected = false;
 
     if (core.config.chain.id == 1289306510) {
-      receipt = await sendTransaction(true, core, playerAccount, params_);
-    } else {
-      receipt = await sendTransaction(false, core, playerAccount, params_);
-
-      /* if(isCallFrom) tx = sessionAccount.worldContract.write.callFrom(params_, callOptions);
-      else{
-
-        if(core.config.chain.id == 37084624){
-
-          const proxy_rpc = playerAccount.walletClient.chain.rpcUrls.proxy.http;
-
-          playerAccount.walletClient.chain.rpcUrls.default.http = proxy_rpc;
-          playerAccount.walletClient.chain.rpcUrls.public.http = proxy_rpc;
-        }
-
-        console.log("playerAccount.walletClient.chain.rpcUrls.default.http " + playerAccount.walletClient.chain.rpcUrls.default.http[0])
-        console.log("playerAccount.walletClient.chain.rpcUrls.public.http " + playerAccount.walletClient.chain.rpcUrls.public.http[0])
-
-        tx = playerAccount.worldContract.write.call(params_, callOptions);
-      } 
-
-      receipt = await _execute(core, tx);
-    }*/
+      isBiteProtected = true;
     }
+
+    const receipt = await sendTransaction(isBiteProtected, core, playerAccount, params_);
 
     console.log("RECEIPT", receipt);
 

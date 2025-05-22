@@ -5,7 +5,6 @@ import { createWalletClient, fallback, formatEther, Hex, http } from "viem";
 import { useBalance, UseBalanceReturnType } from "wagmi";
 
 import { minEth } from "@primodiumxyz/core";
-//import {sFUEL_Distribution} from "../../../core/src/gasless/sfuel_distribution";
 import { sfuelDistribution, useAccountClient, useCore } from "@primodiumxyz/core/react";
 
 export const DEV_CHAIN = import.meta.env.PRI_CHAIN_ID === "dev";

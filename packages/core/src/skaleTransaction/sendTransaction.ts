@@ -8,7 +8,7 @@ export async function sendTransaction(
   isBite: boolean,
   core: Core,
   playerAccount: ExternalAccount | LocalAccount,
-  params: [`0x${string}`, `0x${string}`],
+  params: `0x${string}`[],
 ): Promise<TransactionReceipt> {
   const txData = await getTransactionData(isBite, params);
 

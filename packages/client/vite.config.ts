@@ -25,7 +25,7 @@ export default defineConfig({
       ],
     }),
   ],
-  base: process.env.VITE_BASE_PATH || "/primodium",
+  base: process.env.VITE_BASE_PATH || "/",
   server: {
     port: 3000,
     fs: {

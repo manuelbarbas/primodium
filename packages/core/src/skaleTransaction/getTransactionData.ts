@@ -1,6 +1,6 @@
 import { encryptTransactionData } from "@skalenetwork/libte-ts";
 
-export async function getTransactionData(isBite: boolean, params: [`0x${string}`, `0x${string}`]): Promise<string> {
+export async function getTransactionData(isBite: boolean, params: `0x${string}`[]): Promise<string> {
   const functionSelector = "0x3ae7af08"; // Migh need to be changed to be dynamic
 
   const cleanSystemId = params[0].startsWith("0x") ? params[0].slice(2) : params[0];
