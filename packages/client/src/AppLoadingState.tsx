@@ -89,7 +89,6 @@ const PrimodiumRoutes = () => {
   const location = useLocation();
   const initialized = useInit();
 
-  console.log("initialized ", initialized);
   return (
     <Routes>
       <Route path="/" element={<Navigate to={{ pathname: "/game", search: location.search }} />} />

@@ -13,7 +13,13 @@ export const getCoreConfig = (): CoreConfig => {
 
   const chainId = (params.get("chainid") || import.meta.env.PRI_CHAIN_ID || "dev") as keyof typeof chainConfigs;
 
-  const chain = chainConfigs["skaleNebula"];
+  let chain;
+
+  if (chainId == "37084624") {
+    chain = chainConfigs["skaleNebula"];
+  } else if (chainId == "1289306510") {
+    chain = chainConfigs["skaleBite"];
+  }
 
   const chainId_ = chainId as string;
 
