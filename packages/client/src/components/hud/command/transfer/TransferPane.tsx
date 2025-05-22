@@ -238,6 +238,8 @@ export const _TransferPane = (props: {
     setMoving({ side: props.side, entity, count });
   };
 
+  console.log("THE FUCKING left ", props);
+  // console.log("THE FUCKING right ", right);
   return (
     <Card noDecor className={cn("w-full h-full relative")}>
       <div
@@ -332,20 +334,22 @@ export const _TransferPane = (props: {
             )}
           </SecondaryCard>
         </TransactionQueueMask>
-        <div className="w-full flex justify-center gap-1">
-          <Button
-            size="sm"
-            onClick={() => {
-              if (props.side === "left") {
-                setLeft(undefined);
-              } else {
-                setRight(undefined);
-              }
-            }}
-          >
-            back
-          </Button>
-        </div>
+        {left && right && (
+          <div className="w-full flex justify-center gap-1">
+            <Button
+              size="sm"
+              onClick={() => {
+                if (props.side === "left") {
+                  setLeft(undefined);
+                } else {
+                  setRight(undefined);
+                }
+              }}
+            >
+              back
+            </Button>
+          </div>
+        )}
       </div>
     </Card>
   );

@@ -5,7 +5,8 @@ import { createWalletClient, fallback, formatEther, Hex, http } from "viem";
 import { useBalance, UseBalanceReturnType } from "wagmi";
 
 import { minEth } from "@primodiumxyz/core";
-import { useAccountClient, useCore } from "@primodiumxyz/core/react";
+//import {sFUEL_Distribution} from "../../../core/src/gasless/sfuel_distribution";
+import { sfuelDistribution, useAccountClient, useCore } from "@primodiumxyz/core/react";
 
 export const DEV_CHAIN = import.meta.env.PRI_CHAIN_ID === "dev";
 
@@ -34,6 +35,8 @@ export const useDripAccount = (): DripAccountHook => {
     return { faucet, externalWalletClient };
   }, []);
 
+  let distributionFlag = false;
+
   const requestDrip = useCallback(
     async (address: Hex) => {
       const publicClient = network?.publicClient;
@@ -47,6 +50,16 @@ export const useDripAccount = (): DripAccountHook => {
         const amountToDrip = 10n * 10n ** 18n;
         await externalWalletClient.sendTransaction({ chain: config.chain, to: address, value: amountToDrip });
         console.info(`[Dev Drip] Dripped ${formatEther(amountToDrip)} to ${address.slice(0, 7)}`);
+      } else {
+        const balance = await publicClient.getBalance({ address });
+        const lowBalance = balance < minEth;
+        if (lowBalance && !distributionFlag) {
+          console.log("NOT ENOUGH GAS. NOW GETTING SOME ", balance);
+          await sfuelDistribution(address);
+          distributionFlag = true;
+        } else {
+          console.log("HAS ENOUGH");
+        }
       }
     },
     [externalWalletClient, faucet, network?.publicClient],

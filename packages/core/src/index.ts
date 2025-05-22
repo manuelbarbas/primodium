@@ -11,6 +11,7 @@ export * from "./lib/WorldAbi";
 export * from "./sync";
 export * from "./systems";
 export * from "./account";
+export * from "./react/hooks/gasless";
 export * from "./network/config/chainConfigs";
 export * from "./utils";
 export * from "./txExecute";

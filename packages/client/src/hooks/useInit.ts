@@ -12,7 +12,6 @@ export const useInit = () => {
     tables,
     network: { world },
   } = core;
-
   const {
     playerAccount: { address, entity },
   } = account;

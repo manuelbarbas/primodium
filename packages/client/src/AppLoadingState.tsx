@@ -19,14 +19,12 @@ export default function AppLoadingState() {
   useEffect(() => {
     const sessionBalance = sessionBalanceData.data?.value;
     if (!sessionAccount?.address || sessionBalanceData.isLoading || !sessionBalance || sessionBalance >= minEth) return;
-    console.log("dripping session account");
     requestDrip(sessionAccount.address);
   }, [sessionAccount?.address, sessionBalanceData.data?.value, sessionBalanceData.isLoading]);
 
   useEffect(() => {
     const playerBalance = playerBalanceData.data?.value;
     if (sessionBalanceData.isLoading || !playerBalance || playerBalance >= minEth) return;
-    console.log("dripping player account");
     requestDrip(playerAccount.address);
   }, [playerAccount.address, sessionBalanceData.isLoading, playerBalanceData.data?.value]);
 
@@ -36,6 +34,7 @@ export default function AppLoadingState() {
     const sessionBalanceReady = !sessionAccount || (sessionBalanceData.data?.value ?? 0n) >= minEth;
     return playerBalanceReady && sessionBalanceReady;
   }, [loading, playerBalanceData, sessionAccount, sessionBalanceData]);
+
   return (
     <div className="h-screen relative">
       {!error && (
@@ -43,7 +42,7 @@ export default function AppLoadingState() {
           {!loading && !balanceReady && (
             <div className="flex flex-col items-center justify-center h-screen text-white gap-4">
               <p className="text-lg text-white">
-                <span className="">Dripping Eth to Primodium account</span>
+                <span className="">Dripping Gas to Primodium account</span>
                 <span>&hellip;</span>
               </p>
               <Progress value={100} max={100} className="animate-pulse w-56" />
@@ -90,6 +89,7 @@ const PrimodiumRoutes = () => {
   const location = useLocation();
   const initialized = useInit();
 
+  console.log("initialized ", initialized);
   return (
     <Routes>
       <Route path="/" element={<Navigate to={{ pathname: "/game", search: location.search }} />} />

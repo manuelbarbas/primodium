@@ -34,3 +34,24 @@ chain_id = 17001
 [profile.base-sepolia]
 eth_rpc_url = "https://sepolia.base.org"
 chain_id = 84532
+
+[profile.skale-nebula]
+#eth_rpc_url = "https://testnet.skalenodes.com/v1/lanky-ill-funny-testnet"
+eth_rpc_url = "https://lanky-ill-funny-testnet-indexer.skalenodes.com:10136"
+chain_id = 37084624
+
+[profile.skale-calypso]
+eth_rpc_url = "https://giant-half-dual-testnet-indexer.skalenodes.com:10072"
+chain_id = 974399131
+
+[profile.skale-europa]
+eth_rpc_url = "https://juicy-low-small-testnet-indexer.skalenodes.com:10008"
+chain_id = 1444673419
+
+
+[profile.skale-bite]
+eth_rpc_url = "https://testnet-0.skalenodes.com:10008"
+chain_id = 1289306510
+
+  
+

@@ -22,8 +22,8 @@ export const TransferSelect = ({ side }: { side: "left" | "right" }) => {
 
   // only show new fleet if you own the selected asteroid and there are new fleet slots available
   const showNewFleet = side === "right" && asteroid && playerOwnsRock;
-  const canBuildFleet = useResourceCount(EntityType.FleetCount, asteroid ?? defaultEntity).resourceCount > 0n;
 
+  const canBuildFleet = useResourceCount(EntityType.FleetCount, asteroid ?? defaultEntity).resourceCount > 0n;
   const activeEntities = [left, right];
   const hideNotOwned = activeEntities.some((entity) => {
     if (!entity) return false;

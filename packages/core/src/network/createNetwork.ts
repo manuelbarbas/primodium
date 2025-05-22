@@ -17,7 +17,6 @@ import { setupSyncTables } from "@/tables/syncTables";
  */
 export function createNetwork(config: CoreConfig): CreateNetworkResult {
   const world = createWorld();
-
   const clientOptions = {
     chain: config.chain,
     transport: transportObserver(fallback([http()])),

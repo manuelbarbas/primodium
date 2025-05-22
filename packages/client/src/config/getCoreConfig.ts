@@ -13,12 +13,15 @@ export const getCoreConfig = (): CoreConfig => {
 
   const chainId = (params.get("chainid") || import.meta.env.PRI_CHAIN_ID || "dev") as keyof typeof chainConfigs;
 
-  const chain = chainConfigs[chainId];
+  const chain = chainConfigs["skaleNebula"];
 
-  const world = worlds[chain.id];
+  const chainId_ = chainId as string;
+
+  const world = worlds[chainId_];
+
   const worldAddress = (params.get("worldAddress") || world?.address) as Address;
   if (!worldAddress) {
-    throw new Error(`No world address found for chain ${chainId}. `);
+    throw new Error(`No world address found for chain ${chainId_}. `);
   }
   const initialBlockNumber = params.has("initialBlockNumber")
     ? Number(params.get("initialBlockNumber"))

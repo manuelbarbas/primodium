@@ -78,7 +78,7 @@ export const Connect: React.FC = React.memo(() => {
           className="btn-lg btn-secondary star-background w-full btn join-item inline pointer-events-auto font-bold outline-none h-fit z-10"
           onClick={confirmToast}
         >
-          Login as Guest
+          Quick Login
         </button>
 
         {chunk(
