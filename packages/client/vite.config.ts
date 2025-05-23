@@ -2,7 +2,7 @@ import path from "path";
 import react from "@vitejs/plugin-react";
 import { defineConfig } from "vite";
 import { comlink } from "vite-plugin-comlink";
-import { viteStaticCopy } from "vite-plugin-static-copy";
+//import { viteStaticCopy } from "vite-plugin-static-copy";
 import tsconfigPaths from "vite-tsconfig-paths";
 
 import postcss from "./postcss.config";
@@ -15,7 +15,7 @@ export default defineConfig({
     }),
     react(),
     comlink(),
-    viteStaticCopy({
+    /*   viteStaticCopy({
       targets: [
         {
           // Copy encrypt.wasm from the t-encrypt into dist
@@ -23,7 +23,7 @@ export default defineConfig({
           dest: "",
         },
       ],
-    }),
+    }),*/
   ],
   base: process.env.VITE_BASE_PATH || "/",
   server: {

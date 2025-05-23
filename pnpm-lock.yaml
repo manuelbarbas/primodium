@@ -367,9 +367,6 @@ importers:
       '@primodiumxyz/sync-stack':
         specifier: ^0.6.14
         version: 0.6.14(typescript@5.5.2)
-      '@skalenetwork/libte-ts':
-        specifier: link:../../../libte-ts
-        version: link:../../../libte-ts
       abitype:
         specifier: ^1.0.2
         version: 1.0.4(typescript@5.5.2)(zod@3.23.8)

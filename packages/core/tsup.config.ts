@@ -2,7 +2,7 @@ import fs from "fs";
 import path from "path";
 import { defineConfig } from "tsup";
 
-const copyWasmFile = async () => {
+/*const copyWasmFile = async () => {
   try {
     const sourceWasm = path.resolve(
       "node_modules/@skalenetwork/libte-ts/node_modules/@skalenetwork/t-encrypt/encrypt.wasm",
@@ -36,7 +36,7 @@ const copyWasmFile = async () => {
   } catch (error) {
     console.error("Error copying WASM file:", error);
   }
-};
+};*/
 
 export default defineConfig([
   {
@@ -54,7 +54,7 @@ export default defineConfig([
       "process.env.NODE_ENV": '"production"',
     },
     external: ["dotenv"],
-    onSuccess: copyWasmFile,
+    //  onSuccess: copyWasmFile,
   },
   {
     entry: ["src/react/index.ts"], // Entry point for the React-specific build

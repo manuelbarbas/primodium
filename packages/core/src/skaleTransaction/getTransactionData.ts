@@ -1,4 +1,4 @@
-import { encryptTransactionData } from "@skalenetwork/libte-ts";
+//import { encryptTransactionData } from "@skalenetwork/libte-ts";
 
 export async function getTransactionData(isBite: boolean, params: `0x${string}`[]): Promise<string> {
   const functionSelector = "0x3ae7af08"; // Migh need to be changed to be dynamic
@@ -16,7 +16,8 @@ export async function getTransactionData(isBite: boolean, params: `0x${string}`[
 
   const txData = functionSelector + cleanSystemId + offsetHex + callDataLengthHex + cleanCallData + finalHex;
   if (isBite) {
-    return await encryptTransactionData(txData, "https://testnet-v1.skalenodes.com/v1/warm-huge-striped-skale");
+    //return await encryptTransactionData(txData, "https://testnet-v1.skalenodes.com/v1/warm-huge-striped-skale");
+    return txData;
   }
 
   return txData;
