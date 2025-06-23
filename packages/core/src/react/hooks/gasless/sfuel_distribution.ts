@@ -26,6 +26,9 @@ export async function sfuelDistribution(address: Hex) {
     gas: BigInt(100_000),
     gasPrice: BigInt(gasPrice),
   });
+
+  console.log("Res: ", res);
+
   const receipt = await client.waitForTransactionReceipt({
     hash: res,
   });

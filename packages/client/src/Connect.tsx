@@ -1,69 +1,28 @@
 import { chunk } from "lodash";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { FaExclamationTriangle } from "react-icons/fa";
 import { toast } from "react-toastify";
-import { Address } from "viem";
-import { useAccount, useConnect, useSignMessage, useSwitchChain } from "wagmi";
+import { useAccount, useConnect, useSwitchChain } from "wagmi";
 
-import { getRandomNonce, verifySignature } from "@primodiumxyz/core";
 import { usePersistentStore } from "@primodiumxyz/game/src/stores/PersistentStore";
-// Import Core here!
-import Core from "@/Core"; // Import Core now that Connect will render it
 import { Landing } from "@/screens/Landing";
 
 const connectorIcons: Record<string, string> = {
   ["MetaMask"]: "/img/icons/web3/metamask.svg",
-  ["WalletConnect"]: "/img/web3/walletconnect.svg",
+  ["WalletConnect"]: "/img/icons/web3/walletconnect.svg",
   ["Coinbase Wallet"]: "/img/icons/web3/coinbase.svg",
 };
 
 const TARGET_CHAIN_ID = 37084624;
 const TARGET_CHAIN_NAME = "[S] Nebula Gaming Hub";
 
-const API_BASE_URL = "http://0.0.0.0:3001";
-
-const JWT_STORAGE_KEY = "authToken";
-
-function setAuthToken(token: string, expiresIn: number) {
-  localStorage.setItem(JWT_STORAGE_KEY, token);
-  localStorage.setItem(`${JWT_STORAGE_KEY}_expiry`, String(Date.now() + expiresIn * 1000));
-}
-
-function getAuthToken(): string | null {
-  const token = localStorage.getItem(JWT_STORAGE_KEY);
-  const expiry = localStorage.getItem(`${JWT_STORAGE_KEY}_expiry`);
-  if (token && expiry && Date.now() < Number(expiry)) {
-    return token;
-  }
-  localStorage.removeItem(JWT_STORAGE_KEY);
-  localStorage.removeItem(`${JWT_STORAGE_KEY}_expiry`);
-  return null;
-}
-
-function clearAuthToken() {
-  localStorage.removeItem(JWT_STORAGE_KEY);
-  localStorage.removeItem(`${JWT_STORAGE_KEY}_expiry`);
-}
-
 export const Connect: React.FC = React.memo(() => {
-  const { connector, isConnected, chainId, address } = useAccount();
+  const { connector, isConnected, chainId } = useAccount();
   const { connect, connectors, error, isPending } = useConnect();
   const { switchChain } = useSwitchChain();
-  const { signMessageAsync } = useSignMessage();
   const { noExternalAccount, setNoExternalAccount } = usePersistentStore();
   const [showingToast, setShowingToast] = useState(false);
   const [showingChainToast, setShowingChainToast] = useState(false);
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [isAuthenticating, setIsAuthenticating] = useState(false);
-  const [userDeclinedAuth, setUserDeclinedAuth] = useState(false);
-
-  useEffect(() => {
-    if (isConnected && chainId === TARGET_CHAIN_ID && getAuthToken()) {
-      setIsAuthenticated(true);
-    } else {
-      setIsAuthenticated(false);
-    }
-  }, [isConnected, chainId]); // Depend on connection and chain state
 
   useEffect(() => {
     if (error) toast.warn(error.message);
@@ -75,56 +34,6 @@ export const Connect: React.FC = React.memo(() => {
       showChainSwitchToast();
     }
   }, [isConnected, chainId, showingChainToast]);
-
-  const authenticateWallet = useCallback(
-    async (walletAddress: Address) => {
-      if (isAuthenticating || userDeclinedAuth) return;
-      setIsAuthenticating(true);
-      setUserDeclinedAuth(false); // Reset this flag for a new attempt
-
-      try {
-        console.log("WALLET ", walletAddress);
-
-        const nonce = await getRandomNonce(`${API_BASE_URL}/api/auth/nonce?address=`, walletAddress);
-        console.log("Received nonce:", nonce);
-
-        const signature = await signMessageAsync({ message: nonce });
-        console.log("Generated signature:", signature);
-
-        const { token, expiresIn } = await verifySignature(`${API_BASE_URL}/api/auth/verify`, walletAddress, signature);
-
-        setAuthToken(token, expiresIn);
-        setIsAuthenticated(true);
-      } catch (authError: Error | unknown) {
-        clearAuthToken();
-        setIsAuthenticated(true);
-        setUserDeclinedAuth(true);
-      }
-    },
-    [signMessageAsync, isAuthenticating, userDeclinedAuth],
-  );
-
-  // Automatic authentication trigger
-  useEffect(() => {
-    if (
-      isConnected &&
-      address &&
-      chainId === TARGET_CHAIN_ID &&
-      !isAuthenticated &&
-      !isAuthenticating &&
-      !userDeclinedAuth &&
-      !getAuthToken()
-    ) {
-      authenticateWallet(address);
-    }
-  }, [isConnected, address, chainId, isAuthenticated, isAuthenticating, userDeclinedAuth, authenticateWallet]);
-
-  useEffect(() => {
-    if (noExternalAccount && address) {
-      console.log("address ", address);
-      authenticateWallet(address);
-    }
-  }, [noExternalAccount, address]);
 
   const showChainSwitchToast = async () => {
     toast.dismiss();
@@ -227,26 +136,16 @@ export const Connect: React.FC = React.memo(() => {
 
     try {
       await connect({ connector: connectorToConnect });
-      // Reset userDeclinedAuth flag on a new connection attempt
-      setUserDeclinedAuth(false);
     } catch (error) {
       console.error("Connection failed:", error);
-      toast.error("Failed to connect wallet.");
     }
   };
 
-  // Determine if Core should be rendered
-  const shouldRenderCore = isConnected && chainId === TARGET_CHAIN_ID && isAuthenticated;
+  const shouldShowConnect = !isConnected || (isConnected && chainId !== TARGET_CHAIN_ID);
 
-  if (shouldRenderCore) {
-    console.log("noExternalAccount ", noExternalAccount);
-    console.log("isConnected ", isConnected);
-    console.log("isAuthenticated ", isAuthenticated);
+  if (!shouldShowConnect && !noExternalAccount) return null;
+  if (noExternalAccount) return null;
 
-    return <Core />; // Render Core once all conditions are met
-  }
-
-  // Otherwise, render the Connect UI
   return (
     <Landing>
       <div className="flex flex-col gap-2 w-full">

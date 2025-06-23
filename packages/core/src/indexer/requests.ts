@@ -56,17 +56,11 @@ export async function verifySignature(
  * @param url - The URL of the JSON stream
  * @returns A generator that yields {@link StorageAdapterBlock}
  */
-export async function* processJSONStream(url: string) {
-  const token = getAuthToken();
-
-  console.log("THE TOKEN", token);
-
-  if (!token) {
-    throw new Error(`token authentication error`);
-  }
+export async function* processJSONStream(url: string, apiKey?: string) {
   const headers: HeadersInit = {};
-  headers["Content-Type"] = "application/json";
-  headers["Authorization"] = `Bearer ${token}`;
+  if (apiKey) {
+    headers["x-api-key"] = apiKey;
+  }
 
   const response = await fetch(url, { headers });
 

@@ -11,7 +11,7 @@ import { processJSONStream } from "./requests";
  * @param args - The {@link ReaderFilterIndexerParams}
  * @returns A {@link Reader}
  */
-export const filterLogs = (args: ReaderFilterIndexerParams): Reader => {
+export const filterLogs = (args: ReaderFilterIndexerParams, key?: string): Reader => {
   const { indexerUrl, filter } = args;
   return {
     subscribe: (userCallback, errorCallback) => {
@@ -28,7 +28,7 @@ export const filterLogs = (args: ReaderFilterIndexerParams): Reader => {
         try {
           const urlEncodedQuery = encodeURIComponent(JSON.stringify(filter));
           const url = `${indexerUrl}/api/logs?input=${urlEncodedQuery}`;
-          for await (const result of processJSONStream(url)) {
+          for await (const result of processJSONStream(url, key)) {
             if (!isStorageAdapterBlockIndexer(result)) {
               eventEmitter.emit("update", {
                 blockNumber: 0n,

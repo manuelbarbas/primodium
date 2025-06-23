@@ -10,7 +10,7 @@ import { usePersistentStore } from "@primodiumxyz/game/src/stores/PersistentStor
 //import { ampli } from "@/ampli";
 import { wagmiConfig } from "@/config/wagmiConfig";
 import { Connect } from "@/Connect";
-//import Core from "@/Core";
+import Core from "@/Core";
 import { Maintenance } from "@/screens/Maintenance";
 import { cn } from "@/util/client";
 
@@ -52,6 +52,7 @@ export default function App() {
             theme="dark"
           />
           <Connect />
+          <Core />
         </QueryClientProvider>
       </WagmiProvider>
       <div id="modal-root" className="fixed top-0 pointer-events-auto z-50" />

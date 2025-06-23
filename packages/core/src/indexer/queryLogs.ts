@@ -6,7 +6,7 @@ import { isStorageAdapterBlockIndexer } from "./common";
 import { dbQuerySchema } from "./querySchema";
 import { processJSONStream } from "./requests";
 
-export const queryLogs = (params: ReaderQueryDecodedIndexerParams): Reader => {
+export const queryLogs = (params: ReaderQueryDecodedIndexerParams, key?: string): Reader => {
   const { indexerUrl, query } = params;
   return {
     subscribe: (userCallback, errorCallback) => {
@@ -24,7 +24,7 @@ export const queryLogs = (params: ReaderQueryDecodedIndexerParams): Reader => {
           const urlEncodedQuery = encodeURIComponent(JSON.stringify(parsedInput));
           const url = `${indexerUrl}/api/queryLogs?&input=${urlEncodedQuery}`;
 
-          for await (const result of processJSONStream(url)) {
+          for await (const result of processJSONStream(url, key)) {
             ``;
             if (!isStorageAdapterBlockIndexer(result)) {
               eventEmitter.emit("update", {

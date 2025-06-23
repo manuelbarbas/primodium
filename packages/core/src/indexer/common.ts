@@ -1,7 +1,5 @@
 import { LogFilter, StorageAdapterBlock, StoreEventsLog } from "@primodiumxyz/sync-stack/types";
 
-import { getValidAuthToken } from "./authStorage";
-
 /**
  * Checks if a given object can be processed as a {@link StorageAdapterBlock}.
  *

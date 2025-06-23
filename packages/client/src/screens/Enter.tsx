@@ -6,6 +6,7 @@ import { generatePrivateKey, privateKeyToAccount } from "viem/accounts";
 
 import { STORAGE_PREFIX } from "@primodiumxyz/core";
 import { useAccountClient, useCore } from "@primodiumxyz/core/react";
+import { usePersistentStore } from "@primodiumxyz/game/src/stores/PersistentStore";
 import { defaultEntity } from "@primodiumxyz/reactive-tables";
 import { Tooltip } from "@/components/core/Tooltip";
 import { TransactionQueueMask } from "@/components/shared/TransactionQueueMask";
@@ -20,6 +21,7 @@ export const Enter: React.FC = () => {
     playerAccount: { entity: playerEntity },
     sessionAccount,
   } = useAccountClient();
+  const { noExternalAccount } = usePersistentStore();
 
   const { grantAccessWithSignature, spawn } = useContractCalls();
   const navigate = useNavigate();
@@ -73,7 +75,7 @@ export const Enter: React.FC = () => {
     );
   };
   useEffect(() => {
-    if (!sessionAccount) {
+    if (!sessionAccount && !noExternalAccount) {
       setState("delegate");
     } else {
       setState("play");
@@ -87,8 +89,6 @@ export const Enter: React.FC = () => {
 
   const handlePlay = async () => {
     const hasSpawned = !!tables.Home.get(playerEntity)?.value;
-
-    //console.log("tables.SyncSource.get()  ", tables.SyncSource.get());
     if (!hasSpawned) {
       await spawn();
     }

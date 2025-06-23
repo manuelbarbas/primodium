@@ -46,6 +46,7 @@ export const getCoreConfig = (): CoreConfig => {
     runSystems: true,
     devPrivateKey: import.meta.env.PRI_DEV_PKEY as Hex,
     accountLinkUrl: import.meta.env.PRI_ACCOUNT_LINK_VERCEL_URL as string,
+    indexerKey: import.meta.env.PRI_INDEXER_API_KEY as string,
   };
   return config;
 };
