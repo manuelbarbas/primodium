@@ -21,13 +21,17 @@ export async function getRandomNonce(url: string, address: `0x${string}`) {
     console.log("Received nonce:", nonce);
 
     return nonce;
-  } catch (authError: any) {
+  } catch (authError: Error | unknown) {
     console.error("Authentication error:", authError);
     throw new Error(`Failed to get nonce: ${authError}`);
   }
 }
 
-export async function verifySignature(url: string, address: `0x${string}`, signature: `0x${string}`) {
+export async function verifySignature(
+  url: string,
+  address: `0x${string}`,
+  signature: `0x${string}`,
+): Promise<{ token: string; expiresIn: number }> {
   const verifyResponse = await fetch(url, {
     method: "POST",
     headers: {

@@ -1,5 +1,5 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { useEffect } from "react";
+//import { useEffect } from "react";
 import { ToastContainer } from "react-toastify";
 
 import "react-toastify/dist/ReactToastify.min.css";
@@ -7,14 +7,14 @@ import "react-toastify/dist/ReactToastify.min.css";
 import { WagmiProvider } from "wagmi";
 
 import { usePersistentStore } from "@primodiumxyz/game/src/stores/PersistentStore";
-import { ampli } from "@/ampli";
+//import { ampli } from "@/ampli";
 import { wagmiConfig } from "@/config/wagmiConfig";
 import { Connect } from "@/Connect";
-import Core from "@/Core";
+//import Core from "@/Core";
 import { Maintenance } from "@/screens/Maintenance";
 import { cn } from "@/util/client";
 
-const DEV = import.meta.env.PRI_DEV === "true";
+//const DEV = import.meta.env.PRI_DEV === "true";
 const MAINTENANCE = import.meta.env.PRI_MAINTENANCE === "true";
 
 const queryClient = new QueryClient();
@@ -22,13 +22,13 @@ const queryClient = new QueryClient();
 export default function App() {
   const fontStyle = usePersistentStore((state) => state.fontStyle);
   // Amplitude Analytics
-  useEffect(() => {
+  /* useEffect(() => {
     if (DEV) {
       ampli.load({ client: { apiKey: import.meta.env.PRI_AMPLI_API_KEY_DEV } });
     } else {
       ampli.load({ client: { apiKey: import.meta.env.PRI_AMPLI_API_KEY_PROD } });
     }
-  }, []);
+  }, []);*/
 
   if (MAINTENANCE) return <Maintenance />;
 
@@ -52,7 +52,6 @@ export default function App() {
             theme="dark"
           />
           <Connect />
-          <Core />
         </QueryClientProvider>
       </WagmiProvider>
       <div id="modal-root" className="fixed top-0 pointer-events-auto z-50" />

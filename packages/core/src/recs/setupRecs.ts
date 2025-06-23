@@ -22,7 +22,6 @@ import {
   WrapperResult,
 } from "@primodiumxyz/reactive-tables";
 import { StorageAdapterBlock } from "@primodiumxyz/reactive-tables/utils";
-import { Read } from "@primodiumxyz/sync-stack";
 import { SyncStep } from "@/lib";
 import { SyncTables } from "@/tables/syncTables";
 
@@ -62,21 +61,36 @@ export const setupRecs = <config extends StoreConfig, extraTables extends Contra
   );
 
   const storedBlockLogs$ = new Observable<StorageAdapterBlock>((subscriber) => {
-    const unsub = Read.fromRPC
+    // Create a proper subscription to block logs
+    const unsub = createBlockStream({ publicClient, blockTag: "latest" })
+      .pipe(
+        concatMap(async (block) => {
+          try {
+            // Get all logs for the block
+            const logs = await publicClient.getLogs({
+              address: address,
+              fromBlock: block.number,
+              toBlock: block.number,
+            });
+
+            return {
+              blockNumber: block.number,
+              logs: logs as unknown as StorageAdapterBlock["logs"],
+            } as StorageAdapterBlock;
+          } catch (error) {
+            console.error("Error fetching logs for block", block.number, error);
+            return null;
+          }
+        }),
+        filter((block): block is StorageAdapterBlock => block !== null),
+      )
       .subscribe({
-        address,
-        publicClient,
-      })
-      .subscribe((block) => {
-        subscriber.next({
-          blockNumber: block.blockNumber,
-          logs: [...block.logs],
-        });
+        next: (block) => subscriber.next(block),
+        error: (err) => subscriber.error(err),
       });
 
-    // Handle unsubscription
     return () => {
-      unsub();
+      unsub.unsubscribe();
     };
   }).pipe(share());
 
@@ -107,6 +121,7 @@ export const setupRecs = <config extends StoreConfig, extraTables extends Contra
           const lastBlock = blocks[0];
           // debug("fetching tx receipt for block", lastBlock.blockNumber);
           const receipt = await publicClient.getTransactionReceipt({ hash: tx });
+
           return lastBlock.blockNumber >= receipt.blockNumber;
         } catch (error) {
           if (error instanceof TransactionReceiptNotFoundError) {

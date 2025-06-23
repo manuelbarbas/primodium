@@ -72,6 +72,53 @@ const baseSepolia: ChainConfig = {
   },
 };
 
+const skaleBite: ChainConfig = {
+  name: "SKALE BITE",
+  id: 1289306510,
+  nativeCurrency: { decimals: 18, name: "BITE", symbol: "BITE" },
+  rpcUrls: {
+    default: {
+      http: ["https://testnet-v1.skalenodes.com/v1/warm-huge-striped-skale"],
+    },
+    public: {
+      http: ["https://testnet-v1.skalenodes.com/v1/warm-huge-striped-skale"],
+    },
+  },
+  blockExplorers: {
+    default: {
+      name: "BITE Hub explorer",
+      url: "https://warm-huge-striped-skale.explorer.testnet-v1.skalenodes.com:10001/",
+    },
+  },
+};
+
+const skaleNebula: ChainConfig = {
+  name: "SKALE Nebula",
+  id: 37084624,
+  nativeCurrency: { decimals: 18, name: "SKALE Fuel", symbol: "sFUEL" },
+  rpcUrls: {
+    default: {
+      http: ["https://testnet.skalenodes.com/v1/lanky-ill-funny-testnet"],
+    },
+    public: {
+      http: ["https://testnet.skalenodes.com/v1/lanky-ill-funny-testnet"],
+    },
+    indexer: {
+      http: ["https://lanky-ill-funny-testnet-indexer.skalenodes.com:10136"],
+    },
+    fallback: {
+      http: ["https://lanky-ill-funny-testnet-indexer.skalenodes.com:10136"],
+    },
+  },
+  indexerUrl: "http://0.0.0.0:3001",
+  blockExplorers: {
+    default: {
+      name: "Nebula Gaming Hub explorer",
+      url: "https://lanky-ill-funny-testnet.explorer.testnet.skalenodes.com/",
+    },
+  },
+};
+
 export type ChainConfig = MUDChain & { indexerUrl?: string };
 
 export const chainConfigs = {
@@ -81,4 +128,6 @@ export const chainConfigs = {
   dev,
   garnet: garnet as ChainConfig,
   redstone: redstone as ChainConfig,
+  skaleNebula,
+  skaleBite,
 } as const;

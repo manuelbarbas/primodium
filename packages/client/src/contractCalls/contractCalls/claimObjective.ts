@@ -1,13 +1,14 @@
 import {
   Core,
   ExecuteFunctions,
-  getEntityTypeName,
-  ObjectiveEntityLookup,
+  //getEntityTypeName,
+  // ObjectiveEntityLookup,
   ObjectiveEnumLookup,
 } from "@primodiumxyz/core";
 import { Entity } from "@primodiumxyz/reactive-tables";
-import { ampli } from "@/ampli";
-import { parseReceipt } from "@/contractCalls/parseReceipt";
+
+//import { ampli } from "@/ampli";
+//import { parseReceipt } from "@/contractCalls/parseReceipt";
 
 export const createClaimObjective =
   (core: Core, { execute }: ExecuteFunctions) =>
@@ -24,10 +25,11 @@ export const createClaimObjective =
         id: `claim-${rawObjective}`,
       },
       onComplete: (receipt) => {
-        ampli.systemClaimObjective({
+        /*  ampli.systemClaimObjective({
           objectiveType: getEntityTypeName(ObjectiveEntityLookup[objective]),
           ...parseReceipt(receipt),
-        });
+        });*/
+        console.log(receipt);
       },
     });
   };

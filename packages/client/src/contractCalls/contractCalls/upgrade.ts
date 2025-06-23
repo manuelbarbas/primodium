@@ -2,20 +2,20 @@ import { EObjectives, EUnit } from "contracts/config/enums";
 
 import {
   AccountClient,
-  bigintToNumber,
+  //bigintToNumber,
   Core,
   ExecuteFunctions,
-  getEntityTypeName,
+  //getEntityTypeName,
   TxQueueOptions,
   UnitEntityLookup,
 } from "@primodiumxyz/core";
 import { Entity } from "@primodiumxyz/reactive-tables";
-import { ampli } from "@/ampli";
-import { parseReceipt } from "@/contractCalls/parseReceipt";
+//import { ampli } from "@/ampli";
+//import { parseReceipt } from "@/contractCalls/parseReceipt";
 import { makeObjectiveClaimable } from "@/util/objectives/makeObjectiveClaimable";
 
 export const createUpgrade = (core: Core, { playerAccount }: AccountClient, { execute }: ExecuteFunctions) => {
-  const { tables, utils } = core;
+  const { tables, network } = core;
   const upgradeUnit = async (spaceRock: Entity, unit: EUnit) => {
     await execute({
       functionName: "Pri_11__upgradeUnit",
@@ -27,7 +27,7 @@ export const createUpgrade = (core: Core, { playerAccount }: AccountClient, { ex
       },
       onComplete: (receipt) => {
         makeObjectiveClaimable(core, playerAccount.entity, EObjectives.UpgradeUnit);
-        const unitLevel =
+        /* const unitLevel =
           tables.UnitLevel.getWithKeys({
             entity: playerAccount.entity,
             unit: UnitEntityLookup[unit],
@@ -37,7 +37,12 @@ export const createUpgrade = (core: Core, { playerAccount }: AccountClient, { ex
           currLevel: bigintToNumber(unitLevel),
           unitName: getEntityTypeName(UnitEntityLookup[unit]),
           ...parseReceipt(receipt),
-        });
+        });*/
+        console.log(receipt);
+
+        if (receipt?.status == "success") {
+          network.triggerUpdateStream();
+        }
       },
     });
   };
@@ -52,7 +57,7 @@ export const createUpgrade = (core: Core, { playerAccount }: AccountClient, { ex
         id: `upgrade-${playerAccount.entity}`,
       },
       onComplete: (receipt) => {
-        const level = tables.Level.get(asteroid)?.value ?? 1n;
+        /* const level = tables.Level.get(asteroid)?.value ?? 1n;
         const bounds = utils.getAsteroidBounds(asteroid);
 
         ampli.systemUpgradeRange({
@@ -60,7 +65,8 @@ export const createUpgrade = (core: Core, { playerAccount }: AccountClient, { ex
           currLevel: bigintToNumber(level),
           currBounds: [bounds.minX, bounds.minY, bounds.maxX, bounds.maxY],
           ...parseReceipt(receipt),
-        });
+        });*/
+        console.log(receipt);
       },
     });
   };
@@ -80,7 +86,7 @@ export const createUpgrade = (core: Core, { playerAccount }: AccountClient, { ex
         ...options,
       },
       onComplete: (receipt) => {
-        const building = tables.SelectedBuilding.get()?.value;
+        /* const building = tables.SelectedBuilding.get()?.value;
         const buildingType = tables.BuildingType.get(building)?.value;
         const currLevel = tables.Level.get(building)?.value || 0n;
 
@@ -90,7 +96,8 @@ export const createUpgrade = (core: Core, { playerAccount }: AccountClient, { ex
           coord: [position.x, position.y],
           currLevel: bigintToNumber(currLevel),
           ...parseReceipt(receipt),
-        });
+        });*/
+        console.log(receipt);
       },
     });
   };

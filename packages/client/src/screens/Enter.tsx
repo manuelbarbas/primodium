@@ -87,6 +87,8 @@ export const Enter: React.FC = () => {
 
   const handlePlay = async () => {
     const hasSpawned = !!tables.Home.get(playerEntity)?.value;
+
+    //console.log("tables.SyncSource.get()  ", tables.SyncSource.get());
     if (!hasSpawned) {
       await spawn();
     }

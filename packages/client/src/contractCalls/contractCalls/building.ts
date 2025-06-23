@@ -1,19 +1,21 @@
 import { EBuilding } from "contracts/config/enums";
 
 import {
-  bigintToNumber,
+  //bigintToNumber,
   BuildingEntityLookup,
   Coord,
   Core,
   ExecuteFunctions,
-  getEntityTypeName,
+  //getEntityTypeName,
   TxQueueOptions,
 } from "@primodiumxyz/core";
 import { Entity } from "@primodiumxyz/reactive-tables";
-import { ampli } from "@/ampli";
-import { parseReceipt } from "@/contractCalls/parseReceipt";
 
-export const createBuildingCalls = ({ utils, tables }: Core, { execute }: ExecuteFunctions) => {
+//import { ampli } from "@/ampli";
+//import { parseReceipt } from "@/contractCalls/parseReceipt";
+
+export const createBuildingCalls = (core: Core, { execute }: ExecuteFunctions) => {
+  const { tables, utils } = core;
   const buildBuilding = async (
     building: EBuilding,
     coord: Coord & { parentEntity?: Entity },
@@ -40,16 +42,18 @@ export const createBuildingCalls = ({ utils, tables }: Core, { execute }: Execut
         ...options,
       },
       onComplete: (receipt) => {
-        ampli.systemBuild({
-          asteroidCoord: activeAsteroid,
-          buildingType: getEntityTypeName(BuildingEntityLookup[building]),
-          coord: [coord.x, coord.y],
-          currLevel: 0,
-          ...parseReceipt(receipt),
-        });
+        console.log(receipt);
+        /* setTimeout(() => {
+          // Check if UI needs update
+          if (!hasUIUpdatedForTransaction(receipt.transactionHash)) {
+            console.log("Safeguard: Manually triggering UI update");
+            network.triggerUpdateStream();
+          }
+        }, 2000); */
       },
     });
   };
+
   const moveBuilding = async (building: Entity, coord: Coord, onComplete?: () => void) => {
     // todo: find a cleaner way to extract this value in all web3 functions
     const activeAsteroid = tables.ActiveRock.get()?.value;
@@ -77,17 +81,18 @@ export const createBuildingCalls = ({ utils, tables }: Core, { execute }: Execut
       // TODO: we don't need to use coord here any longer
       onComplete: (receipt) => {
         onComplete?.();
-        const buildingType = tables.BuildingType.get(building)?.value;
-        const currLevel = tables.Level.get(building)?.value || 0;
+        // const buildingType = tables.BuildingType.get(building)?.value;
+        //   const currLevel = tables.Level.get(building)?.value || 0;
 
-        ampli.systemMoveBuilding({
+        /* ampli.systemMoveBuilding({
           asteroidCoord: activeAsteroid,
           buildingType: getEntityTypeName(buildingType as Entity),
           coord: [prevPosition.x, prevPosition.y],
           endCoord: [position.x, position.y],
           currLevel: bigintToNumber(currLevel),
           ...parseReceipt(receipt),
-        });
+        });*/
+        console.log(receipt);
       },
     });
   };
@@ -108,16 +113,17 @@ export const createBuildingCalls = ({ utils, tables }: Core, { execute }: Execut
       // TODO: we don't need to use coord here any longer
       onComplete: (receipt) => {
         onComplete?.();
-        const buildingType = tables.BuildingType.get(building)?.value;
-        const currLevel = tables.Level.get(building)?.value || 0;
+        //const buildingType = tables.BuildingType.get(building)?.value;
+        //const currLevel = tables.Level.get(building)?.value || 0;
 
-        ampli.systemDestroy({
+        /*ampli.systemDestroy({
           asteroidCoord: position.parentEntity,
           buildingType: getEntityTypeName(buildingType as Entity),
           coord: [position.x, position.y],
           currLevel: bigintToNumber(currLevel),
           ...parseReceipt(receipt),
-        });
+        });*/
+        console.log(receipt);
       },
     });
   }
@@ -137,7 +143,7 @@ export const createBuildingCalls = ({ utils, tables }: Core, { execute }: Execut
         id: `toggle-${building}`,
       },
       onComplete: (receipt) => {
-        const buildingType = tables.BuildingType.get(building)?.value;
+        /*const buildingType = tables.BuildingType.get(building)?.value;
         const currLevel = tables.Level.get(building)?.value || 0;
 
         ampli.systemToggleBuilding({
@@ -147,7 +153,8 @@ export const createBuildingCalls = ({ utils, tables }: Core, { execute }: Execut
           coord: [position.x, position.y],
           currLevel: bigintToNumber(currLevel),
           ...parseReceipt(receipt),
-        });
+        });*/
+        console.log(receipt);
       },
     });
   }

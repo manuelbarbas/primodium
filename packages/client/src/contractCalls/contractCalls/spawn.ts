@@ -1,7 +1,8 @@
 import { ExecuteFunctions } from "@primodiumxyz/core";
 import { defaultEntity } from "@primodiumxyz/reactive-tables";
-import { ampli } from "@/ampli";
-import { parseReceipt } from "@/contractCalls/parseReceipt";
+
+//import { ampli } from "@/ampli";
+//import { parseReceipt } from "@/contractCalls/parseReceipt";
 
 export const createSpawn = ({ execute }: ExecuteFunctions) => {
   return async () =>
@@ -11,9 +12,12 @@ export const createSpawn = ({ execute }: ExecuteFunctions) => {
       args: [],
       txQueueOptions: { id: defaultEntity },
       onComplete: (receipt) => {
-        ampli.systemSpawn({
+        console.log(receipt);
+        // core.sync.syncSecondaryGameState();
+
+        /* ampli.systemSpawn({
           ...parseReceipt(receipt),
-        });
+        });*/
       },
     });
 };

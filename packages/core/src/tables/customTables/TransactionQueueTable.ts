@@ -11,6 +11,8 @@ export function createTransactionQueueTable<M extends BaseTableMetadata = BaseTa
   const queue: { id: string; fn: () => Promise<void> }[] = [];
   let isRunning = false;
 
+  console.log("createTransactionQueueTable ");
+
   const table = createLocalTable(
     world,
     {
@@ -24,6 +26,8 @@ export function createTransactionQueueTable<M extends BaseTableMetadata = BaseTa
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   async function enqueue(fn: () => Promise<any>, options: TxQueueOptions) {
     if (!options.force && table.has(options.id as Entity)) return;
+
+    console.log("createTransactionQueueTable enqueue options.id ", options.id);
 
     queue.push({
       id: options.id,
@@ -42,6 +46,8 @@ export function createTransactionQueueTable<M extends BaseTableMetadata = BaseTa
   }
 
   async function run() {
+    console.log("createTransactionQueueTable RUN");
+
     if (isRunning) return;
     isRunning = true;
 
@@ -55,6 +61,7 @@ export function createTransactionQueueTable<M extends BaseTableMetadata = BaseTa
       if (fn) {
         try {
           await fn();
+          console.log("createTransactionQueueTable RUN done");
         } catch (error) {
           console.error("Error executing function:", error);
         } finally {

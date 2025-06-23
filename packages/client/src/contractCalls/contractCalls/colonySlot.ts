@@ -1,9 +1,10 @@
 import { EResource } from "contracts/config/enums";
 
-import { bigintToNumber, Core, ExecuteFunctions, ResourceEntityLookup } from "@primodiumxyz/core";
+import { /*bigintToNumber,*/ Core, ExecuteFunctions, ResourceEntityLookup } from "@primodiumxyz/core";
 import { Entity } from "@primodiumxyz/reactive-tables";
-import { ampli } from "@/ampli";
-import { parseReceipt } from "@/contractCalls/parseReceipt";
+
+//import { ampli } from "@/ampli";
+//import { parseReceipt } from "@/contractCalls/parseReceipt";
 
 export const createColonySlotsCalls =
   ({ tables }: Core, { execute }: ExecuteFunctions) =>
@@ -21,11 +22,12 @@ export const createColonySlotsCalls =
         id: "pay",
       },
       onComplete: (receipt) => {
-        ampli.systemColonySystemPrimodiumPayForMaxColonySlots({
+        console.log(receipt);
+        /*ampli.systemColonySystemPrimodiumPayForMaxColonySlots({
           shipyard: shipyardEntity,
           resourceCounts: resourceCounts.map((resourceCount) => bigintToNumber(resourceCount)),
           ...parseReceipt(receipt),
-        });
+        });*/
       },
     });
   };

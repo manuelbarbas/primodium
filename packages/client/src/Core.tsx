@@ -26,7 +26,9 @@ function Core() {
 
   const core = useMemo(() => {
     if (coreRef.current) coreRef.current.network.world.dispose();
+
     const config = getCoreConfig();
+
     const core = createCore(config);
     coreRef.current = core;
     return core;
@@ -42,6 +44,7 @@ function Core() {
     const ret = { playerPrivateKey, playerAddress };
     return ret;
   }, [noExternalAccount, externalAccount.address]);
+
   if (MAINTENANCE) return <Maintenance />;
 
   if (!noExternalAccount && !externalAccount.isConnected) return null;

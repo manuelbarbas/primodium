@@ -1,9 +1,9 @@
 import { EObjectives } from "contracts/config/enums";
 
-import { AccountClient, bigintToNumber, Core, ExecuteFunctions } from "@primodiumxyz/core";
+import { AccountClient /*, bigintToNumber*/, Core, ExecuteFunctions } from "@primodiumxyz/core";
 import { Entity } from "@primodiumxyz/reactive-tables";
-import { ampli } from "@/ampli";
-import { parseReceipt } from "@/contractCalls/parseReceipt";
+//import { ampli } from "@/ampli";
+//import { parseReceipt } from "@/contractCalls/parseReceipt";
 import { makeObjectiveClaimable } from "@/util/objectives/makeObjectiveClaimable";
 
 export const createTransferCalls = (core: Core, { playerAccount }: AccountClient, { execute }: ExecuteFunctions) => {
@@ -76,7 +76,7 @@ export const createTransferCalls = (core: Core, { playerAccount }: AccountClient
         onComplete: (receipt) => {
           activeAsteroid && makeObjectiveClaimable(core, playerAccount.entity, claimableObjective);
 
-          const commonProperties = {
+          /* const commonProperties = {
             spaceRock: from,
             spaceRockTo: to,
             unitCounts: unitCounts.map((unitCount) => bigintToNumber(unitCount)),
@@ -89,7 +89,9 @@ export const createTransferCalls = (core: Core, { playerAccount }: AccountClient
             ampli.systemTransferSystemPrimodiumTransferUnitsFromFleetToAsteroid(commonProperties);
           } else {
             ampli.systemTransferSystemPrimodiumTransferUnitsFromFleetToFleet(commonProperties);
-          }
+          }*/
+
+          console.log(receipt);
         },
       });
     } else if (unitCounts.every((count) => count == 0n)) {
@@ -107,7 +109,7 @@ export const createTransferCalls = (core: Core, { playerAccount }: AccountClient
         onComplete: (receipt) => {
           activeAsteroid && makeObjectiveClaimable(core, playerAccount.entity, claimableObjective);
 
-          const commonProperties = {
+          /* const commonProperties = {
             spaceRock: from,
             spaceRockTo: to,
             resourceCounts: resourceCounts.map((resourceCount) => bigintToNumber(resourceCount)),
@@ -120,7 +122,8 @@ export const createTransferCalls = (core: Core, { playerAccount }: AccountClient
             ampli.systemTransferSystemPrimodiumTransferResourcesFromFleetToAsteroid(commonProperties);
           } else {
             ampli.systemTransferSystemPrimodiumTransferResourcesFromFleetToFleet(commonProperties);
-          }
+          }*/
+          console.log(receipt);
         },
       });
     } else {
@@ -138,7 +141,7 @@ export const createTransferCalls = (core: Core, { playerAccount }: AccountClient
         onComplete: (receipt) => {
           activeAsteroid && makeObjectiveClaimable(core, playerAccount.entity, claimableObjective);
 
-          const commonProperties = {
+          /*const commonProperties = {
             spaceRock: from,
             spaceRockTo: to,
             unitCounts: unitCounts.map((unitCount) => bigintToNumber(unitCount)),
@@ -152,7 +155,8 @@ export const createTransferCalls = (core: Core, { playerAccount }: AccountClient
             ampli.systemTransferSystemPrimodiumTransferUnitsAndResourcesFromFleetToAsteroid(commonProperties);
           } else {
             ampli.systemTransferSystemPrimodiumTransferUnitsAndResourcesFromFleetToFleet(commonProperties);
-          }
+          }*/
+          console.log(receipt);
         },
       });
     }
@@ -179,12 +183,13 @@ export const createTransferCalls = (core: Core, { playerAccount }: AccountClient
         withSession: true,
         txQueueOptions,
         onComplete: (receipt) => {
-          ampli.systemTransferTwoWaySystemPrimodiumTransferUnitsTwoWay({
+          /* ampli.systemTransferTwoWaySystemPrimodiumTransferUnitsTwoWay({
             spaceRock: left,
             spaceRockTo: right,
             unitCounts: unitCounts.map((unitCount) => bigintToNumber(unitCount)),
             ...parseReceipt(receipt),
-          });
+          });*/
+          console.log(receipt);
         },
       });
     }
@@ -196,12 +201,13 @@ export const createTransferCalls = (core: Core, { playerAccount }: AccountClient
         withSession: true,
         txQueueOptions,
         onComplete: (receipt) => {
-          ampli.systemTransferTwoWaySystemPrimodiumTransferResourcesTwoWay({
+          /*ampli.systemTransferTwoWaySystemPrimodiumTransferResourcesTwoWay({
             spaceRock: left,
             spaceRockTo: right,
             resourceCounts: resourceCounts.map((resourceCount) => bigintToNumber(resourceCount)),
             ...parseReceipt(receipt),
-          });
+          });*/
+          console.log(receipt);
         },
       });
     }
@@ -213,13 +219,14 @@ export const createTransferCalls = (core: Core, { playerAccount }: AccountClient
       withSession: true,
       txQueueOptions,
       onComplete: (receipt) => {
-        ampli.systemTransferTwoWaySystemPrimodiumTransferUnitsAndResourcesTwoWay({
+        /*ampli.systemTransferTwoWaySystemPrimodiumTransferUnitsAndResourcesTwoWay({
           spaceRock: left,
           spaceRockTo: right,
           unitCounts: unitCounts.map((unitCount) => bigintToNumber(unitCount)),
           resourceCounts: resourceCounts.map((resourceCount) => bigintToNumber(resourceCount)),
           ...parseReceipt(receipt),
-        });
+        });*/
+        console.log(receipt);
       },
     });
   };

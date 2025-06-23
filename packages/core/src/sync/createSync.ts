@@ -8,6 +8,7 @@ import { CoreConfig, CreateNetworkResult, SyncSourceType, SyncStep, Tables } fro
 import { getSecondaryQuery } from "@/sync/queries/secondaryQueries";
 import { hashEntities } from "@/utils/global/encode";
 
+import { filterLogs, queryLogs } from "../indexer";
 import { getAllianceQuery } from "./queries/allianceQueries";
 import { getActiveAsteroidQuery, getAsteroidFilter, getShardAsteroidFilter } from "./queries/asteroidQueries";
 import { getBattleReportQuery } from "./queries/battleReportQueries";
@@ -27,6 +28,8 @@ export function createSync(config: CoreConfig, network: CreateNetworkResult, tab
   const { tableDefs, world, publicClient, storageAdapter } = network;
   const indexerUrl = config.chain.indexerUrl;
   let fromBlock = config.initialBlockNumber ?? 0n;
+
+  console.log("indexerUrl ", indexerUrl);
 
   const syncFromRPC = (
     fromBlock: bigint,
@@ -73,26 +76,27 @@ export function createSync(config: CoreConfig, network: CreateNetworkResult, tab
   };
 
   const subscribeToRPC = () => {
-    // Store logs that come in during indexer & rpc sync
     const pendingLogs: StorageAdapterLog[] = [];
-    const storePendingLogs = (log: StorageAdapterLog) => pendingLogs.push(log);
-    // Process logs right after sync and before switching to live
-    const processPendingLogs = () =>
-      pendingLogs.forEach((log, index) => {
-        storageAdapter(log);
-        tables.SyncStatus.update({
-          message: "Processing pending logs",
-          progress: index / pendingLogs.length,
-        });
-      });
+    let storeLogs = true;
+
+    const storePendingLogs = (log: StorageAdapterLog) => {
+      if (storeLogs) pendingLogs.push(log);
+    };
+
+    const writer = (logs: StorageAdapterLog) => {
+      if (tables.SyncStatus.get()?.step === SyncStep.Live) {
+        storageAdapter(logs);
+      } else {
+        storePendingLogs(logs);
+      }
+    };
 
     const sync = Sync.withCustom({
       reader: Read.fromRPC.subscribe({
         address: config.worldAddress as Hex,
         publicClient,
       }),
-      writer: (logs) =>
-        tables.SyncStatus.get()?.step === SyncStep.Live ? storageAdapter(logs) : storePendingLogs(logs),
+      writer,
     });
 
     sync.start((_, blockNumber) => {
@@ -100,7 +104,16 @@ export function createSync(config: CoreConfig, network: CreateNetworkResult, tab
     });
 
     world.registerDisposer(sync.unsubscribe);
-    return processPendingLogs;
+
+    return {
+      processPendingLogs: () => {
+        pendingLogs.forEach(storageAdapter);
+        pendingLogs.length = 0;
+      },
+      disableStoring: () => {
+        storeLogs = false;
+      },
+    };
   };
 
   function createSyncHandlers(
@@ -149,13 +162,12 @@ export function createSync(config: CoreConfig, network: CreateNetworkResult, tab
   }
 
   const syncInitialGameState = (onComplete: () => void, onError: (err: unknown) => void) => {
-    // if we're already syncing from RPC, don't sync from indexer
     if (tables.SyncSource.get()?.value === SyncSourceType.RPC) return;
 
     if (!indexerUrl) return;
 
     const sync = Sync.withCustom({
-      reader: Read.fromDecodedIndexer.query({
+      reader: queryLogs({
         indexerUrl,
         query: getInitialQuery({
           tables: tableDefs,
@@ -182,14 +194,12 @@ export function createSync(config: CoreConfig, network: CreateNetworkResult, tab
   };
 
   const syncSecondaryGameState = (onComplete: () => void, onError: (err: unknown) => void) => {
-    // if we're already syncing from RPC, don't sync from indexer
     if (tables.SyncSource.get()?.value === SyncSourceType.RPC) return;
-
     if (!indexerUrl) return;
 
     const syncId = Keys.SECONDARY;
     const sync = Sync.withCustom({
-      reader: Read.fromDecodedIndexer.query({
+      reader: queryLogs({
         indexerUrl,
         query: getSecondaryQuery({ tables: tableDefs, worldAddress: config.worldAddress as Hex }),
       }),
@@ -206,16 +216,19 @@ export function createSync(config: CoreConfig, network: CreateNetworkResult, tab
         syncId,
       );
 
-      // sync remaining blocks from RPC
       if (progress === 1) {
         const latestBlockNumber = await publicClient.getBlockNumber();
-        const processPendingLogs = subscribeToRPC();
+        const { processPendingLogs, disableStoring } = subscribeToRPC();
+
         syncFromRPC(
           fromBlock,
           latestBlockNumber,
           () => {
+            disableStoring();
             processPendingLogs();
-            onComplete();
+            setTimeout(() => {
+              onComplete();
+            }, 100);
           },
           () => {
             console.warn("Failed to sync remaining blocks. Client may be out of sync!");
@@ -240,7 +253,7 @@ export function createSync(config: CoreConfig, network: CreateNetworkResult, tab
     }
 
     const syncData = Sync.withCustom({
-      reader: Read.fromDecodedIndexer.query({
+      reader: queryLogs({
         indexerUrl,
         query: getPlayerQuery({
           tables: tableDefs,
@@ -285,7 +298,7 @@ export function createSync(config: CoreConfig, network: CreateNetworkResult, tab
     };
 
     const syncData = Sync.withCustom({
-      reader: Read.fromIndexer.filter({
+      reader: filterLogs({
         indexerUrl,
         filter: shard ? getShardAsteroidFilter(params) : getAsteroidFilter(params),
       }),
@@ -319,7 +332,7 @@ export function createSync(config: CoreConfig, network: CreateNetworkResult, tab
     }
 
     const syncData = Sync.withCustom({
-      reader: Read.fromDecodedIndexer.query({
+      reader: queryLogs({
         indexerUrl,
         query: getActiveAsteroidQuery({
           tables: tableDefs,
@@ -355,7 +368,7 @@ export function createSync(config: CoreConfig, network: CreateNetworkResult, tab
     }
 
     const syncData = Sync.withCustom({
-      reader: Read.fromDecodedIndexer.query({
+      reader: queryLogs({
         indexerUrl,
         query: getAllianceQuery({
           tables: tableDefs,
@@ -392,7 +405,7 @@ export function createSync(config: CoreConfig, network: CreateNetworkResult, tab
 
     const ownerAsteroid = (tables.OwnedBy.get(fleetEntity)?.value ?? defaultEntity) as Entity;
     const syncData = Sync.withCustom({
-      reader: Read.fromIndexer.filter({
+      reader: filterLogs({
         indexerUrl,
         filter: getFleetFilter({
           tables: tableDefs,
@@ -431,7 +444,7 @@ export function createSync(config: CoreConfig, network: CreateNetworkResult, tab
     }
 
     const syncData = Sync.withCustom({
-      reader: Read.fromDecodedIndexer.query({
+      reader: queryLogs({
         indexerUrl,
         query: getBattleReportQuery({
           tables: tableDefs,

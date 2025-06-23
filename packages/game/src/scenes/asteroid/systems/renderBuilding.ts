@@ -25,8 +25,6 @@ export const renderBuilding = (scene: PrimodiumScene, core: Core) => {
 
       const activeRock = current?.value;
 
-      world.dispose("game_spectate");
-
       // Find buildings that have this asteroid as parent
       const positionQuery = {
         withProperties: [{ table: tables.Position, properties: { parentEntity: activeRock } }],
@@ -73,6 +71,7 @@ export const renderBuilding = (scene: PrimodiumScene, core: Core) => {
           building.setCoordPosition(tileCoord);
           building.setDepth(DepthLayers.Building - tileCoord.y * 5);
           // trigger anim since the building was just moved
+
           if (initialBuildingsPlaced && !showLevelAnimation) building.triggerPlacementAnim();
 
           return;
@@ -155,6 +154,7 @@ export const renderBuilding = (scene: PrimodiumScene, core: Core) => {
 
         // buildings.set(entity, building);
         // trigger the build anim if it's a new placement (not when game is initializing)
+
         if (initialBuildingsPlaced) building.triggerPlacementAnim();
       };
 

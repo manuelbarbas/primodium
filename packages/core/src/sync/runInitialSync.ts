@@ -1,11 +1,5 @@
 import { Core, SyncSourceType, SyncStep } from "@/lib/types";
 
-/**
- * Runs default initial sync process. Syncs to indexer. If indexer is not available, syncs to RPC.
- *
- * @param core {@link Core}
- * @param playerAddress Player address (optional). If included, will fetch player data on initial sync
- */
 export const runInitialSync = async (core: Core) => {
   const {
     network,
@@ -16,16 +10,22 @@ export const runInitialSync = async (core: Core) => {
   const { publicClient, triggerUpdateStream } = network;
   const fromBlock = config.initialBlockNumber ?? 0n;
 
-  // Once historical sync (indexer > rpc) is complete
-  const onSyncComplete = (processPendingLogs?: () => void) => {
-    // process logs that came in the meantime
-    processPendingLogs?.();
+  // Updated onSyncComplete function
+  const onSyncComplete = () => {
+    // Set sync status to Live
+    tables.SyncStatus.set({
+      step: SyncStep.Live,
+      progress: 1,
+      message: "Subscribed to live updates",
+    });
 
-    // trigger update stream for all entities in all components (to update UI on hooks and watchers)
-    triggerUpdateStream();
+    // Add small delay before triggering UI update
+    setTimeout(() => {
+      triggerUpdateStream();
 
-    // set sync status to live so it processed incoming blocks immediately
-    tables.SyncStatus.set({ step: SyncStep.Live, progress: 1, message: "Subscribed to live updates" });
+      // Schedule a secondary update as a safeguard
+      setTimeout(triggerUpdateStream, 500);
+    }, 100);
   };
 
   if (!config.chain.indexerUrl) {
@@ -33,57 +33,61 @@ export const runInitialSync = async (core: Core) => {
     tables.SyncSource.set({ value: SyncSourceType.RPC });
 
     const toBlock = await publicClient.getBlockNumber();
-    // Start live sync right away (it will store logs until `SyncStatus` is `SyncStep.Live`)
-    const processPendingLogs = subscribeToRPC();
+    const { processPendingLogs, disableStoring } = subscribeToRPC();
 
     syncFromRPC(
       fromBlock,
       toBlock,
-      //on complete
-      () => onSyncComplete(processPendingLogs),
-      //on error
+      // onComplete
+      () => {
+        disableStoring();
+        processPendingLogs();
+        onSyncComplete();
+      },
+      // onError
       (err: unknown) => {
         tables.SyncStatus.set({
           step: SyncStep.Error,
           progress: 0,
           message: `Failed to sync from RPC`,
         });
-
-        console.warn("Failed to sync from RPC");
-        console.log(err);
+        console.warn("Failed to sync from RPC", err);
       },
     );
-
     return;
   }
 
   const onError = async (err: unknown) => {
-    console.warn("Failed to fetch from indexer, hydrating from RPC");
+    console.warn("Failed to fetch from indexer, hydrating from RPC", err);
     tables.SyncSource.set({ value: SyncSourceType.RPC });
     const toBlock = await publicClient.getBlockNumber();
-    const processPendingLogs = subscribeToRPC();
+    const { processPendingLogs, disableStoring } = subscribeToRPC();
 
     syncFromRPC(
       fromBlock,
       toBlock,
-      //on complete
-      () => onSyncComplete(processPendingLogs),
-      //on error
+      // onComplete
+      () => {
+        disableStoring();
+        processPendingLogs();
+        onSyncComplete();
+      },
+      // onError
       (err: unknown) => {
         tables.SyncStatus.set({
           step: SyncStep.Error,
           progress: 0,
           message: `Failed to sync from RPC. Please try again.`,
         });
-        console.warn("Failed to sync from RPC ");
+        console.warn("Failed to sync from RPC", err);
       },
     );
   };
 
   tables.SyncSource.set({ value: SyncSourceType.Indexer });
-  // sync initial game state from indexer
+
   syncInitialGameState(
-    // on complete
+    // onComplete
     () => {
       tables.SyncStatus.set({
         step: SyncStep.Complete,
@@ -91,24 +95,22 @@ export const runInitialSync = async (core: Core) => {
         message: `DONE`,
       });
 
-      // initialize secondary state
-      syncSecondaryGameState(
-        // on complete
-        onSyncComplete,
-        onError,
-      );
+      syncSecondaryGameState(onSyncComplete, onError);
     },
     onError,
   );
 
-  // resolve when sync is live
   return await new Promise<void>((resolve) => {
     tables.SyncStatus.watch({
       onChange: ({ properties }) => {
         if (properties.current?.step === SyncStep.Live) {
-          resolve();
+          // Add small delay before resolving
+          setTimeout(resolve, 100);
         }
       },
     });
+
+    // Fallback timeout
+    setTimeout(resolve, 3000);
   });
 };

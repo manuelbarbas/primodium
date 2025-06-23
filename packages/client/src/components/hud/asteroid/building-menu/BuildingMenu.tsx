@@ -38,6 +38,8 @@ export const BuildingMenu: React.FC<{ selectedBuilding: Entity }> = ({ selectedB
   };
 
   const RenderScreen = () => {
+    console.log("TRANSACTION TEST RenderScreen ", buildingType);
+
     switch (buildingType) {
       case EntityType.MainBase:
         return <MainBase building={selectedBuilding} />;

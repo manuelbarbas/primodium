@@ -1,7 +1,8 @@
 import { Core, ExecuteFunctions } from "@primodiumxyz/core";
 import { Entity } from "@primodiumxyz/reactive-tables";
-import { ampli } from "@/ampli";
-import { parseReceipt } from "@/contractCalls/parseReceipt";
+
+//import { ampli } from "@/ampli";
+//import { parseReceipt } from "@/contractCalls/parseReceipt";
 
 export const createClaimUnits =
   (core: Core, { execute }: ExecuteFunctions) =>
@@ -15,10 +16,11 @@ export const createClaimUnits =
         id: `claimUnits-${rock}`,
       },
       onComplete: (receipt) => {
-        ampli.systemClaimUnitsSystemPrimodiumClaimUnits({
+        /*  ampli.systemClaimUnitsSystemPrimodiumClaimUnits({
           spaceRock: rock,
           ...parseReceipt(receipt),
-        });
+        });*/
+        console.log(receipt);
       },
     });
   };
