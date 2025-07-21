@@ -8,7 +8,8 @@ import { CoreConfig, CreateNetworkResult, SyncSourceType, SyncStep, Tables } fro
 import { getSecondaryQuery } from "@/sync/queries/secondaryQueries";
 import { hashEntities } from "@/utils/global/encode";
 
-import { filterLogs, queryLogs } from "../indexer";
+import { filterLogs, queryLogs } from "../requests/indexer";
+import { filterRPCLogs, subscribeLogs } from "../requests/rpc";
 import { getAllianceQuery } from "./queries/allianceQueries";
 import { getActiveAsteroidQuery, getAsteroidFilter, getShardAsteroidFilter } from "./queries/asteroidQueries";
 import { getBattleReportQuery } from "./queries/battleReportQueries";
@@ -39,7 +40,7 @@ export function createSync(config: CoreConfig, network: CreateNetworkResult, tab
     syncId?: Entity,
   ) => {
     const sync = Sync.withCustom({
-      reader: Read.fromRPC.filter({
+      reader: filterRPCLogs({
         address: config.worldAddress as Hex,
         publicClient,
         fromBlock,
@@ -92,7 +93,7 @@ export function createSync(config: CoreConfig, network: CreateNetworkResult, tab
     };
 
     const sync = Sync.withCustom({
-      reader: Read.fromRPC.subscribe({
+      reader: subscribeLogs({
         address: config.worldAddress as Hex,
         publicClient,
       }),

@@ -1,13 +1,18 @@
 import { EventEmitter } from "eventemitter3";
 
-import { Reader, ReaderQueryDecodedIndexerParams, StorageAdapterBlock } from "@primodiumxyz/sync-stack/types";
+import { Reader, ReaderFilterIndexerParams, StorageAdapterBlock } from "@primodiumxyz/sync-stack/types";
 
-import { isStorageAdapterBlockIndexer } from "./common";
-import { dbQuerySchema } from "./querySchema";
-import { processJSONStream } from "./requests";
+import { isStorageAdapterBlockIndexer } from "../common";
+import { processJSONStream } from "../requests";
 
-export const queryLogs = (params: ReaderQueryDecodedIndexerParams, key?: string): Reader => {
-  const { indexerUrl, query } = params;
+/**
+ * Creates a reader for filtered indexer logs.
+ *
+ * @param args - The {@link ReaderFilterIndexerParams}
+ * @returns A {@link Reader}
+ */
+export const filterLogs = (args: ReaderFilterIndexerParams, key?: string): Reader => {
+  const { indexerUrl, filter } = args;
   return {
     subscribe: (userCallback, errorCallback) => {
       const eventEmitter = new EventEmitter();
@@ -18,14 +23,12 @@ export const queryLogs = (params: ReaderQueryDecodedIndexerParams, key?: string)
       // Listen for the 'error' event
       if (errorCallback) eventEmitter.on("error", errorCallback);
 
+      // Start fetching the logs
       (async () => {
         try {
-          const parsedInput = dbQuerySchema.parse(query);
-          const urlEncodedQuery = encodeURIComponent(JSON.stringify(parsedInput));
-          const url = `${indexerUrl}/api/queryLogs?&input=${urlEncodedQuery}`;
-
+          const urlEncodedQuery = encodeURIComponent(JSON.stringify(filter));
+          const url = `${indexerUrl}/api/logs?input=${urlEncodedQuery}`;
           for await (const result of processJSONStream(url, key)) {
-            ``;
             if (!isStorageAdapterBlockIndexer(result)) {
               eventEmitter.emit("update", {
                 blockNumber: 0n,
@@ -37,8 +40,8 @@ export const queryLogs = (params: ReaderQueryDecodedIndexerParams, key?: string)
 
             eventEmitter.emit("update", {
               blockNumber: BigInt(result.blockNumber),
-              progress: result.chunk / result.totalChunks,
               logs: result.logs,
+              progress: result.chunk / result.totalChunks,
             });
           }
         } catch (err) {

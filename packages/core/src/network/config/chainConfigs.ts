@@ -110,7 +110,7 @@ const skaleNebula: ChainConfig = {
       http: ["https://lanky-ill-funny-testnet-indexer.skalenodes.com:10136"],
     },
   },
-  indexerUrl: "http://0.0.0.0:3001",
+  indexerUrl: "http://0.0.0.0:3003",
   blockExplorers: {
     default: {
       name: "Nebula Gaming Hub explorer",

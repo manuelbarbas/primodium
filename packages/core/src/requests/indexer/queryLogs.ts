@@ -1,18 +1,13 @@
 import { EventEmitter } from "eventemitter3";
 
-import { Reader, ReaderFilterIndexerParams, StorageAdapterBlock } from "@primodiumxyz/sync-stack/types";
+import { Reader, ReaderQueryDecodedIndexerParams, StorageAdapterBlock } from "@primodiumxyz/sync-stack/types";
 
-import { isStorageAdapterBlockIndexer } from "./common";
-import { processJSONStream } from "./requests";
+import { isStorageAdapterBlockIndexer } from "../common";
+import { dbQuerySchema } from "../querySchema";
+import { processJSONStream } from "../requests";
 
-/**
- * Creates a reader for filtered indexer logs.
- *
- * @param args - The {@link ReaderFilterIndexerParams}
- * @returns A {@link Reader}
- */
-export const filterLogs = (args: ReaderFilterIndexerParams, key?: string): Reader => {
-  const { indexerUrl, filter } = args;
+export const queryLogs = (params: ReaderQueryDecodedIndexerParams, key?: string): Reader => {
+  const { indexerUrl, query } = params;
   return {
     subscribe: (userCallback, errorCallback) => {
       const eventEmitter = new EventEmitter();
@@ -23,12 +18,14 @@ export const filterLogs = (args: ReaderFilterIndexerParams, key?: string): Reade
       // Listen for the 'error' event
       if (errorCallback) eventEmitter.on("error", errorCallback);
 
-      // Start fetching the logs
       (async () => {
         try {
-          const urlEncodedQuery = encodeURIComponent(JSON.stringify(filter));
-          const url = `${indexerUrl}/api/logs?input=${urlEncodedQuery}`;
+          const parsedInput = dbQuerySchema.parse(query);
+          const urlEncodedQuery = encodeURIComponent(JSON.stringify(parsedInput));
+          const url = `${indexerUrl}/api/queryLogs?&input=${urlEncodedQuery}`;
+
           for await (const result of processJSONStream(url, key)) {
+            ``;
             if (!isStorageAdapterBlockIndexer(result)) {
               eventEmitter.emit("update", {
                 blockNumber: 0n,
@@ -40,8 +37,8 @@ export const filterLogs = (args: ReaderFilterIndexerParams, key?: string): Reade
 
             eventEmitter.emit("update", {
               blockNumber: BigInt(result.blockNumber),
-              logs: result.logs,
               progress: result.chunk / result.totalChunks,
+              logs: result.logs,
             });
           }
         } catch (err) {

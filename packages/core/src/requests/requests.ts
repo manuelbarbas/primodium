@@ -1,4 +1,4 @@
-export function getAuthToken(): string | null {
+/*export function getAuthToken(): string | null {
   const JWT_STORAGE_KEY = "authToken";
 
   const token = localStorage.getItem(JWT_STORAGE_KEY);
@@ -48,7 +48,7 @@ export async function verifySignature(
   console.log("Received JWT:", token, "Expires in:", expiresIn, "seconds");
 
   return { token, expiresIn };
-}
+}*/
 
 /**
  * Processes a JSON stream from an indexer.
