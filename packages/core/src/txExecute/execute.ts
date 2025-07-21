@@ -1,12 +1,11 @@
 import { Abi, ContractFunctionName, Hex, TransactionReceipt } from "viem";
 
-import { AccountClient, Core, SyncStep, WorldAbiType } from "@/lib/types";
+import { AccountClient, Core, WorldAbiType } from "@/lib/types";
 import { WorldAbi } from "@/lib/WorldAbi";
 import { TxQueueOptions } from "@/tables/types";
+import { _execute } from "@/txExecute/_execute";
 import { encodeSystemCall, encodeSystemCallFrom, SystemCall } from "@/txExecute/encodeSystemCall";
 import { functionSystemIds } from "@/txExecute/functionSystemIds";
-
-import { sendTransaction } from "../skaleTransaction/sendTransaction";
 
 export type ExecuteCallOptions<abi extends Abi, functionName extends ContractFunctionName<abi>> = Omit<
   SystemCall<abi, functionName>,
@@ -43,12 +42,8 @@ export function execute<functionName extends ContractFunctionName<WorldAbiType>>
   const run = async () => {
     let tx: Promise<Hex>;
 
-    let params_;
-    let isCallFrom = false;
-
     const systemId = functionSystemIds[functionName as ContractFunctionName<WorldAbiType>];
     if (!systemId || !args) throw new Error(`System ID not found for function ${functionName}`);
-
     if (authorizing && sessionAccount) {
       const params = encodeSystemCallFrom(core.tables, {
         abi: WorldAbi,
@@ -57,9 +52,7 @@ export function execute<functionName extends ContractFunctionName<WorldAbiType>>
         functionName,
         args: args as any,
       });
-      params_ = params;
-      isCallFrom = true;
-      //tx = sessionAccount.worldContract.write.callFrom(params, callOptions);
+      tx = sessionAccount.worldContract.write.callFrom(params, callOptions);
     } else {
       const params = encodeSystemCall(core.tables, {
         abi: WorldAbi,
@@ -67,21 +60,9 @@ export function execute<functionName extends ContractFunctionName<WorldAbiType>>
         functionName,
         args: args as any,
       });
-      //tx = playerAccount.worldContract.write.call(params, callOptions);
-
-      params_ = params;
+      tx = playerAccount.worldContract.write.call(params, callOptions);
     }
-
-    let isBiteProtected = false;
-
-    if (core.config.chain.id == 1289306510) {
-      isBiteProtected = true;
-    }
-
-    const receipt = await sendTransaction(isBiteProtected, isCallFrom, core, account, params_);
-
-    console.log("receipt ", receipt.status);
-
+    const receipt = await _execute(core, tx);
     onComplete?.(receipt);
   };
 
