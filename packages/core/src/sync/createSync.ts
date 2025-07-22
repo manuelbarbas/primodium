@@ -9,7 +9,8 @@ import { getSecondaryQuery } from "@/sync/queries/secondaryQueries";
 import { hashEntities } from "@/utils/global/encode";
 
 import { filterLogs, queryLogs } from "../requests/indexer";
-import { filterRPCLogs, subscribeLogs } from "../requests/rpc";
+import { filterRPCLogs } from "../requests/rpc";
+import { robustSubscribeLogs } from "../requests/rpc/robustSubscribeLogs";
 import { getAllianceQuery } from "./queries/allianceQueries";
 import { getActiveAsteroidQuery, getAsteroidFilter, getShardAsteroidFilter } from "./queries/asteroidQueries";
 import { getBattleReportQuery } from "./queries/battleReportQueries";
@@ -79,29 +80,45 @@ export function createSync(config: CoreConfig, network: CreateNetworkResult, tab
   const subscribeToRPC = () => {
     const pendingLogs: StorageAdapterLog[] = [];
     let storeLogs = true;
+    let lastProcessedBlock = fromBlock;
+    let lastSyncTime = Date.now();
 
     const storePendingLogs = (log: StorageAdapterLog) => {
       if (storeLogs) pendingLogs.push(log);
     };
 
     const writer = (logs: StorageAdapterLog) => {
-      if (tables.SyncStatus.get()?.step === SyncStep.Live) {
+      const syncStep = tables.SyncStatus.get()?.step;
+      const logCount = (logs as any).logs?.length || 0;
+
+      console.log(
+        `[createSync DEBUG] Writer called - SyncStep: ${syncStep}, LogCount: ${logCount}, BlockNumber: ${(logs as any).blockNumber}`,
+      );
+
+      if (syncStep === SyncStep.Live) {
+        console.log(`[createSync DEBUG] Processing logs in LIVE mode - calling storageAdapter`);
         storageAdapter(logs);
+        lastSyncTime = Date.now();
+        console.log(`[createSync DEBUG] storageAdapter completed, updated lastSyncTime`);
       } else {
+        console.log(`[createSync DEBUG] Not in LIVE mode (step: ${syncStep}) - adding to pending logs`);
         storePendingLogs(logs);
       }
     };
 
     const sync = Sync.withCustom({
-      reader: subscribeLogs({
+      reader: robustSubscribeLogs({
         address: config.worldAddress as Hex,
         publicClient,
+        chain: config.chain, // Pass chain config for multi-RPC fallback
       }),
       writer,
     });
 
     sync.start((_, blockNumber) => {
       console.log("syncing updates on block:", blockNumber);
+      lastProcessedBlock = blockNumber;
+      lastSyncTime = Date.now();
     });
 
     world.registerDisposer(sync.unsubscribe);
@@ -231,8 +248,18 @@ export function createSync(config: CoreConfig, network: CreateNetworkResult, tab
           fromBlock,
           latestBlockNumber,
           () => {
+            console.log(`[createSync DEBUG] syncFromRPC completed, switching to LIVE mode`);
             disableStoring();
             processPendingLogs();
+
+            // Set sync status to Live
+            tables.SyncStatus.set({
+              step: SyncStep.Live,
+              progress: 1,
+              message: `Live sync active`,
+            });
+
+            console.log(`[createSync DEBUG] Sync status set to LIVE, calling onComplete`);
             setTimeout(() => {
               onComplete();
             }, 100);
