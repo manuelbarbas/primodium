@@ -332,20 +332,22 @@ export const _TransferPane = (props: {
             )}
           </SecondaryCard>
         </TransactionQueueMask>
-        <div className="w-full flex justify-center gap-1">
-          <Button
-            size="sm"
-            onClick={() => {
-              if (props.side === "left") {
-                setLeft(undefined);
-              } else {
-                setRight(undefined);
-              }
-            }}
-          >
-            back
-          </Button>
-        </div>
+        {left && right && (
+          <div className="w-full flex justify-center gap-1">
+            <Button
+              size="sm"
+              onClick={() => {
+                if (props.side === "left") {
+                  setLeft(undefined);
+                } else {
+                  setRight(undefined);
+                }
+              }}
+            >
+              back
+            </Button>
+          </div>
+        )}
       </div>
     </Card>
   );
