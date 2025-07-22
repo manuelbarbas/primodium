@@ -4,15 +4,29 @@ import { Core } from "@/lib/types";
 
 export async function _execute({ network: { waitForTransaction, publicClient } }: Core, txPromise: Promise<Hex>) {
   let receipt: TransactionReceipt | undefined = undefined;
+  const startTime = Date.now();
 
   try {
     const txHash = await txPromise;
+    console.log(`[Tx DEBUG] Transaction sent: ${txHash} at ${new Date().toISOString()}`);
+
     await waitForTransaction(txHash);
+    const waitTime = Date.now() - startTime;
+    console.log(`[Tx DEBUG] waitForTransaction completed in ${waitTime}ms for ${txHash}`);
+
     console.log("[Tx] hash: ", txHash);
 
     // If the transaction runs out of gas, status will be reverted
     // receipt.status is of type TStatus = 'success' | 'reverted' defined in TransactionReceipt
     receipt = await publicClient.getTransactionReceipt({ hash: txHash });
+    const receiptTime = Date.now() - startTime;
+
+    if (receipt) {
+      console.log(
+        `[Tx DEBUG] Receipt received in ${receiptTime}ms - Status: ${receipt.status}, Block: ${receipt.blockNumber}, Hash: ${txHash}`,
+      );
+    }
+
     if (receipt && receipt.status === "reverted") {
       // Force a CallExecutionError such that we can get the revert reason
       await callTransaction(publicClient, txHash);

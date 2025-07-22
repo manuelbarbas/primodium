@@ -16,6 +16,14 @@ type Subscription = {
 
 const clients = new Map<PublicClient, Subscription[]>();
 const clientWatchers = new Map<PublicClient, WatchEventReturnType>();
+const connectionHealth = new Map<
+  PublicClient,
+  {
+    lastLogTime: number;
+    isHealthy: boolean;
+    reconnectAttempts: number;
+  }
+>();
 
 /**
  * Subscribes to logs for a given public client.
@@ -88,14 +96,25 @@ function initializeWatchEvent(args: ReaderSubscribeRpcParams) {
     onLogs: (logs) => {
       const subs = clients.get(publicClient);
 
+      console.log(`[subscribeLogs DEBUG] Received ${logs.length} logs from RPC subscription`);
+
+      if (logs.length > 0) {
+        console.log(`[subscribeLogs DEBUG] First log details:`, {
+          blockNumber: logs[0].blockNumber,
+          transactionHash: logs[0].transactionHash,
+          address: logs[0].address,
+          topics: logs[0].topics,
+        });
+      }
+
       if (!subs === undefined) {
-        //  error("could not find public client");
+        console.error(`[subscribeLogs ERROR] Could not find public client`);
         return;
       }
 
       //just in case
       if (subs?.length === 0) {
-        //debug(`no listeners, unsubscribing from watch event`);
+        console.warn(`[subscribeLogs DEBUG] No listeners, unsubscribing from watch event`);
         unsub();
         clients.delete(publicClient);
         clientWatchers.delete(publicClient);
@@ -105,10 +124,22 @@ function initializeWatchEvent(args: ReaderSubscribeRpcParams) {
       subs?.forEach(({ filter, callback }) => {
         const filteredLogs = filter ? logs.filter(createLogFilter(filter)) : logs;
         const blocks = groupLogsByBlockNumber(filteredLogs) as StorageAdapterBlock[];
-        /* debug(
-          `client: ${publicClient.name}, subs: ${subs.length}: logs: ${logs.length}, filteredLogs: ${filteredLogs.length}, blocks: ${blocks.length}`,
-        );*/
+
+        console.log(
+          `[subscribeLogs DEBUG] Processing: ${logs.length} raw logs → ${filteredLogs.length} filtered logs → ${blocks.length} blocks`,
+        );
+
+        if (blocks.length > 0) {
+          console.log(
+            `[subscribeLogs DEBUG] Blocks to process:`,
+            blocks.map((b) => ({ blockNumber: b.blockNumber, logCount: b.logs.length })),
+          );
+        }
+
         for (const block of blocks) {
+          console.log(
+            `[subscribeLogs DEBUG] Calling callback for block ${block.blockNumber} with ${block.logs.length} logs`,
+          );
           callback(block);
         }
       });
