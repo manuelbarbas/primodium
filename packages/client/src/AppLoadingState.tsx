@@ -57,7 +57,7 @@ export default function AppLoadingState() {
           {!loading && !balanceReady && (
             <div className="flex flex-col items-center justify-center h-screen text-white gap-4">
               <p className="text-lg text-white">
-                <span className="">Dripping Eth to Primodium account</span>
+                <span className="">Dripping Gas to Primodium account</span>
                 <span>&hellip;</span>
               </p>
               <Progress value={100} max={100} className="animate-pulse w-56" />
