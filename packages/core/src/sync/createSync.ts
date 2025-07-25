@@ -11,6 +11,7 @@ import { hashEntities } from "@/utils/global/encode";
 import { filterLogs, queryLogs } from "../requests/indexer";
 import { filterRPCLogs } from "../requests/rpc";
 import { robustSubscribeLogs } from "../requests/rpc/robustSubscribeLogs";
+import { OptimisticUpdateManager } from "./optimisticUpdates";
 import { getAllianceQuery } from "./queries/allianceQueries";
 import { getActiveAsteroidQuery, getAsteroidFilter, getShardAsteroidFilter } from "./queries/asteroidQueries";
 import { getBattleReportQuery } from "./queries/battleReportQueries";
@@ -32,6 +33,9 @@ export function createSync(config: CoreConfig, network: CreateNetworkResult, tab
   let fromBlock = config.initialBlockNumber ?? 0n;
 
   console.log("indexerUrl ", indexerUrl);
+
+  // Initialize optimistic update manager for hybrid approach
+  const optimisticUpdateManager = new OptimisticUpdateManager(tables, storageAdapter, config.worldAddress as Hex);
 
   const syncFromRPC = (
     fromBlock: bigint,
@@ -97,6 +101,20 @@ export function createSync(config: CoreConfig, network: CreateNetworkResult, tab
 
       if (syncStep === SyncStep.Live) {
         console.log(`[createSync DEBUG] Processing logs in LIVE mode - calling storageAdapter`);
+
+        // First, let the optimistic update manager handle incoming logs
+        // This will confirm any pending transactions and handle reconciliation
+        // Convert StorageAdapterLog to StorageAdapterBlock format for the optimistic update manager
+        const blockForOptimistic = {
+          blockNumber: (logs as any).blockNumber || 0n,
+          logs: Array.isArray((logs as any).logs) ? (logs as any).logs : [logs],
+        };
+
+        optimisticUpdateManager.processIncomingLogs(blockForOptimistic).catch((error) => {
+          console.error(`[OptimisticUpdates] Error processing incoming logs:`, error);
+        });
+
+        // Then process logs normally
         storageAdapter(logs);
         lastSyncTime = Date.now();
         console.log(`[createSync DEBUG] storageAdapter completed, updated lastSyncTime`);
@@ -532,5 +550,8 @@ export function createSync(config: CoreConfig, network: CreateNetworkResult, tab
     syncAllianceData,
     syncFleetData,
     syncBattleReports,
+
+    // Expose optimistic update manager for use in transaction execution
+    optimisticUpdateManager,
   };
 }
