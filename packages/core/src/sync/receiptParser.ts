@@ -1,12 +1,12 @@
+import { groupLogsByBlockNumber } from "@latticexyz/block-logs-stream";
 import { storeEventsAbi } from "@latticexyz/store";
-import { Hex, Log, TransactionReceipt } from "viem";
+import { Hex, Log, parseEventLogs, TransactionReceipt } from "viem";
 
 import { StorageAdapterBlock } from "@primodiumxyz/reactive-tables/utils";
 
 /** Parse transaction receipt and extract relevant logs for optimistic updates */
 export function parseReceiptLogs(receipt: TransactionReceipt, worldAddress: Hex): StorageAdapterBlock | null {
   if (!receipt.logs || receipt.logs.length === 0) {
-    console.log(`[ReceiptParser] No logs found in receipt for tx: ${receipt.transactionHash}`);
     return null;
   }
 
@@ -14,27 +14,39 @@ export function parseReceiptLogs(receipt: TransactionReceipt, worldAddress: Hex)
   const worldLogs = receipt.logs.filter((log) => log.address.toLowerCase() === worldAddress.toLowerCase());
 
   if (worldLogs.length === 0) {
-    console.log(`[ReceiptParser] No world contract logs found for tx: ${receipt.transactionHash}`);
     return null;
   }
 
-  console.log(`[ReceiptParser] Found ${worldLogs.length} world contract logs for tx: ${receipt.transactionHash}`);
+  try {
+    // Parse logs using storeEventsAbi just like the RPC subscription system does
+    // This creates logs with the proper structure including the 'args' object
+    const parsedLogs = parseEventLogs({
+      abi: storeEventsAbi,
+      logs: worldLogs,
+      strict: false, // Allow parsing to continue even if some logs don't match
+    });
 
-  // Convert to the format expected by StorageAdapterLog
-  const processedLogs = worldLogs.map((log) => ({
-    ...log,
-    blockNumber: receipt.blockNumber,
-    blockHash: receipt.blockHash,
-    transactionIndex: receipt.transactionIndex,
-    // Ensure we have the required fields
-    removed: false,
-    logIndex: log.logIndex || 0,
-  }));
+    console.log(`[receiptParser DEBUG] Parsed ${parsedLogs.length} logs with storeEventsAbi`);
+    if (parsedLogs.length > 0) {
+      console.log(`[receiptParser DEBUG] First parsed log structure:`, {
+        eventName: parsedLogs[0].eventName,
+        hasArgs: !!parsedLogs[0].args,
+        argsKeys: parsedLogs[0].args ? Object.keys(parsedLogs[0].args) : [],
+      });
+    }
 
-  return {
-    blockNumber: receipt.blockNumber,
-    logs: processedLogs,
-  };
+    // Group logs by block number using the same function as RPC subscription
+    const blocks = groupLogsByBlockNumber(parsedLogs) as StorageAdapterBlock[];
+
+    console.log(`[receiptParser DEBUG] Grouped into ${blocks.length} blocks`);
+
+    // Return the first block (should only be one since all logs are from the same transaction)
+    return blocks.length > 0 ? blocks[0] : null;
+  } catch (error) {
+    console.error(`[receiptParser ERROR] Failed to parse logs with storeEventsAbi:`, error);
+    console.error(`[receiptParser ERROR] Raw worldLogs:`, worldLogs);
+    return null;
+  }
 }
 
 /**

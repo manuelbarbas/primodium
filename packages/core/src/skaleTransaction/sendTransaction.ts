@@ -53,6 +53,15 @@ export async function sendTransaction(
 
       return receipt;
     } catch (error) {
+      if (
+        (error as any).code === 4001 ||
+        (error as Error).message.toLowerCase().includes("user rejected") ||
+        (error as Error).message.toLowerCase().includes("user denied")
+      ) {
+        console.warn("User cancelled the transaction. Aborting retries.");
+        throw new Error("Transaction cancelled by user");
+      }
+
       lastError = error as Error;
       console.warn(`Transaction attempt ${attempt + 1} failed:`, error);
 

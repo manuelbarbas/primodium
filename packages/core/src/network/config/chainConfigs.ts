@@ -108,11 +108,11 @@ const skaleNebula: ChainConfig = {
     },
     fallback: {
       http: [
-        "https://staging-3.skalenodes.com:10072",
+        "https://staging-0.skalenodes.com:10136",
+        "https://staging-1.skalenodes.com:10136",
         "https://lanky-ill-funny-testnet-indexer.skalenodes.com:10136",
-        "https://staging-0.skalenodes.com:10072",
-        "https://staging-1.skalenodes.com:10072",
-        "https://staging-2.skalenodes.com:10072",
+        "https://staging-2.skalenodes.com:10136",
+        "https://staging-3.skalenodes.com:10136",
       ],
     },
   },

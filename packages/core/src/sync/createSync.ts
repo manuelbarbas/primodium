@@ -95,10 +95,6 @@ export function createSync(config: CoreConfig, network: CreateNetworkResult, tab
       const syncStep = tables.SyncStatus.get()?.step;
       const logCount = (logs as any).logs?.length || 0;
 
-      console.log(
-        `[createSync DEBUG] Writer called - SyncStep: ${syncStep}, LogCount: ${logCount}, BlockNumber: ${(logs as any).blockNumber}`,
-      );
-
       if (syncStep === SyncStep.Live) {
         console.log(`[createSync DEBUG] Processing logs in LIVE mode - calling storageAdapter`);
 
@@ -110,9 +106,7 @@ export function createSync(config: CoreConfig, network: CreateNetworkResult, tab
           logs: Array.isArray((logs as any).logs) ? (logs as any).logs : [logs],
         };
 
-        optimisticUpdateManager.processIncomingLogs(blockForOptimistic).catch((error) => {
-          console.error(`[OptimisticUpdates] Error processing incoming logs:`, error);
-        });
+        optimisticUpdateManager.processIncomingLogs(blockForOptimistic);
 
         // Then process logs normally
         storageAdapter(logs);
@@ -260,24 +254,25 @@ export function createSync(config: CoreConfig, network: CreateNetworkResult, tab
 
       if (progress === 1) {
         const latestBlockNumber = await publicClient.getBlockNumber();
-        const { processPendingLogs, disableStoring } = subscribeToRPC();
-
+        // TESTING: Comment out subscribeToRPC to test optimistic updates only
+        //const { processPendingLogs, disableStoring } = subscribeToRPC();
         syncFromRPC(
           fromBlock,
           latestBlockNumber,
           () => {
             console.log(`[createSync DEBUG] syncFromRPC completed, switching to LIVE mode`);
-            disableStoring();
-            processPendingLogs();
+            // TESTING: Comment out WebSocket-related calls
+            // disableStoring();
+            //  processPendingLogs();
 
-            // Set sync status to Live
+            // Set sync status to Live (for optimistic updates only)
             tables.SyncStatus.set({
               step: SyncStep.Live,
               progress: 1,
-              message: `Live sync active`,
+              message: `Live sync active (optimistic only - no WebSocket)`,
             });
 
-            console.log(`[createSync DEBUG] Sync status set to LIVE, calling onComplete`);
+            console.log(`[createSync DEBUG] Sync status set to LIVE (optimistic only), calling onComplete`);
             setTimeout(() => {
               onComplete();
             }, 100);

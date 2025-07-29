@@ -5,17 +5,6 @@ import { Tables } from "@/lib/types";
 
 import { extractTransactionMetadata, hasGameRelevantLogs, parseReceiptLogs } from "./receiptParser";
 
-/**
- * Manages optimistic updates for immediate UI feedback with eventual consistency
- *
- * This system:
- *
- * 1. Immediately updates UI when transaction receipts are received
- * 2. Tracks pending transactions awaiting log confirmation
- * 3. Reconciles state when logs arrive via the subscription system
- * 4. Provides rollback capability if logs differ from optimistic updates
- */
-
 export interface PendingTransaction {
   transactionHash: Hex;
   receipt: TransactionReceipt;
@@ -43,9 +32,7 @@ export class OptimisticUpdateManager {
   }
 
   /** Apply optimistic update immediately when transaction receipt is received */
-  async applyOptimisticUpdate(receipt: TransactionReceipt): Promise<void> {
-    console.log(`[OptimisticUpdates] Applying optimistic update for tx: ${receipt.transactionHash}`);
-
+  applyOptimisticUpdate(receipt: TransactionReceipt): void {
     // Check if this transaction has game-relevant logs
     if (!hasGameRelevantLogs(receipt, this.worldAddress)) {
       console.log(
@@ -59,9 +46,7 @@ export class OptimisticUpdateManager {
       this.markAsPending(receipt.transactionHash, receipt);
 
       // Apply immediate optimistic state update
-      await this.processReceiptOptimistically(receipt);
-
-      console.log(`[OptimisticUpdates] Optimistic update applied for tx: ${receipt.transactionHash}`);
+      this.processReceiptOptimistically(receipt);
     } catch (error) {
       console.error(`[OptimisticUpdates] Failed to apply optimistic update:`, error);
       // Remove from pending if we failed to apply optimistically
@@ -69,19 +54,22 @@ export class OptimisticUpdateManager {
     }
   }
 
-  private async processReceiptOptimistically(receipt: TransactionReceipt): Promise<void> {
+  private processReceiptOptimistically(receipt: TransactionReceipt): void {
     // Generate optimistic block from receipt
-    const optimisticBlock = await this.generateOptimisticLogsFromReceipt(receipt);
+    const optimisticBlock = this.generateOptimisticLogsFromReceipt(receipt);
 
     if (optimisticBlock && optimisticBlock.logs.length > 0) {
       // Apply optimistic logs immediately to the UI
-      console.log(
-        `[OptimisticUpdates] Applying optimistic block ${optimisticBlock.blockNumber} with ${optimisticBlock.logs.length} logs`,
-      );
 
       // Process each log individually through the storage adapter
-      optimisticBlock.logs.forEach((log) => {
-        this.storageAdapter(log);
+      optimisticBlock.logs.forEach((log, index) => {
+        try {
+          console.log("TEST LOGAO 2 ", log);
+          this.storageAdapter(log);
+          console.log(`[OptimisticUpdates DEBUG] storageAdapter call ${index + 1} completed successfully`);
+        } catch (error) {
+          console.error(`[OptimisticUpdates DEBUG] storageAdapter call ${index + 1} failed:`, error);
+        }
       });
 
       // Store optimistic data for potential rollback
@@ -92,9 +80,7 @@ export class OptimisticUpdateManager {
     }
   }
 
-  private async generateOptimisticLogsFromReceipt(receipt: TransactionReceipt): Promise<StorageAdapterBlock | null> {
-    console.log(`[OptimisticUpdates] Generating optimistic logs for tx: ${receipt.transactionHash}`);
-
+  private generateOptimisticLogsFromReceipt(receipt: TransactionReceipt): StorageAdapterBlock | null {
     // Parse the receipt logs using our utility function
     const parsedLogs = parseReceiptLogs(receipt, this.worldAddress);
 
@@ -102,38 +88,28 @@ export class OptimisticUpdateManager {
       console.log(`[OptimisticUpdates] No parseable logs found for tx: ${receipt.transactionHash}`);
       return null;
     }
-
-    console.log(
-      `[OptimisticUpdates] Generated optimistic logs for tx ${receipt.transactionHash}: ${parsedLogs.logs.length} logs`,
-    );
     return parsedLogs;
   }
 
   /** Handle incoming logs from the subscription system */
-  async processIncomingLogs(block: StorageAdapterBlock): Promise<void> {
+  processIncomingLogs(block: StorageAdapterBlock): void {
     if (!block.logs || block.logs.length === 0) return;
 
     for (const log of block.logs) {
       const txHash = log.transactionHash as Hex;
 
       if (this.isPending(txHash)) {
-        console.log(`[OptimisticUpdates] Confirming pending transaction: ${txHash}`);
-        await this.confirmTransaction(txHash, log);
+        this.confirmTransaction(txHash, log);
       } else {
         console.log(`[OptimisticUpdates] Processing new log (not from pending tx): ${txHash}`);
-        // This is a new log not from our optimistic updates
-        // Process it normally
       }
     }
   }
 
   /** Confirm a pending transaction with actual log data */
-  private async confirmTransaction(txHash: Hex, actualLog: any): Promise<void> {
+  private confirmTransaction(txHash: Hex, actualLog: any): void {
     const pending = this.pendingTransactions.get(txHash);
     if (!pending) return;
-
-    console.log(`[OptimisticUpdates] Confirming transaction: ${txHash}`);
-
     // TODO: Implement reconciliation logic
     // Compare actualLog with pending.optimisticLogData
     // If they differ, apply corrections to the state

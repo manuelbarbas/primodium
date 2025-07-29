@@ -82,17 +82,16 @@ export function execute<functionName extends ContractFunctionName<WorldAbiType>>
 
     console.log("receipt ", receipt.status);
 
-    // Apply optimistic update immediately for faster UI feedback
     if (receipt.status === "success" && core.sync?.optimisticUpdateManager) {
       try {
-        console.log(`[Execute] Applying optimistic update for successful transaction: ${receipt.transactionHash}`);
-        await core.sync.optimisticUpdateManager.applyOptimisticUpdate(receipt);
+        core.sync.optimisticUpdateManager.applyOptimisticUpdate(receipt);
+        onComplete?.(receipt);
       } catch (error) {
         console.error(`[Execute] Failed to apply optimistic update:`, error);
       }
+    } else {
+      console.log(`[Execute DEBUG] Skipping optimistic update - conditions not met`);
     }
-
-    onComplete?.(receipt);
   };
 
   if (txQueueOptions) core.tables.TransactionQueue.enqueue(run, txQueueOptions);
