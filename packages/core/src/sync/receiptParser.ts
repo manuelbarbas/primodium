@@ -3,11 +3,6 @@ import { Hex, Log, TransactionReceipt } from "viem";
 
 import { StorageAdapterBlock } from "@primodiumxyz/reactive-tables/utils";
 
-/**
- * Utility functions to parse transaction receipts and generate optimistic logs that match the format expected by the
- * storage adapter
- */
-
 /** Parse transaction receipt and extract relevant logs for optimistic updates */
 export function parseReceiptLogs(receipt: TransactionReceipt, worldAddress: Hex): StorageAdapterBlock | null {
   if (!receipt.logs || receipt.logs.length === 0) {

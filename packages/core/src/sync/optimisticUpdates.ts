@@ -69,12 +69,7 @@ export class OptimisticUpdateManager {
     }
   }
 
-  /** Process transaction receipt and generate optimistic state changes */
   private async processReceiptOptimistically(receipt: TransactionReceipt): Promise<void> {
-    // This is where you'd implement the logic to convert a transaction receipt
-    // into the expected state changes. This is complex and depends on your specific
-    // transaction types and state structure.
-
     // Generate optimistic block from receipt
     const optimisticBlock = await this.generateOptimisticLogsFromReceipt(receipt);
 
@@ -97,7 +92,6 @@ export class OptimisticUpdateManager {
     }
   }
 
-  /** Generate optimistic logs from transaction receipt */
   private async generateOptimisticLogsFromReceipt(receipt: TransactionReceipt): Promise<StorageAdapterBlock | null> {
     console.log(`[OptimisticUpdates] Generating optimistic logs for tx: ${receipt.transactionHash}`);
 

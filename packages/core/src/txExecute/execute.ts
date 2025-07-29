@@ -89,7 +89,6 @@ export function execute<functionName extends ContractFunctionName<WorldAbiType>>
         await core.sync.optimisticUpdateManager.applyOptimisticUpdate(receipt);
       } catch (error) {
         console.error(`[Execute] Failed to apply optimistic update:`, error);
-        // Continue execution even if optimistic update fails
       }
     }
 

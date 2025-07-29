@@ -360,8 +360,6 @@ function initializeWatchEvent(args: EnhancedReaderSubscribeRpcParams) {
 /** Enhanced subscribeLogs with WebSocket + Multi-RPC Polling hybrid approach */
 export function robustSubscribeLogs(args: EnhancedReaderSubscribeRpcParams): Reader {
   const fallbackRpcCount = args.chain?.rpcUrls?.fallback?.http?.length || 0;
-  console.log(`[robustSubscribeLogs INIT] Starting with ${fallbackRpcCount} fallback RPCs configured`);
-  console.log(`[robustSubscribeLogs INIT] Chain ID: ${args.chain?.id}, Address: ${args.address}`);
 
   if (!clients.has(args.publicClient)) {
     initializeWatchEvent(args);
