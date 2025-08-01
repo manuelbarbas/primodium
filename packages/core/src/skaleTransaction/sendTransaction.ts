@@ -1,4 +1,12 @@
-import { createPublicClient, createWalletClient, custom, http, TransactionReceipt } from "viem";
+import {
+  CallExecutionError,
+  ContractFunctionExecutionError,
+  createPublicClient,
+  createWalletClient,
+  custom,
+  http,
+  TransactionReceipt,
+} from "viem";
 
 import { Core, ExternalAccount, LocalAccount } from "@/lib/types";
 
@@ -53,13 +61,29 @@ export async function sendTransaction(
 
       return receipt;
     } catch (error) {
+      console.log("This is the error");
+      console.log(error);
+
+      const errorMessage = (error as Error).message;
+
+      console.log("errorMessage ");
+      console.log(errorMessage);
+
+      // Check for user cancellation - no retry
       if (
         (error as any).code === 4001 ||
-        (error as Error).message.toLowerCase().includes("user rejected") ||
-        (error as Error).message.toLowerCase().includes("user denied")
+        errorMessage.toLowerCase().includes("user rejected") ||
+        errorMessage.toLowerCase().includes("user denied")
       ) {
         console.warn("User cancelled the transaction. Aborting retries.");
+        console.error(error);
         throw new Error("Transaction cancelled by user");
+      }
+
+      if (errorMessage.includes("Execution reverted with reason")) {
+        console.warn("Transaction execution failed with specific reason.");
+        console.error(error);
+        throw new Error("Transaction not allowed");
       }
 
       lastError = error as Error;

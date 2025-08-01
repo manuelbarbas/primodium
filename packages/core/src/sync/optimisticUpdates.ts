@@ -59,14 +59,9 @@ export class OptimisticUpdateManager {
     const optimisticBlock = this.generateOptimisticLogsFromReceipt(receipt);
 
     if (optimisticBlock && optimisticBlock.logs.length > 0) {
-      // Apply optimistic logs immediately to the UI
-
-      // Process each log individually through the storage adapter
       optimisticBlock.logs.forEach((log, index) => {
         try {
-          console.log("TEST LOGAO 2 ", log);
           this.storageAdapter(log);
-          console.log(`[OptimisticUpdates DEBUG] storageAdapter call ${index + 1} completed successfully`);
         } catch (error) {
           console.error(`[OptimisticUpdates DEBUG] storageAdapter call ${index + 1} failed:`, error);
         }
@@ -85,7 +80,6 @@ export class OptimisticUpdateManager {
     const parsedLogs = parseReceiptLogs(receipt, this.worldAddress);
 
     if (!parsedLogs) {
-      console.log(`[OptimisticUpdates] No parseable logs found for tx: ${receipt.transactionHash}`);
       return null;
     }
     return parsedLogs;

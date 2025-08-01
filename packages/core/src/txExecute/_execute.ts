@@ -2,7 +2,11 @@ import { CallExecutionError, ContractFunctionExecutionError, Hex, PublicClient, 
 
 import { Core } from "@/lib/types";
 
-export async function _execute({ network: { waitForTransaction, publicClient } }: Core, txPromise: Promise<Hex>) {
+export async function _execute(core: Core, txPromise: Promise<Hex>) {
+  const { network } = core;
+
+  const { waitForTransaction, publicClient } = network;
+
   let receipt: TransactionReceipt | undefined = undefined;
   const startTime = Date.now();
 
@@ -19,6 +23,17 @@ export async function _execute({ network: { waitForTransaction, publicClient } }
     // If the transaction runs out of gas, status will be reverted
     // receipt.status is of type TStatus = 'success' | 'reverted' defined in TransactionReceipt
     receipt = await publicClient.getTransactionReceipt({ hash: txHash });
+
+    if (receipt.status === "success" && core.sync?.optimisticUpdateManager) {
+      try {
+        core.sync.optimisticUpdateManager.applyOptimisticUpdate(receipt);
+      } catch (error) {
+        console.error(`[Execute] Failed to apply optimistic update:`, error);
+      }
+    } else {
+      console.log(`[Execute DEBUG] Skipping optimistic update - conditions not met`);
+    }
+
     const receiptTime = Date.now() - startTime;
 
     if (receipt) {
@@ -51,6 +66,8 @@ export async function _execute({ network: { waitForTransaction, publicClient } }
         return receipt;
       }
     } catch (error) {
+      console.log("ERRORRRRR 2");
+
       console.error(error);
       // As of MUDv1, this would most likely be a gas error. i.e.:
       //     TypeError: Cannot set properties of null (setting 'gasPrice')
@@ -59,6 +76,7 @@ export async function _execute({ network: { waitForTransaction, publicClient } }
       // throws an error if the transaction fails.
       // We should be on the lookout for other errors that could be thrown here.
       console.error(`${error}`);
+
       return receipt;
     }
   }

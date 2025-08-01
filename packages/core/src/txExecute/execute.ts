@@ -41,8 +41,6 @@ export function execute<functionName extends ContractFunctionName<WorldAbiType>>
   );
 
   const run = async () => {
-    let tx: Promise<Hex>;
-
     let params_;
     let isCallFrom = false;
 
@@ -59,7 +57,6 @@ export function execute<functionName extends ContractFunctionName<WorldAbiType>>
       });
       params_ = params;
       isCallFrom = true;
-      //tx = sessionAccount.worldContract.write.callFrom(params, callOptions);
     } else {
       const params = encodeSystemCall(core.tables, {
         abi: WorldAbi,
@@ -67,8 +64,6 @@ export function execute<functionName extends ContractFunctionName<WorldAbiType>>
         functionName,
         args: args as any,
       });
-      //tx = playerAccount.worldContract.write.call(params, callOptions);
-
       params_ = params;
     }
 
@@ -78,20 +73,27 @@ export function execute<functionName extends ContractFunctionName<WorldAbiType>>
       isBiteProtected = true;
     }
 
-    const receipt = await sendTransaction(isBiteProtected, isCallFrom, core, account, params_);
+    let receipt: TransactionReceipt | undefined = undefined;
 
-    console.log("receipt ", receipt.status);
+    try {
+      receipt = await sendTransaction(isBiteProtected, isCallFrom, core, account, params_);
+      console.log("receipt ", receipt.status);
 
-    if (receipt.status === "success" && core.sync?.optimisticUpdateManager) {
-      try {
-        core.sync.optimisticUpdateManager.applyOptimisticUpdate(receipt);
-        onComplete?.(receipt);
-      } catch (error) {
-        console.error(`[Execute] Failed to apply optimistic update:`, error);
+      if (receipt.status === "success" && core.sync?.optimisticUpdateManager) {
+        try {
+          core.sync.optimisticUpdateManager.applyOptimisticUpdate(receipt);
+        } catch (error) {
+          console.error(`[Execute] Failed to apply optimistic update:`, error);
+        }
+      } else {
+        console.log(`[Execute DEBUG] Skipping optimistic update - conditions not met`);
       }
-    } else {
-      console.log(`[Execute DEBUG] Skipping optimistic update - conditions not met`);
+    } catch (error) {
+      console.error(`[Execute] Transaction failed or was cancelled:`, error);
+      receipt = undefined;
     }
+
+    onComplete?.(receipt);
   };
 
   if (txQueueOptions) core.tables.TransactionQueue.enqueue(run, txQueueOptions);
