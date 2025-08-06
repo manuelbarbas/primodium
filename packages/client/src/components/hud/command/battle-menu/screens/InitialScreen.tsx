@@ -186,15 +186,17 @@ export const InitialScreen = ({ target }: { target: Entity }) => {
     <Navigator.Screen title="initial" className="gap-2 flex h-full w-full">
       {/* Attack if not owned */}
       {!isOwner && <AttackButton target={target} />}
-      <Tabs.Button index={1} variant="neutral" size="content" onClick={() => tables.BattleTarget.remove()}>
-        <div className="flex flex-start px-1 gap-3 w-full">
-          <IconLabel className="text-lg drop-shadow-lg" imageUri={InterfaceIcons.Transfer} />
-          <div className="flex flex-col items-start">
-            <p>TRANSFER INVENTORY</p>
-            <p className="block text-xs opacity-75 text-wrap">TRADE UNITS AND RESOURCES</p>
+      {isOwner && (
+        <Tabs.Button index={1} variant="neutral" size="content" onClick={() => tables.BattleTarget.remove()}>
+          <div className="flex flex-start px-1 gap-3 w-full">
+            <IconLabel className="text-lg drop-shadow-lg" imageUri={InterfaceIcons.Transfer} />
+            <div className="flex flex-col items-start">
+              <p>TRANSFER INVENTORY</p>
+              <p className="block text-xs opacity-75 text-wrap">TRADE UNITS AND RESOURCES</p>
+            </div>
           </div>
-        </div>
-      </Tabs.Button>
+        </Tabs.Button>
+      )}
       {/* Manage buttons if owned and is a fleet */}
       {isOwner && isFleet && <FleetManageButtons fleet={target} />}
     </Navigator.Screen>

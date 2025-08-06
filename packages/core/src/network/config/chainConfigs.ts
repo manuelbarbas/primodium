@@ -116,7 +116,7 @@ const skaleNebula: ChainConfig = {
       ],
     },
   },
-  indexerUrl: "http://0.0.0.0:3003",
+  indexerUrl: "https://primordium-indexer-api.onrender.com",
   blockExplorers: {
     default: {
       name: "Nebula Gaming Hub explorer",
