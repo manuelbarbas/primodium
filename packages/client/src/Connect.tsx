@@ -2,7 +2,7 @@ import { chunk } from "lodash";
 import React, { useEffect, useState } from "react";
 import { FaExclamationTriangle } from "react-icons/fa";
 import { toast } from "react-toastify";
-import { useAccount, useConnect } from "wagmi";
+import { useAccount, useConnect, useSwitchChain } from "wagmi";
 
 import { usePersistentStore } from "@primodiumxyz/game/src/stores/PersistentStore";
 import { Landing } from "@/screens/Landing";
@@ -13,15 +13,78 @@ const connectorIcons: Record<string, string> = {
   ["Coinbase Wallet"]: "/img/icons/web3/coinbase.svg",
 };
 
+const TARGET_CHAIN_ID = 37084624;
+const TARGET_CHAIN_NAME = "[S] Nebula Gaming Hub";
+
 export const Connect: React.FC = React.memo(() => {
-  const { connector, isConnected } = useAccount();
+  const { connector, isConnected, chainId } = useAccount();
   const { connect, connectors, error, isPending } = useConnect();
+  const { switchChain } = useSwitchChain();
   const { noExternalAccount, setNoExternalAccount } = usePersistentStore();
   const [showingToast, setShowingToast] = useState(false);
+  const [showingChainToast, setShowingChainToast] = useState(false);
 
   useEffect(() => {
     if (error) toast.warn(error.message);
   }, [error]);
+
+  // Check chain when wallet connects
+  useEffect(() => {
+    if (isConnected && chainId && chainId !== TARGET_CHAIN_ID && !showingChainToast) {
+      showChainSwitchToast();
+    }
+  }, [isConnected, chainId, showingChainToast]);
+
+  const showChainSwitchToast = async () => {
+    toast.dismiss();
+    if (showingChainToast) await new Promise((resolve) => setTimeout(resolve, 500));
+    setShowingChainToast(true);
+
+    toast(
+      ({ closeToast }) => (
+        <div className="flex flex-col gap-4">
+          <div className="flex flex-col text-center justify-center items-center gap-2 w-full">
+            <FaExclamationTriangle size={24} className="text-warning" />
+            <div>WRONG NETWORK. Switch to {TARGET_CHAIN_NAME} to continue.</div>
+          </div>
+
+          <div className="flex justify-center w-full gap-2">
+            <button
+              className="btn btn-primary"
+              onClick={async () => {
+                try {
+                  await switchChain({ chainId: TARGET_CHAIN_ID });
+                  closeToast && closeToast();
+                } catch (error) {
+                  console.error("Failed to switch chain:", error);
+                  toast.error("Failed to switch network. Please switch manually in your wallet.");
+                }
+              }}
+            >
+              {`Switch to`} <br /> {`${TARGET_CHAIN_NAME}`}
+            </button>
+            <button
+              onClick={() => {
+                setShowingChainToast(false);
+                closeToast && closeToast();
+              }}
+              className="btn btn-secondary"
+            >
+              Cancel
+            </button>
+          </div>
+        </div>
+      ),
+      {
+        position: "top-center",
+        autoClose: false,
+        closeOnClick: false,
+        draggable: false,
+        closeButton: false,
+        hideProgressBar: true,
+      },
+    );
+  };
 
   const confirmToast = async () => {
     toast.dismiss();
@@ -58,7 +121,6 @@ export const Connect: React.FC = React.memo(() => {
         </div>
       ),
       {
-        // className: "border-error",
         position: "top-center",
         autoClose: false,
         closeOnClick: false,
@@ -69,7 +131,20 @@ export const Connect: React.FC = React.memo(() => {
     );
   };
 
-  if (isConnected || noExternalAccount) return null;
+  const handleConnectorClick = async (connectorToConnect: (typeof connectors)[0]) => {
+    if (isPending) return;
+
+    try {
+      await connect({ connector: connectorToConnect });
+    } catch (error) {
+      console.error("Connection failed:", error);
+    }
+  };
+
+  const shouldShowConnect = !isConnected || (isConnected && chainId !== TARGET_CHAIN_ID);
+
+  if (!shouldShowConnect && !noExternalAccount) return null;
+  if (noExternalAccount) return null;
 
   return (
     <Landing>
@@ -90,7 +165,7 @@ export const Connect: React.FC = React.memo(() => {
               <button
                 className="flex-1 items-center justify-center btn btn-secondary star-background join-item inline pointer-events-auto font-bold outline-none h-fit z-10"
                 key={`${x.id}-${x.name}`}
-                onClick={() => !isPending && connect({ connector: x })}
+                onClick={() => handleConnectorClick(x)}
                 disabled={isPending}
               >
                 <div className="flex w-full items-center justify-center gap-2">

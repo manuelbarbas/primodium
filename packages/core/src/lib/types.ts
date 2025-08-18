@@ -52,6 +52,8 @@ export type CoreConfig = {
    * Setups up systems to keep core tables and simplified tables in sync with contract tables
    */
   runSystems?: boolean;
+
+  indexerKey?: string;
 };
 
 type MudConfig = typeof mudConfig;

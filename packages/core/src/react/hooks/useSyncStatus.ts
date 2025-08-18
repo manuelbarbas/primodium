@@ -25,6 +25,9 @@ export const useSyncStatus = (syncId?: Entity) => {
 
   //TODO: sync with time updates
   useEffect(() => {
+    console.log("useSyncStatus syncId ", syncId);
+    console.log("useSyncStatus syncSource ", syncSource);
+    console.log("useSyncStatus syncStatus ", syncStatus);
     if (syncStatus === undefined) return;
     if (syncStatus === SyncStep.Complete || syncStatus === SyncStep.Live) {
       setLoading(false);

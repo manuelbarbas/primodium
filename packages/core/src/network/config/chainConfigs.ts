@@ -98,65 +98,30 @@ const skaleNebula: ChainConfig = {
   nativeCurrency: { decimals: 18, name: "SKALE Fuel", symbol: "sFUEL" },
   rpcUrls: {
     default: {
-      http: ["https://lanky-ill-funny-testnet-indexer.skalenodes.com:10136"],
-    },
-    public: {
-      http: ["https://lanky-ill-funny-testnet-indexer.skalenodes.com:10136"],
-    },
-    proxy: {
       http: ["https://testnet.skalenodes.com/v1/lanky-ill-funny-testnet"],
     },
+    public: {
+      http: ["https://testnet.skalenodes.com/v1/lanky-ill-funny-testnet"],
+    },
+    indexer: {
+      http: ["https://lanky-ill-funny-testnet-indexer.skalenodes.com:10136"],
+    },
+    fallback: {
+      http: [
+        "https://staging-0.skalenodes.com:10136",
+        "https://staging-1.skalenodes.com:10136",
+        "https://lanky-ill-funny-testnet-indexer.skalenodes.com:10136",
+        "https://staging-2.skalenodes.com:10136",
+        "https://staging-3.skalenodes.com:10136",
+      ],
+    },
   },
-  //  indexerUrl: "https://lanky-ill-funny-testnet-indexer.skalenodes.com:10136",
+  indexerUrl: "https://primordium-indexer-api.onrender.com",
+
   blockExplorers: {
     default: {
       name: "Nebula Gaming Hub explorer",
       url: "https://lanky-ill-funny-testnet.explorer.testnet.skalenodes.com/",
-    },
-  },
-};
-
-const skaleCalypso: ChainConfig = {
-  name: "SKALE Calypso",
-  id: 974399131,
-  nativeCurrency: { decimals: 18, name: "SKALE Fuel", symbol: "sFUEL" },
-  rpcUrls: {
-    default: {
-      http: ["https://giant-half-dual-testnet-indexer.skalenodes.com:10072"],
-    },
-    public: {
-      http: ["https://giant-half-dual-testnet-indexer.skalenodes.com:10072"],
-    },
-    archive: {
-      http: ["https://giant-half-dual-testnet-indexer.skalenodes.com:10072"],
-    },
-  },
-  //  indexerUrl: "https://lanky-ill-funny-testnet-indexer.skalenodes.com:10136",
-  blockExplorers: {
-    default: {
-      name: "Calypso Hub explorer",
-      url: "https://https://giant-half-dual-testnet.explorer.testnet.skalenodes.com/",
-    },
-  },
-};
-
-const skaleEuropa: ChainConfig = {
-  name: "SKALE Europa",
-  id: 1444673419,
-  nativeCurrency: { decimals: 18, name: "SKALE Fuel", symbol: "sFUEL" },
-  rpcUrls: {
-    default: {
-      http: ["https://testnet.skalenodes.com/v1/juicy-low-small-testnet"],
-    },
-    public: {
-      http: ["https://testnet.skalenodes.com/v1/juicy-low-small-testnet"],
-    },
-  },
-  //  indexerUrl: "https://lanky-ill-funny-testnet-indexer.skalenodes.com:10136",
-  blockExplorers: {
-    default: {
-      name: "Europa Hub explorer",
-      url: "https://juicy-low-small-testnet.explorer.testnet.skalenodes.com/",
     },
   },
 };
@@ -171,7 +136,5 @@ export const chainConfigs = {
   garnet: garnet as ChainConfig,
   redstone: redstone as ChainConfig,
   skaleNebula,
-  skaleCalypso,
-  skaleEuropa,
   skaleBite,
 } as const;

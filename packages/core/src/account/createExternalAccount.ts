@@ -31,7 +31,7 @@ export function createExternalAccount(coreConfig: CoreConfig, address: Address):
 
   const clientOptions = {
     chain: coreConfig.chain,
-    pollingInterval: 1000,
+    pollingInterval: 250,
     account: toAccount(address) as Account,
   };
 

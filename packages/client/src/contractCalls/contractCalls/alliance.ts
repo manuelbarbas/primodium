@@ -2,11 +2,12 @@ import { EAllianceInviteMode, EAllianceRole } from "contracts/config/enums";
 
 import { AccountClient, Core, entityToAddress, ExecuteFunctions, toHex32 } from "@primodiumxyz/core";
 import { Entity } from "@primodiumxyz/reactive-tables";
-import { ampli } from "@/ampli";
-import { parseReceipt } from "@/contractCalls/parseReceipt";
+
+//import { ampli } from "@/ampli";
+//import { parseReceipt } from "@/contractCalls/parseReceipt";
 
 export const createAllianceCalls = (
-  { tables, utils }: Core,
+  { tables /*, utils */ }: Core,
   { playerAccount }: AccountClient,
   { execute }: ExecuteFunctions,
 ) => {
@@ -22,11 +23,12 @@ export const createAllianceCalls = (
         id: `create-${playerAccount.entity}`,
       },
       onComplete: (receipt) => {
-        ampli.systemCreate({
+        /*ampli.systemCreate({
           allianceName: name,
           allianceInviteOnly: inviteOnly,
           ...parseReceipt(receipt),
-        });
+        });*/
+        console.log(receipt);
       },
     });
   };
@@ -40,10 +42,11 @@ export const createAllianceCalls = (
         id: `update-${playerAccount.entity}`,
       },
       onComplete: (receipt) => {
-        ampli.systemAllianceSystemPrimodiumSetAllianceName({
+        /*ampli.systemAllianceSystemPrimodiumSetAllianceName({
           allianceName: name,
           ...parseReceipt(receipt),
-        });
+        });*/
+        console.log(receipt);
       },
     });
   };
@@ -57,11 +60,13 @@ export const createAllianceCalls = (
         id: `updateAccess-${playerAccount.entity}`,
       },
       onComplete: (receipt) => {
-        ampli.systemAllianceSystemPrimodiumSetAllianceInviteMode({
+        /*ampli.systemAllianceSystemPrimodiumSetAllianceInviteMode({
           allianceName: utils.getAllianceName(allianceEntity),
           allianceInviteOnly: inviteOnly,
           ...parseReceipt(receipt),
         });
+        */
+        console.log(receipt);
       },
     });
   };
@@ -76,10 +81,11 @@ export const createAllianceCalls = (
         id: `leave-${playerAccount.entity}`,
       },
       onComplete: (receipt) => {
-        ampli.systemLeave({
+        /*  ampli.systemLeave({
           allianceName: utils.getAllianceNameFromPlayer(playerAccount.entity),
           ...parseReceipt(receipt),
-        });
+        });*/
+        console.log(receipt);
       },
     });
   };
@@ -94,10 +100,12 @@ export const createAllianceCalls = (
         id: `join-${alliance}`,
       },
       onComplete: (receipt) => {
-        ampli.systemJoin({
+        /*  ampli.systemJoin({
           allianceName: utils.getAllianceName(alliance),
           ...parseReceipt(receipt),
         });
+        */
+        console.log(receipt);
       },
     });
   };
@@ -112,11 +120,12 @@ export const createAllianceCalls = (
         id: `decline-${inviter}`,
       },
       onComplete: (receipt) => {
-        ampli.systemDeclineInvite({
+        /* ampli.systemDeclineInvite({
           allianceName: utils.getAllianceName(inviter),
           allianceInviter: inviter,
           ...parseReceipt(receipt),
-        });
+        });*/
+        console.log(receipt);
       },
     });
   };
@@ -131,17 +140,18 @@ export const createAllianceCalls = (
         id: `join-${alliance}`,
       },
       onComplete: (receipt) => {
-        ampli.systemRequestToJoin({
+        /*ampli.systemRequestToJoin({
           allianceName: utils.getAllianceName(alliance),
           ...parseReceipt(receipt),
-        });
+        });*/
+        console.log(receipt);
       },
     });
   };
 
   const kickPlayer = async (player: Entity) => {
     // Fetch alliance name before kicking
-    const allianceName = utils.getAllianceNameFromPlayer(player);
+    // const allianceName = utils.getAllianceNameFromPlayer(player);
 
     execute({
       functionName: "Pri_11__kick",
@@ -152,11 +162,12 @@ export const createAllianceCalls = (
         id: `kick-${player}`,
       },
       onComplete: (receipt) => {
-        ampli.systemKick({
+        /* ampli.systemKick({
           allianceName: allianceName,
           allianceRejectee: player,
           ...parseReceipt(receipt),
-        });
+        });*/
+        console.log(receipt);
       },
     });
   };
@@ -173,12 +184,13 @@ export const createAllianceCalls = (
         id: `${role < currentRole ? "promote" : "demote"}-${player}`,
       },
       onComplete: (receipt) => {
-        ampli.systemGrantRole({
+        /* ampli.systemGrantRole({
           allianceName: utils.getAllianceNameFromPlayer(player),
           allianceRole: EAllianceRole[role],
           allianceMember: player,
           ...parseReceipt(receipt),
-        });
+        });*/
+        console.log(receipt);
       },
     });
   };
@@ -193,11 +205,12 @@ export const createAllianceCalls = (
         id: `accept-${target}`,
       },
       onComplete: (receipt) => {
-        ampli.systemAcceptJoinRequest({
+        /*ampli.systemAcceptJoinRequest({
           allianceName: utils.getAllianceNameFromPlayer(target),
           allianceAcceptee: target,
           ...parseReceipt(receipt),
-        });
+        });*/
+        console.log(receipt);
       },
     });
   };
@@ -212,11 +225,12 @@ export const createAllianceCalls = (
         id: `reject-${target}`,
       },
       onComplete: (receipt) => {
-        ampli.systemRejectJoinRequest({
+        /* ampli.systemRejectJoinRequest({
           allianceName: utils.getAllianceNameFromPlayer(target),
           allianceRejectee: target,
           ...parseReceipt(receipt),
-        });
+        });*/
+        console.log(receipt);
       },
     });
   };
@@ -231,11 +245,12 @@ export const createAllianceCalls = (
         id: "invite",
       },
       onComplete: (receipt) => {
-        ampli.systemInvite({
+        /* ampli.systemInvite({
           allianceName: utils.getAllianceNameFromPlayer(target),
           allianceAcceptee: target,
           ...parseReceipt(receipt),
-        });
+        });*/
+        console.log(receipt);
       },
     });
   };
@@ -250,10 +265,11 @@ export const createAllianceCalls = (
         id: `revoke-${target}`,
       },
       onComplete: (receipt) => {
-        ampli.systemAllianceSystemPrimodiumRevokeInvite({
+        /*ampli.systemAllianceSystemPrimodiumRevokeInvite({
           allianceRejectee: target,
           ...parseReceipt(receipt),
-        });
+        });*/
+        console.log(receipt);
       },
     });
   };

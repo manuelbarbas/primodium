@@ -2,8 +2,8 @@ import { EFleetStance, EObjectives } from "contracts/config/enums";
 
 import { AccountClient, Coord, Core, ExecuteFunctions, TxQueueOptions } from "@primodiumxyz/core";
 import { Entity } from "@primodiumxyz/reactive-tables";
-import { ampli } from "@/ampli";
-import { parseReceipt } from "@/contractCalls/parseReceipt";
+//import { ampli } from "@/ampli";
+//import { parseReceipt } from "@/contractCalls/parseReceipt";
 import { makeObjectiveClaimable } from "@/util/objectives/makeObjectiveClaimable";
 
 export const createFleetCalls = (core: Core, { playerAccount }: AccountClient, { execute }: ExecuteFunctions) => {
@@ -24,11 +24,11 @@ export const createFleetCalls = (core: Core, { playerAccount }: AccountClient, {
       },
       onComplete: (receipt) => {
         makeObjectiveClaimable(core, playerAccount.entity, EObjectives.CreateFleet);
-
-        ampli.systemFleetCreateSystemPrimodiumCreateFleet({
+        console.log(receipt);
+        /*ampli.systemFleetCreateSystemPrimodiumCreateFleet({
           spaceRock: asteroidEntity,
           ...parseReceipt(receipt),
-        });
+        });*/
       },
     });
   };
@@ -43,10 +43,12 @@ export const createFleetCalls = (core: Core, { playerAccount }: AccountClient, {
         id: "abandonFleet",
       },
       onComplete: (receipt) => {
-        ampli.systemFleetClearSystemPrimodiumAbandonFleet({
+        console.log(receipt);
+
+        /*ampli.systemFleetClearSystemPrimodiumAbandonFleet({
           fleets: [fleet],
           ...parseReceipt(receipt),
-        });
+        });*/
       },
     });
   };
@@ -62,11 +64,12 @@ export const createFleetCalls = (core: Core, { playerAccount }: AccountClient, {
       },
       onComplete: (receipt) => {
         tables.SelectedFleet.remove();
+        console.log(receipt);
 
-        ampli.systemFleetClearSystemPrimodiumClearFleet({
+        /* ampli.systemFleetClearSystemPrimodiumClearFleet({
           fleets: [fleet],
           ...parseReceipt(receipt),
-        });
+        });*/
       },
     });
   };
@@ -89,10 +92,12 @@ export const createFleetCalls = (core: Core, { playerAccount }: AccountClient, {
           id: `clear-${fleet}`,
         },
         onComplete: (receipt) => {
-          ampli.systemFleetClearSystemPrimodiumClearResources({
+          console.log(receipt);
+
+          /*ampli.systemFleetClearSystemPrimodiumClearResources({
             fleets: [fleet],
             ...parseReceipt(receipt),
-          });
+          });*/
         },
       });
     }
@@ -106,10 +111,12 @@ export const createFleetCalls = (core: Core, { playerAccount }: AccountClient, {
           id: `clear-${fleet}`,
         },
         onComplete: (receipt) => {
-          ampli.systemFleetClearSystemPrimodiumClearUnits({
+          console.log(receipt);
+
+          /*ampli.systemFleetClearSystemPrimodiumClearUnits({
             fleets: [fleet],
             ...parseReceipt(receipt),
-          });
+          });*/
         },
       });
     } else {
@@ -122,10 +129,12 @@ export const createFleetCalls = (core: Core, { playerAccount }: AccountClient, {
           id: `clear-${fleet}`,
         },
         onComplete: (receipt) => {
-          ampli.systemFleetClearSystemPrimodiumClearUnitsAndResourcesFromFleet({
+          console.log(receipt);
+
+          /* ampli.systemFleetClearSystemPrimodiumClearUnitsAndResourcesFromFleet({
             fleets: [fleet],
             ...parseReceipt(receipt),
-          });
+          });*/
         },
       });
     }
@@ -140,12 +149,14 @@ export const createFleetCalls = (core: Core, { playerAccount }: AccountClient, {
         id: "landFleet",
       },
       onComplete: (receipt) => {
+        console.log(receipt);
+
         makeObjectiveClaimable(core, playerAccount.entity, EObjectives.SetHomebase);
 
-        ampli.systemFleetLandSystemPrimodiumLandFleet({
+        /*ampli.systemFleetLandSystemPrimodiumLandFleet({
           fleets: [fleet],
           ...parseReceipt(receipt),
-        });
+        });*/
       },
     });
   };
@@ -159,10 +170,12 @@ export const createFleetCalls = (core: Core, { playerAccount }: AccountClient, {
         id: `merge-${fleets.map((f) => f).join("-")}`,
       },
       onComplete: (receipt) => {
-        ampli.systemFleetMergeSystemPrimodiumMergeFleets({
+        console.log(receipt);
+
+        /* ampli.systemFleetMergeSystemPrimodiumMergeFleets({
           fleets,
           ...parseReceipt(receipt),
-        });
+        });*/
       },
     });
   };
@@ -177,10 +190,12 @@ export const createFleetCalls = (core: Core, { playerAccount }: AccountClient, {
         id: `recall-${fleet}`,
       },
       onComplete: (receipt) => {
-        ampli.systemFleetRecallSystemPrimodiumRecallFleet({
+        console.log(receipt);
+
+        /*ampli.systemFleetRecallSystemPrimodiumRecallFleet({
           fleets: [fleet],
           ...parseReceipt(receipt),
-        });
+        });*/
       },
     });
   };
@@ -197,12 +212,13 @@ export const createFleetCalls = (core: Core, { playerAccount }: AccountClient, {
       },
       onComplete: (receipt) => {
         activeAsteroid && makeObjectiveClaimable(core, playerAccount.entity, EObjectives.SendFleet);
+        console.log(receipt);
 
-        ampli.systemFleetSendSystemPrimodiumSendFleet({
+        /* ampli.systemFleetSendSystemPrimodiumSendFleet({
           fleets: [fleet],
           spaceRock: spaceRock,
           ...parseReceipt(receipt),
-        });
+        });*/
       },
     });
   };
@@ -219,13 +235,14 @@ export const createFleetCalls = (core: Core, { playerAccount }: AccountClient, {
       },
       onComplete: (receipt) => {
         activeAsteroid && makeObjectiveClaimable(core, playerAccount.entity, EObjectives.SendFleet);
+        console.log(receipt);
 
-        ampli.systemFleetSendSystemPrimodiumSendFleet({
+        /* ampli.systemFleetSendSystemPrimodiumSendFleet({
           fleets: [fleet],
           spaceRock: "",
           spaceRockCoord: [position.x, position.y],
           ...parseReceipt(receipt),
-        });
+        });*/
       },
     });
   };
@@ -247,13 +264,14 @@ export const createFleetCalls = (core: Core, { playerAccount }: AccountClient, {
       },
       onComplete: (receipt) => {
         !!objective && makeObjectiveClaimable(core, playerAccount.entity, objective);
+        console.log(receipt);
 
-        ampli.systemFleetStanceSystemPrimodiumSetFleetStance({
+        /* ampli.systemFleetStanceSystemPrimodiumSetFleetStance({
           fleets: [fleet],
           fleetStance: stance,
           spaceRock: target,
           ...parseReceipt(receipt),
-        });
+        });*/
       },
     });
   };
@@ -268,10 +286,12 @@ export const createFleetCalls = (core: Core, { playerAccount }: AccountClient, {
         id: "FleetStance",
       },
       onComplete: (receipt) => {
-        ampli.systemFleetStanceSystemPrimodiumClearFleetStance({
+        console.log(receipt);
+
+        /*ampli.systemFleetStanceSystemPrimodiumClearFleetStance({
           fleets: [fleet],
           ...parseReceipt(receipt),
-        });
+        });*/
       },
     });
   };

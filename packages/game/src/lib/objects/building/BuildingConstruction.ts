@@ -55,6 +55,8 @@ export class BuildingConstruction extends Phaser.GameObjects.Container implement
     this.coord = coord;
     this._scene = scene;
 
+    console.log("TRANSACTION TEST SPWANED TEST");
+
     this._scene.objects.constructionBuilding.add(id, this);
     this._scene.audio.play("Build", "sfx");
   }
@@ -66,6 +68,7 @@ export class BuildingConstruction extends Phaser.GameObjects.Container implement
 
   spawn() {
     //TODO: placement animation
+    console.log("TRANSACTION TEST SPWANED");
     this.scene.add.existing(this);
     this.spawned = true;
     return this;
@@ -76,6 +79,8 @@ export class BuildingConstruction extends Phaser.GameObjects.Container implement
   }
 
   isSpawned() {
+    console.log("TRANSACTION TEST IS SPWANED");
+
     return this.spawned;
   }
 

@@ -1,5 +1,6 @@
 import { useEffect, useMemo } from "react";
 import { BrowserRouter, Navigate, Route, Routes, useLocation } from "react-router-dom";
+import { useAccount } from "wagmi"; // Add wagmi network hook
 
 import { minEth } from "@primodiumxyz/core";
 import { useAccountClient, useSyncStatus } from "@primodiumxyz/core/react";
@@ -13,28 +14,39 @@ import { Sandbox } from "@/screens/Sandbox";
 import { Statistics } from "@/screens/Statistics";
 
 export default function AppLoadingState() {
+  const { chain } = useAccount();
   const { playerBalanceData, sessionBalanceData, requestDrip } = useDripAccount();
   const { sessionAccount, playerAccount } = useAccountClient();
 
+  const isCorrectChain = useMemo(() => {
+    return chain?.id === 37084624;
+  }, [chain]);
+
   useEffect(() => {
+    // if (!isCorrectChain) return;
+
     const sessionBalance = sessionBalanceData.data?.value;
     if (!sessionAccount?.address || sessionBalanceData.isLoading || !sessionBalance || sessionBalance >= minEth) return;
     requestDrip(sessionAccount.address);
-  }, [sessionAccount?.address, sessionBalanceData.data?.value, sessionBalanceData.isLoading]);
+  }, [sessionAccount?.address, sessionBalanceData.data?.value, sessionBalanceData.isLoading, isCorrectChain]);
 
   useEffect(() => {
+    //    if (!isCorrectChain) return;
+
     const playerBalance = playerBalanceData.data?.value;
     if (sessionBalanceData.isLoading || !playerBalance || playerBalance >= minEth) return;
     requestDrip(playerAccount.address);
-  }, [playerAccount.address, sessionBalanceData.isLoading, playerBalanceData.data?.value]);
+  }, [playerAccount.address, sessionBalanceData.isLoading, playerBalanceData.data?.value, isCorrectChain]);
 
   const { loading, error, progress, message } = useSyncStatus(playerAccount.entity);
+
   const balanceReady = useMemo(() => {
+    //if (!isCorrectChain) return false;
+
     const playerBalanceReady = (playerBalanceData.data?.value ?? 0n) >= minEth;
     const sessionBalanceReady = !sessionAccount || (sessionBalanceData.data?.value ?? 0n) >= minEth;
     return playerBalanceReady && sessionBalanceReady;
-  }, [loading, playerBalanceData, sessionAccount, sessionBalanceData]);
-
+  }, [loading, playerBalanceData, sessionAccount, sessionBalanceData, isCorrectChain]);
   return (
     <div className="h-screen relative">
       {!error && (

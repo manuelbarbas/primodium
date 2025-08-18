@@ -39,7 +39,8 @@ export async function signCall({
 
   const { namespace: systemNamespace, name: systemName } = hexToResource(systemId);
   const chainId = config.chain.id;
-  return await signTypedData(userAccountClient, {
+
+  const receipt = await signTypedData(userAccountClient, {
     account: userAccountClient.account,
     domain: {
       verifyingContract: worldAddress,
@@ -55,4 +56,6 @@ export async function signCall({
       nonce,
     },
   });
+
+  return receipt;
 }

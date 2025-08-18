@@ -2,8 +2,8 @@ import { EObjectives } from "contracts/config/enums";
 
 import { AccountClient, Core, ExecuteFunctions, SPEED_SCALE } from "@primodiumxyz/core";
 import { Entity } from "@primodiumxyz/reactive-tables";
-import { ampli } from "@/ampli";
-import { parseReceipt } from "@/contractCalls/parseReceipt";
+//import { ampli } from "@/ampli";
+//import { parseReceipt } from "@/contractCalls/parseReceipt";
 import { makeObjectiveClaimable } from "@/util/objectives/makeObjectiveClaimable";
 
 export const createClaimPointsCalls = (core: Core, { playerAccount }: AccountClient, { execute }: ExecuteFunctions) => {
@@ -21,10 +21,11 @@ export const createClaimPointsCalls = (core: Core, { playerAccount }: AccountCli
       onComplete: (receipt) => {
         makeObjectiveClaimable(core, playerAccount.entity, EObjectives.EarnPrimodiumOnAsteroid);
 
-        ampli.systemClaimPrimodiumSystemPrimodiumClaimPrimodium({
+        /* ampli.systemClaimPrimodiumSystemPrimodiumClaimPrimodium({
           spaceRock: asteroidEntity,
           ...parseReceipt(receipt),
-        });
+        });*/
+        console.log(receipt);
       },
     });
   };
@@ -56,10 +57,11 @@ export const createClaimPointsCalls = (core: Core, { playerAccount }: AccountCli
       onComplete: (receipt) => {
         if (explosive) makeObjectiveClaimable(core, playerAccount.entity, EObjectives.ExplodeVolatileShard);
 
-        ampli.systemClaimPrimodiumSystemPrimodiumClaimShardAsteroidPoints({
+        /*ampli.systemClaimPrimodiumSystemPrimodiumClaimShardAsteroidPoints({
           spaceRock: asteroidEntity,
           ...parseReceipt(receipt),
-        });
+        });*/
+        console.log(receipt);
       },
     });
   };

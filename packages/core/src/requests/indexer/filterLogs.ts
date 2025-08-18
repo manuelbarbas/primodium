@@ -1,0 +1,61 @@
+import { EventEmitter } from "eventemitter3";
+
+import { Reader, ReaderFilterIndexerParams, StorageAdapterBlock } from "@primodiumxyz/sync-stack/types";
+
+import { isStorageAdapterBlockIndexer } from "../common";
+import { processJSONStream } from "../requests";
+
+/**
+ * Creates a reader for filtered indexer logs.
+ *
+ * @param args - The {@link ReaderFilterIndexerParams}
+ * @returns A {@link Reader}
+ */
+export const filterLogs = (args: ReaderFilterIndexerParams, key?: string): Reader => {
+  const { indexerUrl, filter } = args;
+  return {
+    subscribe: (userCallback, errorCallback) => {
+      const eventEmitter = new EventEmitter();
+
+      // Listen for the 'update' event
+      eventEmitter.on("update", userCallback);
+
+      // Listen for the 'error' event
+      if (errorCallback) eventEmitter.on("error", errorCallback);
+
+      // Start fetching the logs
+      (async () => {
+        try {
+          const urlEncodedQuery = encodeURIComponent(JSON.stringify(filter));
+          const url = `${indexerUrl}/api/logs?input=${urlEncodedQuery}`;
+          for await (const result of processJSONStream(url, key)) {
+            if (!isStorageAdapterBlockIndexer(result)) {
+              eventEmitter.emit("update", {
+                blockNumber: 0n,
+                logs: [],
+                progress: 1,
+              } as StorageAdapterBlock);
+              return;
+            }
+
+            eventEmitter.emit("update", {
+              blockNumber: BigInt(result.blockNumber),
+              logs: result.logs,
+              progress: result.chunk / result.totalChunks,
+            });
+          }
+        } catch (err) {
+          eventEmitter.emit("error", err);
+        } finally {
+          eventEmitter.removeAllListeners("update");
+          eventEmitter.removeAllListeners("error");
+        }
+      })();
+
+      return () => {
+        eventEmitter.removeAllListeners("update");
+        eventEmitter.removeAllListeners("error");
+      };
+    },
+  };
+};

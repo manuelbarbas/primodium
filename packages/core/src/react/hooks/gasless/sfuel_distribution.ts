@@ -19,7 +19,6 @@ export async function sfuelDistribution(address: Hex) {
   });
 
   const { gasPrice } = await mineGasForTransaction(0, 100_000, wallet.account.address);
-  console.log("Magic Value: ", gasPrice);
 
   const res = await wallet.sendTransaction({
     to: "0x000E9c53C4e2e21F5063f2e232d0AA907318dccb",

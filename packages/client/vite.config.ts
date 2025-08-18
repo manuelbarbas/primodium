@@ -28,6 +28,7 @@ export default defineConfig({
   base: process.env.VITE_BASE_PATH || "/",
   server: {
     port: 3000,
+    host: true, // This allows access from external devices
     fs: {
       strict: false,
     },

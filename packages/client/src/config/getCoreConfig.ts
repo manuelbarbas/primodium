@@ -29,6 +29,9 @@ export const getCoreConfig = (): CoreConfig => {
   if (!worldAddress) {
     throw new Error(`No world address found for chain ${chainId_}. `);
   }
+
+  console.log("worldAddress ", worldAddress);
+
   const initialBlockNumber = params.has("initialBlockNumber")
     ? Number(params.get("initialBlockNumber"))
     : (world?.blockNumber ?? 0);
@@ -41,6 +44,7 @@ export const getCoreConfig = (): CoreConfig => {
     runSystems: true,
     devPrivateKey: import.meta.env.PRI_DEV_PKEY as Hex,
     accountLinkUrl: import.meta.env.PRI_ACCOUNT_LINK_VERCEL_URL as string,
+    indexerKey: import.meta.env.PRI_INDEXER_API_KEY as string,
   };
   return config;
 };

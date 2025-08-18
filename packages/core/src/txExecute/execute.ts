@@ -1,9 +1,8 @@
 import { Abi, ContractFunctionName, encodeFunctionData, Hex, TransactionReceipt } from "viem";
 
-import { AccountClient, Core, WorldAbiType } from "@/lib/types";
+import { AccountClient, Core, SyncStep, WorldAbiType } from "@/lib/types";
 import { WorldAbi } from "@/lib/WorldAbi";
 import { TxQueueOptions } from "@/tables/types";
-import { _execute } from "@/txExecute/_execute";
 import { encodeSystemCall, encodeSystemCallFrom, SystemCall } from "@/txExecute/encodeSystemCall";
 import { functionSystemIds } from "@/txExecute/functionSystemIds";
 
@@ -42,7 +41,8 @@ export function execute<functionName extends ContractFunctionName<WorldAbiType>>
   );
 
   const run = async () => {
-    let tx: Promise<Hex>;
+    let params_;
+    let isCallFrom = false;
 
     const systemId = functionSystemIds[functionName as ContractFunctionName<WorldAbiType>];
 
@@ -51,6 +51,7 @@ export function execute<functionName extends ContractFunctionName<WorldAbiType>>
     let isCallFrom = false;
 
     if (!systemId || !args) throw new Error(`System ID not found for function ${functionName}`);
+
     if (authorizing && sessionAccount) {
       const params = encodeSystemCallFrom(core.tables, {
         abi: WorldAbi,
@@ -77,9 +78,26 @@ export function execute<functionName extends ContractFunctionName<WorldAbiType>>
       isBiteProtected = true;
     }
 
-    const receipt = await sendTransaction(isBiteProtected, core, playerAccount, params_);
+    let receipt: TransactionReceipt | undefined = undefined;
 
-    console.log("RECEIPT", receipt);
+    try {
+      receipt = await sendTransaction(isBiteProtected, isCallFrom, core, account, params_);
+      console.log("receipt ", receipt.status);
+
+      if (receipt.status === "success" && core.sync?.optimisticUpdateManager) {
+        try {
+          core.sync.optimisticUpdateManager.applyOptimisticUpdate(receipt);
+        } catch (error) {
+          console.error(`[Execute] Failed to apply optimistic update:`, error);
+        }
+      } else {
+        console.log(`[Execute DEBUG] Skipping optimistic update - conditions not met`);
+      }
+    } catch (error) {
+      console.error(`[Execute] Transaction failed or was cancelled:`, error);
+      receipt = undefined;
+    }
+
 
     onComplete?.(receipt);
   };
