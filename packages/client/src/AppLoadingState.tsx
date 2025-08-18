@@ -27,7 +27,6 @@ export default function AppLoadingState() {
 
     const sessionBalance = sessionBalanceData.data?.value;
     if (!sessionAccount?.address || sessionBalanceData.isLoading || !sessionBalance || sessionBalance >= minEth) return;
-    console.log("dripping session account");
     requestDrip(sessionAccount.address);
   }, [sessionAccount?.address, sessionBalanceData.data?.value, sessionBalanceData.isLoading, isCorrectChain]);
 
@@ -36,7 +35,6 @@ export default function AppLoadingState() {
 
     const playerBalance = playerBalanceData.data?.value;
     if (sessionBalanceData.isLoading || !playerBalance || playerBalance >= minEth) return;
-    console.log("dripping player account");
     requestDrip(playerAccount.address);
   }, [playerAccount.address, sessionBalanceData.isLoading, playerBalanceData.data?.value, isCorrectChain]);
 
@@ -49,7 +47,6 @@ export default function AppLoadingState() {
     const sessionBalanceReady = !sessionAccount || (sessionBalanceData.data?.value ?? 0n) >= minEth;
     return playerBalanceReady && sessionBalanceReady;
   }, [loading, playerBalanceData, sessionAccount, sessionBalanceData, isCorrectChain]);
-
   return (
     <div className="h-screen relative">
       {!error && (

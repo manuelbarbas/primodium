@@ -238,6 +238,8 @@ export const _TransferPane = (props: {
     setMoving({ side: props.side, entity, count });
   };
 
+  console.log("THE FUCKING left ", props);
+  // console.log("THE FUCKING right ", right);
   return (
     <Card noDecor className={cn("w-full h-full relative")}>
       <div

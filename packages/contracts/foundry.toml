@@ -38,3 +38,4 @@ chain_id = 84532
 [profile.skale-nebula]
 eth_rpc_url = "https://lanky-ill-funny-testnet-indexer.skalenodes.com:10136"
 chain_id = 37084624
+

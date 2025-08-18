@@ -38,7 +38,6 @@ export async function signCall({
     0n;
 
   const { namespace: systemNamespace, name: systemName } = hexToResource(systemId);
-
   const chainId = config.chain.id;
 
   const receipt = await signTypedData(userAccountClient, {

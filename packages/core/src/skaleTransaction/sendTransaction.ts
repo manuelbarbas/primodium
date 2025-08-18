@@ -8,6 +8,7 @@ import {
   TransactionReceipt,
 } from "viem";
 
+
 import { Core, ExternalAccount, LocalAccount } from "@/lib/types";
 
 import { getTransactionData } from "./getTransactionData";
@@ -35,6 +36,7 @@ export async function sendTransaction(
   const txData = await getTransactionData(isBite, isDelegated, params);
 
   retryConfig.fallbackRpcUrls = [...core.config.chain.rpcUrls.fallback.http];
+
 
   const transaction = {
     data: txData,
@@ -160,4 +162,5 @@ export async function sendTransaction(
   }
 
   throw new Error(`Transaction failed after all retries. Last error: ${lastError?.message}`);
+
 }

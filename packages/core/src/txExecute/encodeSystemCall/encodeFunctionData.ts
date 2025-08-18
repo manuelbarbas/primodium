@@ -35,7 +35,11 @@ export function encodeFunctionData<
   const rawSignature = toFunctionSelector(definition);
   const signature = tables.FunctionSelectors.getWithKeys({ worldFunctionSelector: rawSignature })
     ?.systemFunctionSelector as Hex;
+
   if (!signature) throw new Error("System Function Selector Not Found");
   const data = "inputs" in abiItem && abiItem.inputs ? encodeAbiParameters(abiItem.inputs, args ?? []) : undefined;
-  return concatHex([signature, data ?? "0x"]);
+
+  const concatHex_ = concatHex([signature, data ?? "0x"]);
+
+  return concatHex_;
 }

@@ -31,6 +31,11 @@ export const createAccessCalls = (
         return;
       }
       const tempSessionAccount = createLocalAccount(core.config, privateKey, false);
+
+      console.log("LOCAL WALLET");
+      console.log(privateKey);
+      console.log(tempSessionAccount);
+
       // Initial request for ETH
       requestDrip(tempSessionAccount.address);
 

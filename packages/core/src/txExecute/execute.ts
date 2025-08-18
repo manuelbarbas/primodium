@@ -1,4 +1,4 @@
-import { Abi, ContractFunctionName, Hex, TransactionReceipt } from "viem";
+import { Abi, ContractFunctionName, encodeFunctionData, Hex, TransactionReceipt } from "viem";
 
 import { AccountClient, Core, SyncStep, WorldAbiType } from "@/lib/types";
 import { WorldAbi } from "@/lib/WorldAbi";
@@ -45,6 +45,11 @@ export function execute<functionName extends ContractFunctionName<WorldAbiType>>
     let isCallFrom = false;
 
     const systemId = functionSystemIds[functionName as ContractFunctionName<WorldAbiType>];
+
+    let params_;
+
+    let isCallFrom = false;
+
     if (!systemId || !args) throw new Error(`System ID not found for function ${functionName}`);
 
     if (authorizing && sessionAccount) {
@@ -92,6 +97,7 @@ export function execute<functionName extends ContractFunctionName<WorldAbiType>>
       console.error(`[Execute] Transaction failed or was cancelled:`, error);
       receipt = undefined;
     }
+
 
     onComplete?.(receipt);
   };

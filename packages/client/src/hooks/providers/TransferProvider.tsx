@@ -48,6 +48,7 @@ export const TransferContextProvider: React.FC<TransferContextProviderProps> = (
       }, i * flashInterval);
     }
   }, []);
+
   const [transferContext, setTransferContext] = useState<TransferContextType>({
     left: initialLeft,
     right: initialRight,

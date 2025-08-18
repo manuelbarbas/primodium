@@ -15,8 +15,6 @@ export const getCoreConfig = (): CoreConfig => {
 
   let chain;
 
-  console.log("chainId ", chainId);
-
   if (chainId == "37084624") {
     chain = chainConfigs["skaleNebula"];
   } else if (chainId == "1289306510") {
