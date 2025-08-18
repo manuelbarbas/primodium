@@ -56,3 +56,5 @@ The whole stack can be run with the following command:
 ```bash
 pnpm dev
 ```
+
+Then press option 1 to run the client side
